@@ -1,6 +1,5 @@
-import { BING_API_KEY } from 'config/keys';
-import ApplicationState from 'core/applicationstate'
-const {base, inherit} = require('core/utils/utils');
+const inherit = require('core/utils/utils').inherit;
+const base = require('core/utils/utils').base;
 const BaseLayer = require('core/layers/baselayers/baselayer');
 const BasesLayers = require('g3w-ol/src/layers/bases');
 
@@ -14,34 +13,24 @@ const proto = BingLayer.prototype;
 
 proto._makeOlLayer = function(){
   let olLayer;
-  const key = ApplicationState.keys.vendorkeys.bing || BING_API_KEY;
   const subtype = this.config.source ? this.config.source.subtype : null;
   switch(subtype) {
     case 'streets':
-      olLayer = BasesLayers.BING.get({
-        imagerySet: 'Road',
-        key
-      });
+      olLayer = BasesLayers.BING.Road;
       break;
     case 'aerial':
-      olLayer = BasesLayers.BING.get({
-        imagerySet: 'Aerial',
-        key
-      });
+      olLayer = BasesLayers.BING.Aerial;
       break;
     case 'aerialwithlabels':
-      olLayer = BasesLayers.BING.get({
-        imagerySet: 'AerialWithLabels',
-        key
-      });
+      olLayer = BasesLayers.BING.AerialWithLabels;
       break;
     default:
-      olLayer = BasesLayers.BING.get({
-        imagerySet: 'Aerial',
-        key
-      });
+      olLayer = BasesLayers.BING.Aerial;
+      break;
   }
   return olLayer
 };
+
+
 
 module.exports = BingLayer;

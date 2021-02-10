@@ -1,5 +1,7 @@
 import { createCompiledTemplate } from 'gui/vue/utils';
-const {base, merge, inherit} = require('core/utils/utils');
+const inherit = require('core/utils/utils').inherit;
+const base = require('core/utils/utils').base;
+const merge = require('core/utils/utils').merge;
 const Component = require('gui/vue/component');
 const AddLayerComponent = require('./addlayer');
 const MapService = require('../mapservice');
@@ -41,20 +43,22 @@ const vueComponentOptions = {
       const mapService = this.$options.service.createCopyMapExtentUrl();
     }
   },
-  async mounted() {
+  mounted: function() {
     const mapService = this.$options.service;
     mapService.once('ready', ()=>{
       this.ready = true;
     });
     this.crs = mapService.getCrs();
-    await this.$nextTick();
-    mapService.setMapControlsContainer($(this.$refs['g3w-map-controls']));
-    $('#permalink').tooltip();
-    // listen of after addHideMap
-    mapService.onafter('addHideMap', async ({ratio, layers=[], mainview=false, switchable=false} = {}) => {
-      await this.$nextTick();
-      mapService._addHideMap({ratio, layers, mainview, switchable});
+    this.$nextTick(() => {
+      mapService.setMapControlsContainer($('.g3w-map-controls'));
+      $('#permalink').tooltip()
     });
+    // listen of after addHideMap
+    mapService.onafter('addHideMap', ({ratio, layers=[], mainview=false, switchable=false} = {}) => {
+      this.$nextTick(() => {
+        mapService._addHideMap({ratio, layers, mainview, switchable});
+      })
+    })
   },
   destroyed() {
     this.service.clear();

@@ -115,6 +115,7 @@ proto.createExpressionFromFilterObject = function(filter={}){
     inputs.forEach((input) => {
       for (const operator in input) {
         const value = input[operator];
+        console.log(value)
         if (Array.isArray(value)) {
           this.createExpressionFromFilterObject(input);
         } else {

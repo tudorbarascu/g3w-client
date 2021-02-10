@@ -1,3 +1,4 @@
+import { BING_API_KEY } from 'config/keys';
 const RasterLayers = require('./rasters');
 const BaseLayers = {};
 
@@ -83,18 +84,37 @@ BaseLayers.WMTS = {
 
 BaseLayers.BING = {};
 
-BaseLayers.BING.get = (config={})=>{
-  const imagerySet = config.imagerySet || 'Aerial'; // 'Road', 'AerialWithLabels', 'Aerial'
-  return new ol.layer.Tile({
-    name: imagerySet,
-    visible: false,
-    preload: Infinity,
-    source: new ol.source.BingMaps({
-      imagerySet: imagerySet,
-      key: config.key
-    }),
-    basemap: true
-  });
-};
+BaseLayers.BING.Road = new ol.layer.Tile({
+  name:'Road',
+  visible: false,
+  preload: Infinity,
+  source: new ol.source.BingMaps({
+    key: BING_API_KEY,
+    imagerySet: 'Road'
+  }),
+  basemap: true
+});
+
+BaseLayers.BING.AerialWithLabels = new ol.layer.Tile({
+  name: 'AerialWithLabels',
+  visible: false,
+  preload: Infinity,
+  source: new ol.source.BingMaps({
+    key: BING_API_KEY,
+    imagerySet: 'AerialWithLabels'
+  }),
+  basemap: true
+});
+
+BaseLayers.BING.Aerial = new ol.layer.Tile({
+  name: 'Aerial',
+  visible: false,
+  preload: Infinity,
+  source: new ol.source.BingMaps({
+    key: BING_API_KEY,
+    imagerySet: 'Aerial'
+  }),
+  basemap: true
+});
 
 module.exports = BaseLayers;
