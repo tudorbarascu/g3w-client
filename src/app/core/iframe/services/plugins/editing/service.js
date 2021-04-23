@@ -72,17 +72,17 @@ function EditingService() {
 
   // METHODS CALLED FROM EACH ACTION METHOD
   // run before each action
-  this.startAction = async function({toolboxes, resolve}){
+  this.startAction = async function({toolboxes, resolve, reject}){
     // set same mode autosave
     this.dependencyApi.setSaveConfig({
       //mode: 'autosave',
       cb: {
-        done: ()=> {
+        done: toolbox => {
           this.stopEditing(toolboxes);
-          resolve();
-        }, // called when commit chenges is done successuffly
-        error: () => {
-          reject();
+          resolve(toolbox && toolbox.getId());
+        }, // called when commit changes is done successuffly
+        error: toolbox => {
+          reject(toolbox && toolbox.getId());
         } // called whe commit change receive an error
       }
     });
