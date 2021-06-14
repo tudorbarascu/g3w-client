@@ -305,7 +305,7 @@ const vueComponentOptions = {
     },
     onChangeColor(val) {
       const mapService = GUI.getComponent('map').getService();
-      this.layerMenu.colorMenu.color = val;
+      this.layerMenu.layer.color = val;
       const layer = mapService.getLayerByName(this.layerMenu.name);
       const style = layer.getStyle();
       style._g3w_options.color = val;
@@ -367,7 +367,6 @@ const vueComponentOptions = {
     CatalogEventHub.$on('activefiltertokenlayer', async (storeid, layerstree) => {
       const layer = CatalogLayersStoresRegistry.getLayersStore(storeid).getLayerById(layerstree.id);
       layerstree.filter.active =  await layer.toggleFilterToken();
-
     });
 
     /**
