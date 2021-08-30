@@ -96,7 +96,7 @@ const utils = {
     childCtor.prototype = new tempCtor();
     childCtor.prototype.constructor = childCtor;
   },
-  // goole closure library implementation
+  // google closure library implementation
   base(me, opt_methodName, var_args) {
     // who call base
     // noinspection JSAnnotator
