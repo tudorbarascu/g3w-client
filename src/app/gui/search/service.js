@@ -1,11 +1,11 @@
 import QueryBuilderService from 'gui/querybuilder/service';
-const {base, inherit} = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const ProjectsRegistry = require('core/project/projectsregistry');
 const G3WObject = require('core/g3wobject');
 const SearchPanel = require('gui/search/vue/panel/searchpanel');
 
 function Service() {
-  base(this);
+  Service.base(this, 'constructor');
   const currentProjectState = ProjectsRegistry.getCurrentProject().state;
   this.title = currentProjectState.search_title || "search";
   this.init = function(searchesObject) {
@@ -18,7 +18,7 @@ function Service() {
   };
 }
 
-inherit(Service, G3WObject);
+inherits(Service, G3WObject);
 
 const proto = Service.prototype;
 
@@ -74,6 +74,5 @@ proto.reload = function() {
   this.state.searches = ProjectsRegistry.getCurrentProject().state.search;
   this.state.querybuildersearches = QueryBuilderService.getCurrentProjectItems();
 };
-
 
 module.exports = Service;

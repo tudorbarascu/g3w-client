@@ -1,10 +1,10 @@
-const {base, inherit} = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const ProjectRegistry = require('core/project/projectsregistry');
 const MenuComponent = require('./menu');
 
 function ProjectsMenuComponent(options={}) {
   options.id = 'projectsmenu';
-  base(this, options);
+  ProjectsMenuComponent.base(this, 'constructor', options);
   this.state.menuitems = [];
   const host = options.host;
   const ApplicationService = require('core/applicationservice');
@@ -24,7 +24,7 @@ function ProjectsMenuComponent(options={}) {
   }));
 }
 
-inherit(ProjectsMenuComponent, MenuComponent);
+inherits(ProjectsMenuComponent, MenuComponent);
 
 module.exports = ProjectsMenuComponent;
 

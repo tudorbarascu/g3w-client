@@ -1,4 +1,4 @@
-const {resolve, inherit} = require('core/utils/utils');
+const {resolve, inherits} = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 const Component = require('gui/vue/component');
 const Panel = require('gui/panel');
@@ -14,7 +14,7 @@ function BarStack() {
   }
 }
 
-inherit(BarStack, G3WObject);
+inherits(BarStack, G3WObject);
 
 const proto = BarStack.prototype;
 

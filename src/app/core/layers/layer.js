@@ -1,8 +1,7 @@
 import ApplicationState from 'core/applicationstate';
 const t = require('core/i18n/i18n.service').t;
-const {inherit, base, XHR } = require('core/utils/utils');
+const {inherits, XHR } = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
-const Filter = require('core/layers/filter/filter');
 const { geometryFields } =  require('core/utils/geo');
 const Relations = require('core/relations/relations');
 const ProviderFactory = require('core/layers/providers/providersfactory');
@@ -121,10 +120,10 @@ function Layer(config={}, options={}) {
       })
     };
   }
-  base(this);
+  Layer.base(this, 'constructor');
 }
 
-inherit(Layer, G3WObject);
+inherits(Layer, G3WObject);
 
 const proto = Layer.prototype;
 

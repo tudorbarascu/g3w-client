@@ -1,4 +1,4 @@
-const {base, inherit, resolve}= require('core/utils/utils');
+const {inherits, resolve}= require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 const Flow = require('./flow');
 const WorkflowsStack = require('./workflowsstack');
@@ -7,7 +7,7 @@ const createUserMessageStepsFactory = require('gui/workflow/createUserMessageSte
 const GUI = require('gui/gui');
 //Class to manage flow of steps
 function Workflow(options={}) {
-  base(this);
+  Workflow.base(this, 'constructor');
   this._promise = null;
   // inputs mandatory to work with editing
   this._inputs = options.inputs || null;
@@ -30,7 +30,7 @@ function Workflow(options={}) {
   },  {});
 }
 
-inherit(Workflow, G3WObject);
+inherits(Workflow, G3WObject);
 
 const proto = Workflow.prototype;
 

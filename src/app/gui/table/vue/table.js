@@ -1,14 +1,13 @@
-const t = require('core/i18n/i18n.service').t;
-const {base, inherit} = require('core/utils/utils');
+import Table from './Table.vue';
+const {t} = require('core/i18n/i18n.service');
+const {inherits} = require('core/utils/utils');
 const GUI = require('gui/gui');
 const Component = require('gui/vue/component');
 const TableService = require('../tableservice');
-import Table from './Table.vue';
-
 const InternalComponent = Vue.extend(Table);
 
 const TableComponent = function(options = {}) {
-  base(this);
+  TableComponent.base(this, 'constructor');
   this.id = "openattributetable";
   const layer = options.layer;
   const formatter = options.formatter;
@@ -30,7 +29,7 @@ const TableComponent = function(options = {}) {
   });
 
   this.unmount = function() {
-    return base(this, 'unmount')
+    return TableComponent.base(this, 'unmount')
   };
 
   this.layout = function() {
@@ -38,7 +37,7 @@ const TableComponent = function(options = {}) {
   };
 };
 
-inherit(TableComponent, Component);
+inherits(TableComponent, Component);
 
 const proto = TableComponent.prototype;
 
@@ -62,9 +61,7 @@ proto.show = function(options = {}) {
 };
 
 proto.unmount = function() {
-  return base(this, 'unmount').then(() => {
-    this._service.clear();
-  })
+  return TableComponent.base(this, 'unmount').then(() => this._service.clear());
 };
 
 

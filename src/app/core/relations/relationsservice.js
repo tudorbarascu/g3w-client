@@ -1,11 +1,11 @@
-const { inherit, XHR, base} = require('core/utils/utils');
+const {inherits, XHR} = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 
 function RelationsService(options={}) {
-  base(this);
+  RelationsService.base(this, 'constructor', options);
 }
 
-inherit(RelationsService, G3WObject);
+inherits(RelationsService, G3WObject);
 
 const proto = RelationsService.prototype;
 

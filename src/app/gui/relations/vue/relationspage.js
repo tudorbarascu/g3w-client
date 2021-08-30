@@ -1,6 +1,6 @@
 import {G3W_FID} from 'constant';
 import { createCompiledTemplate } from 'gui/vue/utils';
-const {base, inherit} = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const GUI = require('gui/gui');
 const Component = require('gui/vue/component');
 const Service = require('../relationsservice');
@@ -90,7 +90,7 @@ const InternalComponent = Vue.extend({
 });
 
 const RelationsPage = function(options={}) {
-  base(this);
+  RelationsPage.base(this, 'constructor');
   const service = options.service || new Service();
   const {layer, relation=null, relations=[], feature=null, table=null, chartRelationIds=[]} = options;
   const currentview = options.currentview || 'relations';
@@ -113,7 +113,7 @@ const RelationsPage = function(options={}) {
   };
 };
 
-inherit(RelationsPage, Component);
+inherits(RelationsPage, Component);
 
 module.exports = RelationsPage;
 

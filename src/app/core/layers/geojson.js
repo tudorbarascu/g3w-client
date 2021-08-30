@@ -1,14 +1,14 @@
-const {base, inherit} = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const VectorLayer = require('./vectorlayer');
 const GeojsonMapLayer = require('./map/geojson');
 
-function GeojsonLayer(config, options) {
-  base(this, config, options);
+function GeojsonLayer(config={}, options={}) {
+  GeojsonLayer.base(this, 'constructor', config, options);
   this.config.style = config.style;
   this.setup(config)
 }
 
-inherit(GeojsonLayer, VectorLayer);
+inherits(GeojsonLayer, VectorLayer);
 
 const proto = GeojsonLayer.prototype;
 

@@ -1,4 +1,4 @@
-const {base, inherit, uniqueId} = require('core/utils/utils');
+const {inherits, uniqueId} = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 
 // Interface for Layers
@@ -48,13 +48,12 @@ function LayersStore(config={}) {
       this._removeLayer(layerId);
     }
   };
-
-  base(this);
+  LayersStore.base(this, 'constructor');
 }
 
-inherit(LayersStore, G3WObject);
+inherits(LayersStore, G3WObject);
 
-proto = LayersStore.prototype;
+const proto = LayersStore.prototype;
 
 proto.isQueryable = function() {
   return this._isQueryable;

@@ -1,5 +1,5 @@
 import { createCompiledTemplate } from 'gui/vue/utils'
-const {inherit, base, imageToDataURL} = require('core/utils/utils');
+const {inherits, imageToDataURL} = require('core/utils/utils');
 const GUI = require('gui/gui');
 const Component = require('gui/vue/component');
 const compiledTemplate = createCompiledTemplate(require('./printpage.html'));
@@ -60,7 +60,7 @@ const InternalComponent = Vue.extend({
 });
 
 const PrintPage = function(options={}) {
-  base(this);
+  PrintPage.base(this, 'constructor');
   const service = options.service;
   this.setService(service);
   const internalComponent = new InternalComponent({
@@ -70,11 +70,11 @@ const PrintPage = function(options={}) {
   this.internalComponent.state = service.state.output;
   this.unmount = function() {
     this.getService().setPrintAreaAfterCloseContent();
-    return base(this, 'unmount')
+    return PrintPage.base(this, 'unmount')
   }
 };
 
-inherit(PrintPage, Component);
+inherits(PrintPage, Component);
 
 
 module.exports = PrintPage;

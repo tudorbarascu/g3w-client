@@ -1,4 +1,4 @@
-const {inherit, merge, noop, base, capitalize_first_letter} = require('core/utils/utils');
+const {inherits, merge, noop, capitalize_first_letter} = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 const VUECOMPONENTSATTRIBUTES = ['methods', 'computed', 'data', 'components'];
 
@@ -34,13 +34,13 @@ const Component = function(options={}) {
     }
   };
   merge(this, options);
-  base(this);
+  Component.base(this, 'constructor');
   // add events options
   this.events = options.events;
   this.events && this.handleEventsComponent();
 };
 
-inherit(Component, G3WObject);
+inherits(Component, G3WObject);
 
 const proto = Component.prototype;
 

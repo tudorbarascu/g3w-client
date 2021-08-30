@@ -1,8 +1,8 @@
-const {base, inherit}= require('core/utils/utils');
+const {inherits}= require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 
 function Step(options={}) {
-  base(this);
+  Step.base(this, 'constructor');
   this._inputs = options.inputs || null;
   this._task = options.task || null;
   this._outputs = options.outputs || null;
@@ -17,7 +17,7 @@ function Step(options={}) {
   };
 }
 
-inherit(Step, G3WObject);
+inherits(Step, G3WObject);
 
 const proto = Step.prototype;
 

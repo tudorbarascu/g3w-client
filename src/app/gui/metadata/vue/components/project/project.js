@@ -1,10 +1,9 @@
-const inherit = require('core/utils/utils').inherit;
+const {inherits} = require('core/utils/utils');
 const Component = require('gui/vue/component');
-const base = require('core/utils/utils').base;
 import ProjectCatalog from './project.vue'
 
 function ProjectMetadataComponent({state = {}, service} = {}) {
-  base(this);
+  ProjectMetadataComponent.base(this, 'constructor');
   const vueComponent = Vue.extend(ProjectCatalog);
   this.setService(service);
   this.internalComponent = new vueComponent({
@@ -13,6 +12,6 @@ function ProjectMetadataComponent({state = {}, service} = {}) {
   this.layout = function() {};
 }
 
-inherit(ProjectMetadataComponent, Component);
+inherits(ProjectMetadataComponent, Component);
 
 module.exports = ProjectMetadataComponent;

@@ -2,10 +2,10 @@ import Tabs from '../../tabs/tabs.vue';
 import Link from '../../fields/link.vue';
 import HeaderFeatureBody from './headerfeaturebody.vue';
 import { createCompiledTemplate } from 'gui/vue/utils';
-const {base, inherit, throttle} = require('core/utils/utils');
+const {inherits, throttle} = require('core/utils/utils');
 const Component = require('gui/vue/component');
 const QueryResultsService = require('gui/queryresults/queryresultsservice');
-const {fieldsMixin } = require('gui/vue/vue.mixins');
+const {fieldsMixin} = require('gui/vue/vue.mixins');
 const maxSubsetLength = 3;
 const headerExpandActionCellWidth = 10;
 const headerActionsCellWidth = 10;
@@ -347,7 +347,7 @@ const vueComponentOptions = {
 const InternalComponent = Vue.extend(vueComponentOptions);
 
 function QueryResultsComponent(options={}) {
-  base(this, options);
+  QueryResultsComponent.base(this, 'constructor', options);
   this.id = "queryresults";
   this.title = "Query Results";
   this._service = new QueryResultsService();
@@ -371,10 +371,10 @@ function QueryResultsComponent(options={}) {
   this.layout = function(width,height) {};
   this.unmount = function() {
     this.getService().closeComponent();
-    return base(this, 'unmount')
+    return QueryResultsComponent.base(this, 'unmount')
   }
 }
 
-inherit(QueryResultsComponent, Component);
+inherits(QueryResultsComponent, Component);
 
 module.exports = QueryResultsComponent;

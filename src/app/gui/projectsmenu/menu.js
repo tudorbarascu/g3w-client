@@ -1,5 +1,5 @@
-const t = require('core/i18n/i18n.service').t;
-const {base, inherit, merge} = require('core/utils/utils');
+const {t} = require('core/i18n/i18n.service');
+const {inherits, merge} = require('core/utils/utils');
 const Component = require('gui/vue/component');
 const GUI = require('gui/gui');
 const ProjectsRegistry = require('core/project/projectsregistry');
@@ -57,7 +57,7 @@ const InternalComponent = Vue.extend({
 });
 
 function MenuComponent(options={}){
-  base(this,options);
+  MenuComponent.base(this, 'constructor' ,options);
   this.title = options.title || "menu";
   this.state.visible = true;
   this.state.menuitems = options.menuitems;
@@ -69,7 +69,7 @@ function MenuComponent(options={}){
   });
   this.internalComponent.state = this.state;
 }
-inherit(MenuComponent, Component);
+inherits(MenuComponent, Component);
 
 const proto = MenuComponent.prototype;
 

@@ -1,4 +1,4 @@
-const {base, inherit}= require('core/utils/utils');
+const { inherits}= require('core/utils/utils');
 const Validator = require('./validator');
 
 function FloatValidator(options) {
@@ -9,6 +9,6 @@ function FloatValidator(options) {
   }
 }
 
-inherit(FloatValidator, Validator);
+inherits(FloatValidator, Validator);
 
 module.exports =  FloatValidator;

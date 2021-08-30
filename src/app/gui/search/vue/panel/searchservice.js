@@ -1,5 +1,5 @@
-import { ALLVALUE, RETURN_TYPES}  from '../../constants';
-const { base, inherit, toRawType , getUniqueDomId, createFilterFormInputs, createSingleFieldParameter, isEmptyObject} = require('core/utils/utils');
+import { ALLVALUE}  from '../../constants';
+const {inherits, toRawType, getUniqueDomId, createFilterFormInputs, createSingleFieldParameter, isEmptyObject} = require('core/utils/utils');
 const DataRouterService = require('core/data/routerservice');
 const GUI = require('gui/gui');
 const G3WObject = require('core/g3wobject');
@@ -23,7 +23,7 @@ function SearchService(config={}) {
       }
     }
   };
-  base(this);
+  SearchService.base(this, 'constructor');
   // reactivity data
   this.state = {
     title: null,
@@ -54,7 +54,7 @@ function SearchService(config={}) {
   this.createInputsFormFromFilter({filter});
 }
 
-inherit(SearchService, G3WObject);
+inherits(SearchService, G3WObject);
 
 const proto = SearchService.prototype;
 

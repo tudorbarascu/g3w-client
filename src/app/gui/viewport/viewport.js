@@ -3,7 +3,7 @@ import userMessage from 'gui/usermessage/vue/usermessage.vue';
 import onlineNotify from 'gui/notifications/online/vue/online.vue';
 import downloadNotify from 'gui/notifications/download/vue/download.vue';
 import pluginsNotify from 'gui/notifications/plugins/vue/plugins.vue';
-const {base, inherit} = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 const GUI = require('gui/gui');
 let SIDEBARWIDTH;
@@ -552,10 +552,10 @@ const ViewportService = function() {
     });
   };
   this._firstLayout();
-  base(this);
+  ViewportService.base(this, 'constructor');
 };
 
-inherit(ViewportService, G3WObject);
+inherits(ViewportService, G3WObject);
 
 //singleton
 const viewportService = new ViewportService;

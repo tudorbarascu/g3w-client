@@ -1,6 +1,5 @@
 const ApplicationService = require('core/applicationservice');
-const inherit = require('core/utils/utils').inherit;
-const base = require('core/utils/utils').base;
+const {inherits} = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 const GUI = require('gui/gui');
 
@@ -60,9 +59,9 @@ function ControlsRegistry() {
     }
     return false
   };
-  base(this);
+  ControlsRegistry.base(this, 'constructor');
 }
 
-inherit(ControlsRegistry, G3WObject);
+inherits(ControlsRegistry, G3WObject);
 
 module.exports = new ControlsRegistry;

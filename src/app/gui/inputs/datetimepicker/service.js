@@ -1,14 +1,13 @@
-const inherit = require('core/utils/utils').inherit;
-const base = require('core/utils/utils').base;
+const {inherits} = require('core/utils/utils');
 const ApplicationService = require('core/applicationservice');
 const Service = require('gui/inputs/service');
 
 function DateTimePickerService(options={}) {
   this.validatorOptions = {};
-  base(this, options);
+  DateTimePickerService.base(this, 'constructor', options);
 }
 
-inherit(DateTimePickerService, Service);
+inherits(DateTimePickerService, Service);
 
 const proto = DateTimePickerService.prototype;
 

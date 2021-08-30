@@ -1,13 +1,13 @@
-const { base, inherit } = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const DataProvider = require('core/layers/providers/provider');
 const Filter = require('core/layers/filter/filter');
 
 function WFSDataProvider(options={}) {
-  base(this, options);
+  WFSDataProvider.base(this, 'constructor', options);
   this._name = 'wfs';
 }
 
-inherit(WFSDataProvider, DataProvider);
+inherits(WFSDataProvider, DataProvider);
 
 const proto = WFSDataProvider.prototype;
 
@@ -33,7 +33,7 @@ proto.query = function(options={}, params = {}) {
         data: featuresForLayers
       });
     })
-    .fail(e => d.reject(e));
+    .fail(err => d.reject(err));
   return d.promise();
 };
 

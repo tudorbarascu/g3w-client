@@ -1,4 +1,4 @@
-const {base, inherit, mixin } = require('core/utils/utils');
+const {inherits, mixin } = require('core/utils/utils');
 const Layer = require('core/layers/layer');
 const VectorLayer = require('./vectorlayer');
 const WMSLayer = require('./map/wmslayer');
@@ -42,7 +42,7 @@ function ImageLayer(config={}, options={}) {
     change(){},
   };
 
-  base(this, config, options);
+  ImageLayer.base(this, 'constructor', config, options);
   this.config.baselayer = config.baselayer || false;
   this.type = Layer.LayerTypes.IMAGE;
   this.legendUrl = null;
@@ -50,7 +50,7 @@ function ImageLayer(config={}, options={}) {
   this.setup(config, options);
 }
 
-inherit(ImageLayer, Layer);
+inherits(ImageLayer, Layer);
 
 mixin(ImageLayer, GeoLayerMixin);
 
@@ -148,7 +148,7 @@ proto.getWmsUrl = function({type='map'}={}) {
 };
 
 proto.getQueryUrl = function() {
-  let url = base(this, 'getQueryUrl');
+  let url = ImageLayer.base(this, 'getQueryUrl');
   if (this.getServerType() === Layer.ServerTypes.QGIS && this.isExternalWMS() && this.isLayerProjectionASMapProjection()) {
     url =`${url}SOURCE=${this.config.source.type}`;
   }

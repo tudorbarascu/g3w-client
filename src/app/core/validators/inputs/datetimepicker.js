@@ -1,13 +1,13 @@
-const {base, inherit}= require('core/utils/utils');
+const {inherits}= require('core/utils/utils');
 const Validator = require('./validator');
 
-function DateTimePickerValidator(options) {
-  base(this, options);
+function DateTimePickerValidator(options={}) {
+  DateTimePickerValidator.base(this, 'constructor', options);
   this.validate = function(value, options) {
     const fielddatetimeformat = options.fielddatetimeformat;
     return moment(value, fielddatetimeformat, true).isValid();
   }
 }
-inherit(DateTimePickerValidator, Validator);
+inherits(DateTimePickerValidator, Validator);
 
 module.exports =  DateTimePickerValidator;

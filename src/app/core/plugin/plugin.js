@@ -1,4 +1,4 @@
-const {base, inherit} = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 const GUI = require('gui/gui');
 const ComponentsFactory = require('gui/componentsfactory');
@@ -7,7 +7,7 @@ const PluginsRegistry = require('./pluginsregistry');
 const TIMEOUT = 10000;
 
 const Plugin = function() {
-  base(this);
+  Plugin.base(this, 'constructor');
   this.name = '(no name)';
   this.config = null;
   this.service = null;
@@ -27,7 +27,7 @@ const Plugin = function() {
   }, TIMEOUT)
 };
 
-inherit(Plugin, G3WObject);
+inherits(Plugin, G3WObject);
 
 const proto = Plugin.prototype;
 

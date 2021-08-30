@@ -1,14 +1,12 @@
-const inherit = require('core/utils/utils').inherit;
-const base = require('core/utils/utils').base;
+const {inherits} = require('core/utils/utils');;
 const DataProvider = require('core/layers/providers/provider');
 
-function XMLDataProvider(options) {
-  options = options || {};
-  base(this);
+function XMLDataProvider(options={}) {
+  XMLDataProvider.base(this, 'constructor');
   this._name = 'xml';
 }
 
-inherit(XMLDataProvider, DataProvider);
+inherits(XMLDataProvider, DataProvider);
 
 const proto = XMLDataProvider.prototype;
 

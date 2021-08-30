@@ -1,4 +1,4 @@
-const {inherit, noop, debounce, throttle} = require('core/utils/utils');
+const {inherits, noop, debounce, throttle} = require('core/utils/utils');
 
 /**
  * Base object to handle a setter and its listeners.
@@ -11,9 +11,10 @@ const G3WObject = function() {
   this.debounces && this._setupDebounces(this.debounces);
   //check throttles
   this.throttles && this._setupThrottles(this.throttles);
+  G3WObject.base(this, 'constructor');
 };
 
-inherit(G3WObject, EventEmitter);
+inherits(G3WObject, EventEmitter);
 
 const proto = G3WObject.prototype;
 

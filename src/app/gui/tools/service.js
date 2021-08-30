@@ -1,4 +1,4 @@
-const {base, inherit} = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const ProjectRegistry = require('core/project/projectsregistry');
 const G3WObject = require('core/g3wobject');
 
@@ -31,9 +31,7 @@ function Service(options={}){
       return this._removeTools();
     }
   };
-
-  base(this);
-
+  Service.base(this, 'constructor');
   const project = ProjectRegistry.getCurrentProject();
   const {tools={}} = project.getState();
   for (let toolName in tools) {
@@ -47,7 +45,7 @@ function Service(options={}){
   }
 }
 
-inherit(Service, G3WObject);
+inherits(Service, G3WObject);
 
 const proto = Service.prototype;
 

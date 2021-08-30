@@ -1,4 +1,4 @@
-const { base, inherit, downloadFile} = require('core/utils/utils');
+const {inherits, downloadFile} = require('core/utils/utils');
 const ApplicationService = require('core/applicationservice');
 const t = require('core/i18n/i18n.service').t;
 const GUI = require('gui/gui');
@@ -13,7 +13,7 @@ const dpis = printConfig.dpis;
 const formats = printConfig.formats;
 
 function PrintComponentService() {
-  base(this);
+  PrintComponentService.base(this, 'constructor');
   this.printService = new PrintService();
   this._initialized = false;
   this.state = {
@@ -49,7 +49,7 @@ function PrintComponentService() {
   };
 }
 
-inherit(PrintComponentService, G3WObject);
+inherits(PrintComponentService, G3WObject);
 
 const proto = PrintComponentService.prototype;
 

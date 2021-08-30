@@ -1,10 +1,9 @@
 import { createCompiledTemplate } from 'gui/vue/utils';
 import ApplicationState from 'core/applicationstate';
-const inherit = require('core/utils/utils').inherit;
+const {inherits} = require('core/utils/utils');
 const GUI = require('gui/gui');
 const Component = require('gui/vue/component');
 const Service = require('../formservice');
-const base = require('core/utils/utils').base;
 const compiledTemplate = createCompiledTemplate(require('./form.html'));
 const HeaderFormComponent = require('../components/header/vue/header');
 const BodyFormComponent = require('../components/body/vue/body');
@@ -13,7 +12,7 @@ const G3wFormFooter = require('gui/form/components/footer/vue/footer');
 //vue component
 const vueComponentObject = {
  ...compiledTemplate,
-  data: function() {
+  data() {
     return {
       state: {},
       switchcomponent: false
@@ -41,34 +40,27 @@ const vueComponentObject = {
       this.switchcomponent = true;
       this.$options.service.setComponentByIndex(index);
     },
-    changeInput: function(input) {
+    changeInput(input) {
       return this.$options.service.isValid(input);
     },
-    addToValidate: function(input) {
+    addToValidate(input) {
       this.$options.service.addToValidate(input);
     },
     // set layout
     reloadLayout: function() {
       const height = $(this.$el).height();
-      if(!height)
-        return;
+      if(!height) return;
       const footerHeight = $('.g3wform_footer').height() ? $('.g3wform_footer').height() + 50 : 50;
       $(this.$el).find(".g3wform_body").height(height - ($('.g3wform_header').height() +  footerHeight));
     },
   },
-  updated() {
-    this.$nextTick(()=> {
-      if (this.switchcomponent) {
-        setTimeout(()=>{
-          this.switchcomponent = false;
-        }, 0)
-      }
-    })
+  async updated() {
+    await this.$nextTick();
+    this.switchcomponent && setTimeout(()=> this.switchcomponent = false, 0);
+
   },
   created() {
-    this.$options.service.getEventBus().$on('set-main-component', () => {
-      this.switchComponent(0);
-    });
+    this.$options.service.getEventBus().$on('set-main-component', () => this.switchComponent(0));
     this.$options.service.getEventBus().$on('component-validation', ({id, valid}) => {
       this.$options.service.setValidComponent({
         id,
@@ -89,7 +81,7 @@ const vueComponentObject = {
 
 function FormComponent(options = {}) {
   options.id = options.id || 'form';
-  base(this, options);
+  FormComponent.base(this, 'constructor', options);
   options.service = options.service ?  new options.service : new Service;
   options.vueComponentObject = options.vueComponentObject  || vueComponentObject;
   //set statdar element of the form
@@ -132,11 +124,8 @@ function FormComponent(options = {}) {
   };
   // overwrite father mount method.
   this.mount = function(parent, append) {
-    return base(this, 'mount', parent, append)
-    .then(() => {
-      // set modal window to true
-      GUI.setModal(true);
-    });
+    return FormComponent.base(this, 'mount', parent, append)
+    .then(() => GUI.setModal(true));
   };
 
   this.layout = function() {
@@ -144,7 +133,7 @@ function FormComponent(options = {}) {
   };
 }
 
-inherit(FormComponent, Component);
+inherits(FormComponent, Component);
 
 module.exports = FormComponent;
 

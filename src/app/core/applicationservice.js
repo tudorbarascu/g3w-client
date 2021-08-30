@@ -1,7 +1,7 @@
 import appConfig from 'config';
 import ApplicationState from './applicationstate';
 const {init:i18ninit, changeLanguage} = require('core/i18n/i18n.service');
-const {base, inherit, XHR, uniqueId}= require('core/utils/utils');
+const { inherits, XHR, uniqueId}= require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 const ApiService = require('core/apiservice');
 const RouterService = require('core/router');
@@ -45,7 +45,7 @@ const ApplicationService = function() {
       this._setFilterToken(filtertoken)
     }
   };
-  base(this);
+  ApplicationService.base(this, 'constructor');
   // init application
   this.init = async function() {
     try {
@@ -591,6 +591,6 @@ const ApplicationService = function() {
   }
 };
 
-inherit(ApplicationService, G3WObject);
+inherits(ApplicationService, G3WObject);
 
 module.exports = new ApplicationService;

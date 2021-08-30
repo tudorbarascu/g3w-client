@@ -1,4 +1,4 @@
-const {base, inherit} = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 const Relation = require('./relation');
 
@@ -20,10 +20,10 @@ function Relations(options={}) {
     this._relations[relation.getId()] = relation;
   });
   this._createRelationsInfo();
-  base(this);
+  Relations.base(this, 'constructor');
 }
 
-inherit(Relations, G3WObject);
+inherits(Relations, G3WObject);
 
 const proto = Relations.prototype;
 

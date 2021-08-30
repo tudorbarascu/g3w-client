@@ -1,10 +1,9 @@
-const inherit = require('core/utils/utils').inherit;
-const base = require('core/utils//utils').base;
+const { inherits } = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 
 function History(options = {}) {
   this.id = options.id;
-  base(this);
+  History.base(this, 'constructor');
   // registered all changes
   /*
   *{
@@ -37,7 +36,7 @@ function History(options = {}) {
   this._current = null; // store the current state of history (useful for undo /redo)
 }
 
-inherit(History, G3WObject);
+inherits(History, G3WObject);
 
 const proto = History.prototype;
 

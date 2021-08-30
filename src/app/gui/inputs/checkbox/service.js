@@ -1,5 +1,4 @@
-const inherit = require('core/utils/utils').inherit;
-const base = require('core/utils/utils').base;
+const {inherits} = require('core/utils/utils');
 const Service = require('gui/inputs/service');
 
 function CheckBoxService(options={}) {
@@ -11,10 +10,10 @@ function CheckBoxService(options={}) {
   };
   if (options.state.value === null && !options.state.forceNull)
     options.state.value = value.value;
-  base(this, options);
+  CheckBoxService.base(this, 'constructor', options);
 }
 
-inherit(CheckBoxService, Service);
+inherits(CheckBoxService, Service);
 
 const proto = CheckBoxService.prototype;
 

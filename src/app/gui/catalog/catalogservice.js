@@ -1,4 +1,4 @@
-const {base, inherit} = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 const ProjectsRegistry = require('core/project/projectsregistry');
 const CatalogLayersStoresRegistry = require('core/catalog/cataloglayersstoresregistry');
@@ -11,14 +11,10 @@ function CatalogService() {
     layerstrees: [],
     layersgroups: []
   };
-  this.setters = {};
-  base(this);
+  CatalogService.base(this, 'constructor');
   const layersStores = CatalogLayersStoresRegistry.getLayersStores();
-
   layersStores.forEach(layersStore => this.addLayersStoreToLayersTrees(layersStore));
-
   CatalogLayersStoresRegistry.onafter('addLayersStore', layersStore => this.addLayersStoreToLayersTrees(layersStore));
-
   CatalogLayersStoresRegistry.onafter('removeLayersStore', layersStore => {
     this.state.layerstrees.forEach((layersTree, idx) => {
       if (layersTree.storeid === layersStore.getId()) {
@@ -35,7 +31,7 @@ function CatalogService() {
   });
 }
 
-inherit(CatalogService, G3WObject);
+inherits(CatalogService, G3WObject);
 
 const proto = CatalogService.prototype;
 

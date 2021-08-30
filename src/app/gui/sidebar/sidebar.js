@@ -1,6 +1,6 @@
 import ApplicationState from 'core/applicationstate';
-const t = require('core/i18n/i18n.service').t;
-const {base, inherit} = require('core/utils/utils');
+const {t} = require('core/i18n/i18n.service');
+const {inherits} = require('core/utils/utils');
 const Stack = require('gui/utils/utils').barstack;
 const G3WObject = require('core/g3wobject');
 const compiledSideBarItemTemplate = Vue.compile(require('./sidebar-item.html'));
@@ -200,10 +200,10 @@ function SidebarService() {
     this.stack.clear();
   };
 
-  base(this);
+  SidebarService.base(this, 'constructor');
 }
 
-inherit(SidebarService, G3WObject);
+inherits(SidebarService, G3WObject);
 
 const sidebarService = new SidebarService;
 const compiledSideBarTemplate = Vue.compile(require('./sidebar.html'));

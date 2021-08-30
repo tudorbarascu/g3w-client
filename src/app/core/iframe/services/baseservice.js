@@ -1,4 +1,4 @@
-const {base, inherit, createFilterFormField } = require('core/utils/utils');
+const { inherits, createFilterFormField } = require('core/utils/utils');
 const ProjectsRegistry = require('core/project/projectsregistry');
 const DataRouterService = require('core/data/routerservice');
 const GUI = require('gui/gui');
@@ -6,14 +6,14 @@ const GUI = require('gui/gui');
 const G3WObject = require('core/g3wobject');
 
 function BaseIframeService(options={}){
-  base(this);
+  BaseIframeService.base(this, 'constructor');
   this.ready = false;
   this.init = function(){
     //overwrite each service
   }
 }
 
-inherit(BaseIframeService, G3WObject);
+inherits(BaseIframeService, G3WObject);
 
 const proto = BaseIframeService.prototype;
 

@@ -1,4 +1,4 @@
-const {base, inherit} = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 
 function MapLayer(config={}) {
@@ -10,10 +10,10 @@ function MapLayer(config={}) {
   this.layer = null;
   this.layers = []; // store all enabled layers
   this.allLayers = []; // store all layers
-  base(this);
+  MapLayer.base(this, 'constructor');
 }
 
-inherit(MapLayer, G3WObject);
+inherits(MapLayer, G3WObject);
 
 const proto = MapLayer.prototype;
 

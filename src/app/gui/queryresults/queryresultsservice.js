@@ -1,6 +1,6 @@
 import {G3W_FID} from 'constant';
 const ApplicationService = require('core/applicationservice');
-const {base, inherit, noop, downloadFile, throttle, getUniqueDomId } = require('core/utils/utils');
+const { inherits, noop, downloadFile, throttle, getUniqueDomId } = require('core/utils/utils');
 const DataRouterService = require('core/data/routerservice');
 const {getAlphanumericPropertiesFromFeature, createFeatureFromGeometry, createFeatureFromBBOX, createFeatureFromCoordinates} = require('core/utils/geo');
 const t = require('core/i18n/i18n.service').t;
@@ -114,7 +114,7 @@ function QueryResultsService() {
     closeComponent() {},
     openCloseFeatureResult({open, layer, feature, container}={}){}
   };
-  base(this);
+  QueryResultsService.base(this, 'constructor');
 
   this.addLayersPlotIds = function(layerIds=[]) {
     this.plotLayerIds = layerIds;
@@ -143,7 +143,7 @@ function QueryResultsService() {
 }
 
 // Make the public service en Event Emitter
-inherit(QueryResultsService, G3WObject);
+inherits(QueryResultsService, G3WObject);
 
 const proto = QueryResultsService.prototype;
 

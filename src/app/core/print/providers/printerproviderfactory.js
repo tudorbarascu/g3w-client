@@ -1,5 +1,4 @@
-const inherit = require('core/utils/utils').inherit;
-const base = require('core/utils/utils').base;
+const {inherits} = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 
 const PrinterQGISProvider = require('./qgis/printerQGISProvider');
@@ -12,10 +11,10 @@ function PrinterProviderFactory() {
   this.get = function(type = 'QGIS') {
     return new Providers[type];
   };
-  base(this);
+  PrinterProviderFactory.base(this, 'constructor');
 }
 
-inherit(PrinterProviderFactory, G3WObject);
+inherits(PrinterProviderFactory, G3WObject);
 
 module.exports =  new PrinterProviderFactory;
 

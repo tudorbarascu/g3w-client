@@ -1,12 +1,12 @@
-const inherit = require('core/utils/utils').inherit;
+const {inherits} = require('core/utils/utils');;
 const base = require('core/utils/utils').base;
 const G3WObject = require('core/g3wobject');
 
 function PrinterProvider() {
-  base(this);
+  PrinterProvider.base(this, 'constructor');
 }
 
-inherit(PrinterProvider, G3WObject);
+inherits(PrinterProvider, G3WObject);
 
 const proto = PrinterProvider.prototype;
 
@@ -21,7 +21,6 @@ proto.getPrintUrl = function() {
 proto.print = function() {
   console.log('overwrite');
 };
-
 
 module.exports =  PrinterProvider;
 

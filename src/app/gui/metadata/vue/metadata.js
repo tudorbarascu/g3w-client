@@ -1,6 +1,5 @@
-import { createCompiledTemplate } from 'gui/vue/utils';
-const inherit = require('core/utils/utils').inherit;
-const base = require('core/utils/utils').base;
+import {createCompiledTemplate } from 'gui/vue/utils';
+const {inherits} = require('core/utils/utils');
 const Component = require('gui/vue/component');
 const GUI = require('gui/gui');
 const MetadataService = require('gui/metadata/metadataservice');
@@ -8,7 +7,7 @@ const templateCompiled = createCompiledTemplate(require('./metadata.html'));
 
 const InternalComponent = Vue.extend({
   ...templateCompiled,
-  data: function() {
+  data() {
     return {
       state: null
     }
@@ -16,7 +15,7 @@ const InternalComponent = Vue.extend({
 });
 
 const MetadataComponent = function(options = {}) {
-  base(this, options);
+  MetadataComponent.base(this, 'constructor', options);
   this.title = "sdk.metadata.title";
   const service = options.service || new MetadataService(options);
   this.setService(service);
@@ -33,12 +32,10 @@ const MetadataComponent = function(options = {}) {
   this._setOpen = function(bool) {
     this._service.showMetadata(bool);
   };
-  GUI.on('closecontent', ()=>{
-    this.state.open = false;
-  })
+  GUI.on('closecontent', ()=> this.state.open = false);
 };
 
-inherit(MetadataComponent, Component);
+inherits(MetadataComponent, Component);
 
 module.exports = MetadataComponent;
 

@@ -1,5 +1,5 @@
 import ApplicationState from 'core/applicationstate';
-const { base, inherit, XHR} = require('core/utils/utils');
+const {inherits, XHR} = require('core/utils/utils');
 const t = require('core/i18n/i18n.service').t;
 const DataProvider = require('core/layers/providers/provider');
 const RelationsService = require('core/relations/relationsservice');
@@ -7,7 +7,7 @@ const Feature = require('core/layers/features/feature');
 const Parsers = require('core/parsers/parsers');
 
 function QGISProvider(options = {}) {
-  base(this);
+  QGISProvider.base(this, 'constructor');
   this._name = 'qgis';
   this._layer = options.layer || {};
   this._projections = {
@@ -32,7 +32,7 @@ function QGISProvider(options = {}) {
   this._infoFormat = this._layer.getInfoFormat() || 'application/vnd.ogc.gml';
 }
 
-inherit(QGISProvider, DataProvider);
+inherits(QGISProvider, DataProvider);
 
 const proto = QGISProvider.prototype;
 /*

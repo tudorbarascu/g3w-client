@@ -1,6 +1,5 @@
 import Applicationstate from 'core/applicationstate';
-const inherit = require('core/utils/utils').inherit;
-const base = require('core/utils//utils').base;
+const {inherits} = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 const FeaturesStore = require('core/layers/features/featuresstore');
 const OlFeaturesStore = require('core/layers/features/olfeaturesstore');
@@ -29,7 +28,7 @@ function Editor(options={}) {
       return this._getFeatures(options);
     }
   };
-  base(this);
+  Editor.base(this, 'constructor');
   // filter to getFeaturerequest
   this._filter = {
     bbox: null
@@ -46,7 +45,7 @@ function Editor(options={}) {
   this._noteditablefileds = this._layer.getEditingNotEditableFields() || [];
 }
 
-inherit(Editor, G3WObject);
+inherits(Editor, G3WObject);
 
 const proto = Editor.prototype;
 

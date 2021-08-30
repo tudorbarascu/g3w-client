@@ -1,13 +1,12 @@
-const inherit = require('core/utils/utils').inherit;
-const base = require('core/utils/utils').base;
+const { inherits } = require('core/utils/utils');
 const BaseLayer = require('core/layers/baselayers/baselayer');
 const BasesLayers = require('g3w-ol/src/layers/bases');
 
 function OSMLayer(config={}, options={}){
-  base(this, config, options);
+  OSMLayer.base(this, 'constructor', config, options);
 }
 
-inherit(OSMLayer, BaseLayer);
+inherits(OSMLayer, BaseLayer);
 
 const proto = OSMLayer.prototype;
 

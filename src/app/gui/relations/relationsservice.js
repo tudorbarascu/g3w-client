@@ -1,4 +1,4 @@
-const { inherit, base, downloadCSV} = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 const ApplicationService = require('core/applicationservice');
 const RelationsService = require('core/relations/relationsservice');
@@ -6,10 +6,10 @@ const RelationsService = require('core/relations/relationsservice');
 function RelationsComponentService(options={}) {
   this.state = {};
   this._options = {};
-  base(this);
+  RelationsComponentService.base(this, 'constructor');
 }
 
-inherit(RelationsComponentService, G3WObject);
+inherits(RelationsComponentService, G3WObject);
 
 const proto = RelationsComponentService.prototype;
 

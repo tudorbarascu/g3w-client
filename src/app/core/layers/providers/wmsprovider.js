@@ -1,5 +1,5 @@
 import ApplicationState from 'core/applicationstate';
-const {base, inherit, appendParams, XHR} = require('core/utils/utils');
+const {inherits, appendParams, XHR} = require('core/utils/utils');
 const geoutils = require('g3w-ol/src/utils/utils');
 const DataProvider = require('core/layers/providers/provider');
 
@@ -10,7 +10,7 @@ const GETFEATUREINFO_IMAGE_SIZE = [101, 101];
 const DPI = geoutils.getDPI();
 
 function WMSDataProvider(options = {}) {
-  base(this, options);
+  WMSDataProvider.base(this, 'constructor', options);
   this._name = 'wms';
   this._projections = {
     map: null,
@@ -19,7 +19,7 @@ function WMSDataProvider(options = {}) {
   this._infoFormat = this._layer.getInfoFormat() || 'application/vnd.ogc.gml';
 }
 
-inherit(WMSDataProvider, DataProvider);
+inherits(WMSDataProvider, DataProvider);
 
 const proto = WMSDataProvider.prototype;
 

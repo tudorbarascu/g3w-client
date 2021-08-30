@@ -1,4 +1,4 @@
-const {base, inherit, noop} = require('core/utils/utils');
+const {inherits, noop} = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 const RouterService = require('core/router');
 const ComponentsRegistry = require('gui/componentsregistry');
@@ -71,9 +71,9 @@ function GUI() {
   this.dialog = noop;
   this.isMobile = noop;
   //useful to registere setters
-  base(this);
+  GUI.base(this, 'constructor');
 }
 
-inherit(GUI, G3WObject);
+inherits(GUI, G3WObject);
 
 module.exports = new GUI;

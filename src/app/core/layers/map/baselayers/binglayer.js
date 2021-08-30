@@ -1,13 +1,12 @@
-const inherit = require('core/utils/utils').inherit;
-const base = require('core/utils/utils').base;
+const {inherits} = require('core/utils/utils');
 const BaseLayer = require('core/layers/baselayers/baselayer');
 const BasesLayers = require('g3w-ol/src/layers/bases');
 
 function BingLayer(options){
-  base(this,options);
+  BingLayer.base(this, 'constructor', options);
 }
 
-inherit(BingLayer, BaseLayer);
+inherits(BingLayer, BaseLayer);
 
 const proto = BingLayer.prototype;
 
@@ -28,14 +27,9 @@ proto._makeOlLayer = function(){
       olLayer = BasesLayers.BING.Aerial;
       break;
   }
-  olLayer.getSource().on('imageloadstart', () => {
-    this.emit("loadstart");
-  });
-  olLayer.getSource().on('imageloadend', () => {
-    this.emit("loadend");
-  });
+  olLayer.getSource().on('imageloadstart', () => this.emit("loadstart"));
+  olLayer.getSource().on('imageloadend', () => this.emit("loadend"));
   return olLayer
 };
-
 
 module.exports = BingLayer;

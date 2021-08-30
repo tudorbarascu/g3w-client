@@ -1,14 +1,13 @@
-const inherit = require('core/utils/utils').inherit;
-const base = require('core/utils/utils').base;
+const {inherits} = require('core/utils/utils');
 const CatalogLayersStoresRegistry = require('core/catalog/cataloglayersstoresregistry');
 const Service = require('gui/inputs/service');
 
 function SelectService(options={}) {
-  base(this, options);
+  SelectService.base(this, 'constructor', options);
   this.layer = null;
 }
 
-inherit(SelectService, Service);
+inherits(SelectService, Service);
 
 const proto = SelectService.prototype;
 
@@ -27,14 +26,14 @@ proto.getKeyByValue = function({search}={}) {
     key:value,
     value: key,
     search
-  }).then((arrayValues) => {
+  }).then(arrayValues => {
     const [_value] = arrayValues;
     const {$value : key, text: value} = _value;
     this.addValue({
       key,
       value
     })
-  }).catch((err) => {
+  }).catch(err => {
     console.log(err);
   })
 };

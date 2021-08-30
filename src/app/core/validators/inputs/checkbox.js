@@ -1,4 +1,4 @@
-const {base, inherit}= require('core/utils/utils');
+const { inherits}= require('core/utils/utils');
 const Validator = require('./validator');
 
 function CheckBoxValidator(options) {
@@ -9,6 +9,6 @@ function CheckBoxValidator(options) {
   }
 }
 
-inherit(CheckBoxValidator, Validator);
+inherits(CheckBoxValidator, Validator);
 
 module.exports =  CheckBoxValidator;

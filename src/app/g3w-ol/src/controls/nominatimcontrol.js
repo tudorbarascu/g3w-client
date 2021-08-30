@@ -928,7 +928,6 @@ function NominatimControl(options={}) {
 
 ol.inherits(NominatimControl, Control);
 
-proto = NominatimControl.prototype;
-
+const proto = NominatimControl.prototype;
 
 module.exports = NominatimControl;

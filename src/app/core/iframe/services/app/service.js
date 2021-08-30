@@ -1,9 +1,9 @@
-const {base, inherit } = require('core/utils/utils');
+const {inherits } = require('core/utils/utils');
 const BaseService = require('../baseservice');
 const DataRouterService = require('core/data/routerservice');
 
 function AppService(){
-  base(this);
+  AppService.base(this, 'constructor');
   this.mapControls = {
     screenshot: {
       control: null
@@ -126,6 +126,6 @@ function AppService(){
   };
 }
 
-inherit(AppService, BaseService);
+inherits(AppService, BaseService);
 
 module.exports = new AppService;

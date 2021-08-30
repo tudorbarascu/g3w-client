@@ -2,7 +2,7 @@ import { createCompiledTemplate } from 'gui/vue/utils';
 import CatalogEventHub from './catalogeventhub';
 import LayerLegend from './components/layerlegend.vue';
 const ApplicationService = require('core/applicationservice');
-const {inherit, base, downloadFile} = require('core/utils/utils');
+const {inherits, downloadFile} = require('core/utils/utils');
 const shpwrite = require('shp-write');
 const {t} = require('core/i18n/i18n.service');
 const Component = require('gui/vue/component');
@@ -892,7 +892,7 @@ Vue.component('layerslegend-items',{
 
 function CatalogComponent(options={}) {
   options.resizable = true;
-  base(this, options);
+  CatalogComponent.base(this, 'constructor', options);
   const {legend}  = options.config;
   this.title = "catalog";
   this.mapComponentId = options.mapcomponentid;
@@ -919,6 +919,6 @@ function CatalogComponent(options={}) {
   }
 }
 
-inherit(CatalogComponent, Component);
+inherits(CatalogComponent, Component);
 
 module.exports = CatalogComponent;

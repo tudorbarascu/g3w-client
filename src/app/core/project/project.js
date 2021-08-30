@@ -1,9 +1,10 @@
-const {base, inherit} = require('core/utils//utils');
+const {inherits} = require('core/utils//utils');
 const {crsToCrsObject} = require('core/utils/geo');
 const G3WObject = require('core/g3wobject');
 const LayerFactory = require('core/layers/layerfactory');
 const LayersStore = require('core/layers/layersstore');
 const Projections = require('g3w-ol/src/projection/projections');
+
 function Project(config={}, options={}) {
   /* structure 'project' object
   {
@@ -48,10 +49,10 @@ function Project(config={}, options={}) {
     }
   };
   this.setSearchEndPoint();
-  base(this);
+  Project.base(this, 'constructor');
 }
 
-inherit(Project, G3WObject);
+inherits(Project, G3WObject);
 
 const proto = Project.prototype;
 

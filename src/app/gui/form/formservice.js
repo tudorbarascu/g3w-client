@@ -1,5 +1,4 @@
-const inherit = require('core/utils/utils').inherit;
-const base = require('core/utils/utils').base;
+const {inherits} = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 
 function FormService() {
@@ -36,7 +35,7 @@ function FormService() {
       // hook for listener to chenge DOM
     }
   };
-  base(this);
+  FormService.base(this, 'constructor');
   this.init = function(options={}) {
     this._setInitForm(options);
   };
@@ -75,12 +74,10 @@ function FormService() {
       }
     }
   };
-  this.eventBus.$on('set-loading-form', (bool=false) => {
-    this.state.loading = bool;
-  })
+  this.eventBus.$on('set-loading-form', (bool=false) => this.state.loading = bool)
 }
 
-inherit(FormService, G3WObject);
+inherits(FormService, G3WObject);
 
 const proto = FormService.prototype;
 

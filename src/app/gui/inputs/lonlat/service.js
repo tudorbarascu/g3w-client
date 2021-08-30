@@ -1,23 +1,21 @@
-const {base, inherit} = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const Service = require('gui/inputs/service');
 const GUI = require('gui/gui');
 
 function LonLatService(options={}) {
-  base(this, options);
+  LonLatService.base(this, 'constructor', options);
   this.coordinatebutton;
   this.mapService =  GUI.getComponent('map').getService();
   this.mapEpsg = this.mapService.getCrs();
-  this.mapControlToggleEventHandler = evt =>{
-    if (evt.target.isToggled() && evt.target.isClickMap()){
-      this.coordinatebutton.active && this.toggleGetCoordinate();
-    }
+  this.mapControlToggleEventHandler = evt => {
+    if (evt.target.isToggled() && evt.target.isClickMap()) this.coordinatebutton.active && this.toggleGetCoordinate();
   };
   this.map = GUI.getComponent('map').getService().getMap();
   this.outputEpsg = this.state.epsg || this.mapEpsg;
   this.eventMapKey;
 }
 
-inherit(LonLatService, Service);
+inherits(LonLatService, Service);
 
 const proto = LonLatService.prototype;
 

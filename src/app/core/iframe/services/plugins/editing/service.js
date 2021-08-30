@@ -1,9 +1,9 @@
 const BasePluginService = require('../service');
-const {base, inherit} = g3wsdk.core.utils;
+const {inherits} = g3wsdk.core.utils;
 const GUI = require('gui/gui');
 
 function EditingService() {
-  base(this);
+  EditingService.base(this, 'constructor');
   this.pluginName = 'editing';
   this.subscribevents = [];
   this.isRunning = false;
@@ -336,7 +336,7 @@ function EditingService() {
   }
 }
 
-inherit(EditingService, BasePluginService);
+inherits(EditingService, BasePluginService);
 
 module.exports = new EditingService;
 

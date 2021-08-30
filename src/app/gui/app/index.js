@@ -1,6 +1,6 @@
 import ApplicationState from 'core/applicationstate';
-const {base, inherit, toRawType} = require('core/utils/utils');
-const t = require('core/i18n/i18n.service').t;
+const {inherits, toRawType} = require('core/utils/utils');
+const {t} = require('core/i18n/i18n.service');
 const G3WObject = require('core/g3wobject');
 const ProjectsMenuComponent = require('gui/projectsmenu/projectsmenu');
 const ComponentsRegistry = require('gui/componentsregistry');
@@ -805,10 +805,10 @@ const ApplicationTemplate = function({ApplicationService}) {
       }
     }
   };
-  base(this);
+  ApplicationTemplate.base(this, 'constructor');
 };
 
-inherit(ApplicationTemplate, G3WObject);
+inherits(ApplicationTemplate, G3WObject);
 
 // Placeholder knowed by application
 ApplicationTemplate.PLACEHOLDERS = [

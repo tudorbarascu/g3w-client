@@ -1,18 +1,16 @@
-const inherit = require('core/utils/utils').inherit;
-const base = require('core/utils//utils').base;
+const {inherits} = require('core/utils/utils');
 const VectorLayer = require('./vectorlayer');
 
 function GeojsonLayer(options = {}) {
   const provider = options.provider;
   this.setProvider(provider);
-  base(this, options);
+  GeojsonLayer.base(this, 'constructor', options);
   this.getFeatures({
     url: options.url,
     mapProjection: this.mapProjection
   });
 }
 
-inherit(GeojsonLayer, VectorLayer);
-
+inherits(GeojsonLayer, VectorLayer);
 
 module.exports = GeojsonLayer;

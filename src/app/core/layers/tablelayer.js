@@ -1,5 +1,5 @@
 import {DEFAULT_EDITING_CAPABILITIES} from 'constant';
-const {base, inherit} = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const CatalogLayersStoresRegistry = require('core/catalog/cataloglayersstoresregistry');
 const Layer = require('./layer');
 const Editor = require('core/editing/editor');
@@ -52,9 +52,7 @@ function TableLayer(config={}, options={}) {
             })
             .fail(err => d.reject(err))
         })
-        .fail((err)  => {
-          d.reject(err);
-        });
+        .fail(err  => d.reject(err));
       return d.promise();
     },
     setColor(color) {
@@ -79,7 +77,7 @@ function TableLayer(config={}, options={}) {
     fields: [] // editing fields
   };
   // call base layer
-  base(this, config, options);
+  TableLayer.base(this, 'constructor', config, options);
 
   // get configuration from server if is editable
   this._editatbleLayer;
@@ -126,7 +124,7 @@ function TableLayer(config={}, options={}) {
   });
 }
 
-inherit(TableLayer, Layer);
+inherits(TableLayer, Layer);
 
 const proto = TableLayer.prototype;
 

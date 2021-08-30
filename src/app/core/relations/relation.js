@@ -1,4 +1,4 @@
-const {base, inherit} = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 
 function Relation(config={}) {
@@ -16,11 +16,10 @@ function Relation(config={}) {
     childField: config.fieldRef.referencingField,
     type: config.type
   };
-
-  base(this);
+  Relation.base(this, 'constructor');
 }
 
-inherit(Relation, G3WObject);
+inherits(Relation, G3WObject);
 
 const proto = Relation.prototype;
 

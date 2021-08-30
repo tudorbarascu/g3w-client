@@ -1,6 +1,6 @@
 import {G3W_FID} from 'constant';
-const t = require('core/i18n/i18n.service').t;
-const {inherit, base, copyUrl, uniqueId, debounce, throttle, toRawType} = require('core/utils/utils');
+const {t} = require('core/i18n/i18n.service');
+const {inherits, copyUrl, uniqueId, debounce, throttle, toRawType} = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 const {
   createVectorLayerFromFile,
@@ -301,10 +301,10 @@ function MapService(options={}) {
     });
   });
 
-  base(this);
+  MapService.base(this, 'constructor');
 }
 
-inherit(MapService, G3WObject);
+inherits(MapService, G3WObject);
 
 const proto = MapService.prototype;
 

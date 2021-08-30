@@ -1,13 +1,13 @@
-const {base, inherit} = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const BaseLayer = require('core/layers/baselayers/baselayer');
 const BasesLayers = require('g3w-ol/src/layers/bases');
 
 function TMSLayer(config={}, options={}) {
   this.config = config;
-  base(this, config, options);
+  TMSLayer.base(this, 'constructor', config, options);
 }
 
-inherit(TMSLayer, BaseLayer);
+inherits(TMSLayer, BaseLayer);
 
 const proto = TMSLayer.prototype;
 

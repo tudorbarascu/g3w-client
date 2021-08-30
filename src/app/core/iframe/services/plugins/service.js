@@ -1,9 +1,9 @@
-const { base, inherit } = require('core/utils/utils');
+const { inherits } = require('core/utils/utils');
 const PluginsRegistry = require('core/plugin/pluginsregistry');
 const BaseService = require('../baseservice');
 
 function BasePluginService(){
-  base(this);
+  BasePluginService.base(this, 'constructor');
   // common attributes between plugin service
   this.pluginName;
   this.dependencyApi ={};
@@ -32,7 +32,7 @@ function BasePluginService(){
   };
 }
 
-inherit(BasePluginService, BaseService);
+inherits(BasePluginService, BaseService);
 
 const proto = BasePluginService.prototype;
 

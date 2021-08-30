@@ -88,48 +88,61 @@ const utils = {
   hasOwn(object, key) {
     return Object.prototype.hasOwnProperty.call(object, key);
   },
-  // google closure library impememtation
-  inherit(childCtor, parentCtor) {
+  /**
+   * Inherit the prototype methods from one constructor into another.
+   *
+   * Usage:
+   * <pre>
+   * function ParentClass(a, b) { }
+   * ParentClass.prototype.foo = function(a) { };
+   *
+   * function ChildClass(a, b, c) {
+   *   ChildClass.base(this, 'constructor', a, b);
+   * }
+   * inherits(ChildClass, ParentClass);
+   *
+   * var child = new ChildClass('a', 'b', 'see');
+   * child.foo(); // This works.
+   * </pre>
+   *
+   * @param {!Function} childCtor Child class.
+   * @param {!Function} parentCtor Parent class.
+   */
+  inherits(childCtor, parentCtor) {
+    /** @constructor */
     function tempCtor() {}
     tempCtor.prototype = parentCtor.prototype;
     childCtor.superClass_ = parentCtor.prototype;
     childCtor.prototype = new tempCtor();
+    /** @override */
     childCtor.prototype.constructor = childCtor;
-  },
-  // google closure library implementation
-  base(me, opt_methodName, var_args) {
-    // who call base
-    // noinspection JSAnnotator
-    const caller = arguments.callee.caller;
-    if (caller.superClass_) {
-      // This function constructor (that inherit from superClass_). Call the superclass constructor.
-      //It is a easy way to cal super class in binding to this
-      return caller.superClass_.constructor.apply(
-          me, Array.prototype.slice.call(arguments, 1));
-    }
-    const args = Array.prototype.slice.call(arguments, 2);
-    let foundCaller = false;
-    //constructor is the constructor function of the object
-    for (let ctor = me.constructor;
-         ctor; ctor = ctor.superClass_ && ctor.superClass_.constructor) {
-      if (ctor.prototype[opt_methodName] === caller) {
-        foundCaller = true;
-      } else if (foundCaller) {
-        return ctor.prototype[opt_methodName].apply(me, args);
+    /**
+     * Calls superclass constructor/method.
+     *
+     * This function is only available if you use goog.inherits to
+     * express inheritance relationships between classes.
+     *
+     * NOTE: This is a replacement for goog.base and for superClass_
+     * property defined in childCtor.
+     *
+     * @param {!Object} me Should always be "this".
+     * @param {string} methodName The method name to call. Calling
+     *     superclass constructor can be done with the special string
+     *     'constructor'.
+     * @param {...*} var_args The arguments to pass to superclass
+     *     method/constructor.
+     * @return {*} The return value of the superclass method/constructor.
+     */
+    childCtor.base = function(me, methodName, var_args) {
+      // Copying using loop to avoid deop due to passing arguments object to
+      // function. This is faster in many JS engines as of late 2014.
+      const args = new Array(arguments.length - 2);
+      console.log(args)
+      for (var i = 2; i < arguments.length; i++) {
+        args[i - 2] = arguments[i];
       }
-    }
-    // If we did not find the caller in the prototype chain,
-    // then one of two things happened:
-    // 1) The caller is an instance method.
-    // 2) This method was not called by the right caller.
-    if (me[opt_methodName] === caller) {
-      // call the function from prototype object
-      return me.constructor.prototype[opt_methodName].apply(me, args);
-    } else {
-      throw Error(
-          'base called from a method of one name ' +
-          'to a method of a different name');
-    }
+      return methodName && parentCtor.prototype[methodName].apply(me, args);
+    };
   },
 
   noop(){},

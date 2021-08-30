@@ -1,4 +1,4 @@
-const {base, inherit} = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 
 // service sidebar
@@ -13,10 +13,10 @@ function navbaritemsService() {
     this.state.items[position].push(item);
   };
 
-  base(this)
+  navbaritemsService.base(this, 'constructor')
 }
 
-inherit(navbaritemsService, G3WObject);
+inherits(navbaritemsService, G3WObject);
 
 const navbaritemsservice = new navbaritemsService();
 const compiledTemplateLeft = Vue.compile(require('./navbarleftitems.html'));
@@ -40,7 +40,6 @@ const NavbarRightItemsComponent = Vue.extend({
     }
   }
 });
-
 
 module.exports = {
   NavbarItemsService: navbaritemsservice,

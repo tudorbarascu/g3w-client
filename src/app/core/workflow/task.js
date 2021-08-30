@@ -1,4 +1,4 @@
-const {base, inherit} = require('core/utils/utils');
+const { inherits} = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 
 function Task(options={}) {
@@ -8,7 +8,7 @@ function Task(options={}) {
   };
 }
 
-inherit(Task, G3WObject);
+inherits(Task, G3WObject);
 
 const proto = Task.prototype;
 

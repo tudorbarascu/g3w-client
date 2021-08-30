@@ -1,6 +1,6 @@
 import Select2 from './select2.vue'
 import {EXPRESSION_OPERATORS} from 'core/layers/filter/operators';
-const {base, inherit, uniqueId} = require('core/utils/utils');
+const {inherits, uniqueId} = require('core/utils/utils');
 const Panel = require('gui/panel');
 const Service = require('./searchservice');
 const compiledTemplate = Vue.compile(require('./searchpanel.html'));
@@ -23,9 +23,7 @@ const SearchPanelComponent = Vue.extend({
       if (this.isMobile()) {
         const top = $(event.target).position().top - 10 ;
         await this.$nextTick();
-        setTimeout(() => {
-          $('.sidebar').scrollTop(top);
-          }, 500);
+        setTimeout(() => $('.sidebar').scrollTop(top), 500);
       }
     },
     async autocompleteRequest(params={}){
@@ -55,9 +53,7 @@ const SearchPanelComponent = Vue.extend({
       this.changeDependencyFields({
         attribute,
         value
-      }).finally(() => {
-        this.state.searching = false;
-      })
+      }).finally(() => this.state.searching = false);
     },
     doSearch(event) {
      event.preventDefault();
@@ -76,12 +72,10 @@ function SearchPanel(options = {}) {
   });
   this.setInternalPanel(internalPanel);
   this.unmount = function() {
-    return base(this, 'unmount').then(() => {
-      service.clear()
-    })
+    return SearchPanel.base(this, 'unmount').then(() => service.clear());
   }
 }
 
-inherit(SearchPanel, Panel);
+inherits(SearchPanel, Panel);
 
 module.exports = SearchPanel;

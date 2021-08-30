@@ -1,11 +1,10 @@
-const inherit = require('core/utils/utils').inherit;
-const base = require('core/utils/utils').base;
+const {inherits} = require('core/utils/utils');
 const Service = require('gui/inputs/service');
 
 function RadioService(options={}) {
-  base(this, options);
+  RadioService.base(this, 'constructor', options);
 }
 
-inherit(RadioService, Service);
+inherits(RadioService, Service);
 
 module.exports = RadioService;

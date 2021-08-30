@@ -1,5 +1,5 @@
 import {G3W_FID} from 'constant';
-const {base, inherit, toRawType} = require('core/utils/utils');
+const {inherits, toRawType} = require('core/utils/utils');
 const geoutils = require('g3w-ol/src/utils/utils');
 const G3WObject = require('core/g3wobject');
 const { geometryFields } =  require('core/utils/geo');
@@ -11,10 +11,10 @@ function Provider(options = {}) {
   this._name = 'provider';
   this._layer = options.layer;
   this._hasFieldsStartWithNumber = false;
-  base(this);
+  Provider.base(this, 'constructor');
 }
 
-inherit(Provider, G3WObject);
+inherits(Provider, G3WObject);
 
 const proto = Provider.prototype;
 

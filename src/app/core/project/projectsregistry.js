@@ -1,4 +1,4 @@
-const {base, inherit }= require('core/utils/utils');
+const {inherits }= require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 const Project = require('core/project/project');
 const CatalogLayersStoresRegistry = require('core/catalog/cataloglayersstoresregistry');
@@ -45,10 +45,10 @@ function ProjectsRegistry() {
   this._groupProjects = [];
   this._projectConfigs = {};
 
-  base(this);
+  ProjectsRegistry.base(this, 'constructor');
 }
 
-inherit(ProjectsRegistry, G3WObject);
+inherits(ProjectsRegistry, G3WObject);
 
 const proto = ProjectsRegistry.prototype;
 

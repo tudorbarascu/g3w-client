@@ -1,4 +1,4 @@
-const {inherit, noop } = require('core/utils/utils');
+const {inherits, noop } = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 const GUI = require('gui/gui');
 const t = require('core/i18n/i18n.service').t;
@@ -73,7 +73,7 @@ const TableService = function(options = {}) {
   this.layer.on('filtertokenchange', this.filterChangeHandler);
 };
 
-inherit(TableService, G3WObject);
+inherits(TableService, G3WObject);
 
 const proto = TableService.prototype;
 

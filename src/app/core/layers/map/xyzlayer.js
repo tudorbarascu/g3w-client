@@ -1,22 +1,19 @@
-const inherit = require('core/utils/utils').inherit;
-const base = require('core/utils/utils').base;
+const {inherits} = require('core/utils/utils');
 const MapLayer = require('./maplayer');
 const RasterLayers = require('g3w-ol/src/layers/rasters');
 
 function XYZLayer(options, method="GET") {
-  base(this, options);
+  XYZLayer.base(this, 'constructor', options);
   this._method = method;
 }
 
-inherit(XYZLayer, MapLayer);
+inherits(XYZLayer, MapLayer);
 
 const proto = XYZLayer.prototype;
 
 proto.getOLLayer = function(){
   let olLayer = this._olLayer;
-  if (!olLayer){
-    olLayer = this._olLayer = this._makeOlLayer();
-  }
+  if (!olLayer) olLayer = this._olLayer = this._makeOlLayer();
   return olLayer;
 };
 
@@ -48,7 +45,7 @@ proto.isVisible = function(){
 proto._makeOlLayer = function(){
   const projection = this.projection ? this.projection : this.layer.getProjection();
   const layerOptions = {
-    url: this.layer.getCacheUrl()+"/{z}/{x}/{y}.png",
+    url: `${this.layer.getCacheUrl()}/{z}/{x}/{y}.png`,
     maxZoom: 20,
     extent: this.config.extent,
     iframe_internal: this.iframe_internal
@@ -57,15 +54,9 @@ proto._makeOlLayer = function(){
   layerOptions.projection = projection;
   this._olLayer = new RasterLayers.XYZLayer(layerOptions, this._method);
 
-  this._olLayer.getSource().on('imageloadstart', () => {
-    this.emit("loadstart");
-  });
-  this._olLayer.getSource().on('imageloadend', () => {
-    this.emit("loadend");
-  });
-  this._olLayer.getSource().on('imageloaderror', () => {
-    this.emit("loaderror");
-  });
+  this._olLayer.getSource().on('imageloadstart', () => this.emit("loadstart"));
+  this._olLayer.getSource().on('imageloadend', () => this.emit("loadend"));
+  this._olLayer.getSource().on('imageloaderror', () => this.emit("loaderror"));
   return this._olLayer
 };
 

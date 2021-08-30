@@ -1,14 +1,14 @@
 import { BING_API_KEY } from 'config/keys';
 import ApplicationState from 'core/applicationstate'
-const {base, inherit} = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const BaseLayer = require('core/layers/baselayers/baselayer');
 const BasesLayers = require('g3w-ol/src/layers/bases');
 
 function BingLayer(config={}, options={}){
-  base(this, config, options);
+  BingLayer.base(this, 'constructor', config, options);
 }
 
-inherit(BingLayer, BaseLayer);
+inherits(BingLayer, BaseLayer);
 
 const proto = BingLayer.prototype;
 

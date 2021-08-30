@@ -1,10 +1,10 @@
-const {base, inherit} = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const Projections = require('g3w-ol/src/projection/projections');
 const WMSLayer = require('../map/wmslayer');
 const ImageLayer = require('core/layers/imagelayer');
 
 function BaseLayer(config = {}, options={}) {
-  base(this, config, options);
+  BaseLayer.base(this, 'constructor', config, options);
   if (this.isWMS()) {
     const config = {
       url: this.getWmsUrl(),
@@ -16,7 +16,7 @@ function BaseLayer(config = {}, options={}) {
   } else this._mapLayer = this;
 }
 
-inherit(BaseLayer, ImageLayer);
+inherits(BaseLayer, ImageLayer);
 
 const proto = BaseLayer.prototype;
 

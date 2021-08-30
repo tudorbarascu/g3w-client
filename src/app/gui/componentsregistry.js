@@ -1,5 +1,5 @@
+const {inherits} = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
-const {base, inherit} = require('core/utils/utils');
 
 //class Componet Registry (singleton)
 // store all components added
@@ -29,8 +29,9 @@ function ComponentsRegistry() {
     }
     return component;
   };
-  base(this);
+  ComponentsRegistry.base(this, 'constructor');
 }
-inherit(ComponentsRegistry, G3WObject);
+
+inherits(ComponentsRegistry, G3WObject);
 
 module.exports = new ComponentsRegistry;

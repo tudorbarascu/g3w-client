@@ -1,5 +1,5 @@
 import ApplicationState from 'core/applicationstate';
-const {base, inherit} = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const MapLayer = require('./maplayer');
 const RasterLayers = require('g3w-ol/src/layers/rasters');
 
@@ -10,10 +10,10 @@ function WMSLayer(options={}, extraParams={}, method='GET') {
   };
   this.extraParams = extraParams;
   this._method = method;
-  base(this, options);
+  WMSLayer.base(this, 'constructor', options);
 }
 
-inherit(WMSLayer, MapLayer);
+inherits(WMSLayer, MapLayer);
 
 const proto = WMSLayer.prototype;
 

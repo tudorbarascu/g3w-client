@@ -1,6 +1,4 @@
-const inherit = require('core/utils/utils').inherit;
-const base = require('core/utils/utils').base;
-const Base64 = require('core/utils/utils').Base64;
+const { inherits, Base64 }  = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 
 /*
@@ -33,7 +31,6 @@ crossroads.ignoreState = true;
 crossroads.greedy = true;
 
 const RouterService = function(){
-
   this._initialLocationQuery;
   this._routeQuery = '';
   this.setters = {
@@ -43,9 +40,9 @@ const RouterService = function(){
     }
   };
 
-  base(this);
+  RouterService.base(this, 'constructor');
 };
-inherit(RouterService, G3WObject);
+inherits(RouterService, G3WObject);
 
 const proto = RouterService.prototype;
 

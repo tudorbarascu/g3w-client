@@ -1,5 +1,4 @@
-const inherit = require('core/utils/utils').inherit;
-const base = require('core/utils//utils').base;
+const {inherits} = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 
 // Object to store and handle features of layer
@@ -10,9 +9,7 @@ function FeaturesStore(options={}) {
   this._lockIds = []; // store locked features
   this.setters = {
     addFeatures(features) {
-      features.forEach(feature => {
-        this._addFeature(feature);
-      })
+      features.forEach(feature => this._addFeature(feature));
     },
     addFeature(feature) {
       this._addFeature(feature);
@@ -23,7 +20,7 @@ function FeaturesStore(options={}) {
     updateFeature(feature) {
       this._updateFeature(feature);
     },
-    clear() {
+    clear(){
       this._clearFeatures();
     },
     getFeatures(options={}) {
@@ -33,11 +30,10 @@ function FeaturesStore(options={}) {
       return this._commit(commitItems, featurestore);
     }
   };
-
-  base(this);
+  FeaturesStore.base(this, 'constructor');
 }
 
-inherit(FeaturesStore, G3WObject);
+inherits(FeaturesStore, G3WObject);
 
 const proto = FeaturesStore.prototype;
 

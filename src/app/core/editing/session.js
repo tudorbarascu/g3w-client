@@ -1,4 +1,4 @@
-const { base, inherit } = require('core/utils/utils');
+const { inherits } = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 const History = require('./history');
 const Layer = require('core/layers/layer');
@@ -19,7 +19,7 @@ function Session(options={}) {
     },
     saveChangesOnServer(commitItems){} // hook to get informed that are saved on server
   };
-  base(this, options);
+  Session.base(this, 'constructor', options);
 
   this.state = {
     id: options.id,
@@ -35,7 +35,7 @@ function Session(options={}) {
   this.register();
 }
 
-inherit(Session, G3WObject);
+inherits(Session, G3WObject);
 
 const proto = Session.prototype;
 

@@ -1,4 +1,4 @@
-const {inherit} = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const GUI = require('gui/gui');
 const G3WObject = require('core/g3wobject');
 const ProjectsRegistry = require('core/project/projectsregistry');
@@ -34,7 +34,7 @@ function MetadataService() {
   this._buildProjectGroupMetadata();
 }
 
-inherit(MetadataService, G3WObject);
+inherits(MetadataService, G3WObject);
 
 const proto = MetadataService.prototype;
 

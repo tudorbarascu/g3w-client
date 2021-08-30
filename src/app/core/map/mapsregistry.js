@@ -1,11 +1,11 @@
-const {inherit, base} = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 
 function MapsRegistry() {
-  base(this);
+  MapsRegistry.base(this, 'constructor');
   this._mapsServices = {};
 }
-inherit(MapsRegistry,G3WObject);
+inherits(MapsRegistry,G3WObject);
 
 const proto = MapsRegistry.prototype;
 

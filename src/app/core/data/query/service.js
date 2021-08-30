@@ -1,4 +1,4 @@
-const {base, inherit} = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const {t} = require('core/i18n/i18n.service');
 const BaseService = require('core/data/service');
 
@@ -9,7 +9,7 @@ const {
   getMapLayersByFilter} = require('core/utils/geo');
 
 function QueryService(){
-  base(this);
+  QueryService.base(this, 'constructor');
   /**
    *
    * @type {{filtrable: {ows: string}}}
@@ -154,6 +154,6 @@ function QueryService(){
   }
 }
 
-inherit(QueryService, BaseService);
+inherits(QueryService, BaseService);
 
 module.exports = new QueryService();

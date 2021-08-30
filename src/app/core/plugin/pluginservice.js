@@ -1,9 +1,9 @@
-const { base, inherit} = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const ApplicationService = require('core/applicationservice');
 const G3WObject = require('core/g3wobject');
 
 function PluginService(options={}) {
-  base(this, options);
+  PluginService.base(this, 'constructor', options);
   this.plugin;
   this._api = {
     own: null,
@@ -16,7 +16,7 @@ function PluginService(options={}) {
   }
 }
 
-inherit(PluginService, G3WObject);
+inherits(PluginService, G3WObject);
 
 const proto = PluginService.prototype;
 

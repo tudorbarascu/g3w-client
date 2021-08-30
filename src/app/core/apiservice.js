@@ -1,4 +1,4 @@
-const {base, inherit, reject} = require('core/utils/utils');
+const { inherits, reject} = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 
 // Class Api Service
@@ -45,9 +45,9 @@ function ApiService(){
     }
     else return reject();
   };
-  base(this);
+  ApiService.base(this, 'constructor');
 }
 
-inherit(ApiService, G3WObject);
+inherits(ApiService, G3WObject);
 
 module.exports = new ApiService;

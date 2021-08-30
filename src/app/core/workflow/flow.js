@@ -1,4 +1,4 @@
-const {base, inherit}= require('core/utils/utils');
+const {inherits}= require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 const Queque = require('./queque');
 
@@ -17,9 +17,7 @@ function Flow() {
   //start workflow
   this.start = function(workflow) {
     d = $.Deferred();
-    if (counter > 0) {
-      console.log("reset workflow before restarting");
-    }
+    if (counter > 0) console.log("reset workflow before restarting");
     _workflow = workflow;
     inputs = workflow.getInputs();
     context = workflow.getContext();
@@ -41,13 +39,11 @@ function Flow() {
     });
     const runMicroTasks = this.queques.micro.getLength();
     step.run(inputs, context, this.queques)
-      .then((outputs) => {
+      .then(outputs => {
         runMicroTasks && this.queques.micro.run();
         this.onDone(outputs);
       })
-      .fail((error) => {
-        this.onError(error);
-      })
+      .fail(error => this.onError(error));
   };
 
   //check if all step are resolved
@@ -84,10 +80,10 @@ function Flow() {
     }
     return d.promise();
   };
-  base(this)
+  Flow.base(this, 'constructor')
 }
 
-inherit(Flow, G3WObject);
+inherits(Flow, G3WObject);
 
 const proto = Flow.prototype;
 

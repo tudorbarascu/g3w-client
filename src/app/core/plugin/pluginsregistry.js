@@ -1,4 +1,4 @@
-const {base, inherit} = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 const OTHERPLUGINS = ['law'];
 
@@ -14,7 +14,7 @@ function PluginsRegistry() {
       if (!this._plugins[plugin.name]) this._plugins[plugin.name] = plugin;
     }
   };
-  base(this);
+  PluginsRegistry.base(this, 'constructor');
 
   // initialize plugin
   this.init = function(options={}) {
@@ -155,6 +155,6 @@ function PluginsRegistry() {
   }
 }
 
-inherit(PluginsRegistry,G3WObject);
+inherits(PluginsRegistry, G3WObject);
 
 module.exports = new PluginsRegistry;

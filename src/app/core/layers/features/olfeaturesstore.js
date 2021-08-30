@@ -1,14 +1,13 @@
-const inherit = require('core/utils/utils').inherit;
-const base = require('core/utils//utils').base;
+const {inherits} = require('core/utils/utils');
 const FeaturesStore = require('./featuresstore');
 
 // Storage of the feature in vector layer
 function OlFeaturesStore(options={}) {
-  base(this, options);
+  OlFeaturesStore.base(this, 'constructor', options);
   this._features = options.features || new ol.Collection([]);
 }
 
-inherit(OlFeaturesStore, FeaturesStore);
+inherits(OlFeaturesStore, FeaturesStore);
 
 const proto = OlFeaturesStore.prototype;
 
@@ -32,15 +31,11 @@ proto.getFeaturesCollection = function() {
 };
 
 proto.getFeatureById = function(featureId) {
-  return this._features.getArray().find((feature) => {
-    return feature.getId() == featureId;
-  });
+  return this._features.getArray().find(feature => feature.getId() == featureId);
 };
 
 proto.getFeatureByUid = function(uid) {
-  return this._features.getArray().find((feature) => {
-    return feature.getUid() === uid;
-  });
+  return this._features.getArray().find(feature => feature.getUid() === uid);
 };
 
 proto._addFeature = function(feature) {

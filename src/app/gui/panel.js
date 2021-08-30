@@ -1,4 +1,4 @@
-const {inherit, resolve:resolvedValue}= require('core/utils/utils');
+const {inherits, resolve:resolvedValue}= require('core/utils/utils');
 const GUI = require('gui/gui');
 const G3WObject = require('core/g3wobject');
 
@@ -9,7 +9,7 @@ const Panel = function(options={}) {
   this.service = options.service;
 };
 
-inherit(Panel, G3WObject);
+inherits(Panel, G3WObject);
 
 const proto = Panel.prototype;
 

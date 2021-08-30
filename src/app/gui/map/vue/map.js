@@ -1,5 +1,5 @@
 import { createCompiledTemplate } from 'gui/vue/utils';
-const {base, merge, inherit} = require('core/utils/utils');
+const { merge, inherits} = require('core/utils/utils');
 const Component = require('gui/vue/component');
 const AddLayerComponent = require('./addlayer');
 const MapService = require('../mapservice');
@@ -8,7 +8,7 @@ const templateCompiled = createCompiledTemplate(require('./map.html'));
 // map vue component
 const vueComponentOptions = {
   ...templateCompiled,
-  data: function() {
+  data() {
     const {service, target} = this.$options;
     return {
       ready: false,
@@ -22,7 +22,7 @@ const vueComponentOptions = {
     'addlayer': AddLayerComponent
   },
   computed: {
-    mapcontrolsalignement: function() {
+    mapcontrolsalignement() {
       return this.service.state.mapcontrolsalignement;
     },
     disableMapControls(){
@@ -30,12 +30,9 @@ const vueComponentOptions = {
     }
   },
   methods: {
-    showHideControls: function () {
+    showHideControls() {
       const mapControls = this.$options.service.getMapControls();
-      mapControls.forEach((control) => {
-        if (control.type !== "scaleline")
-          control.control.showHide();
-      })
+      mapControls.forEach(control => control.type !== "scaleline" && control.control.showHide());
     },
     getPermalinkUrl() {
       return this.ready ? this.$options.service.getMapExtentUrl(): null;
@@ -46,9 +43,7 @@ const vueComponentOptions = {
   },
   async mounted() {
     const mapService = this.$options.service;
-    mapService.once('ready', ()=>{
-      this.ready = true;
-    });
+    mapService.once('ready', ()=>this.ready = true);
     this.crs = mapService.getCrs();
     await this.$nextTick();
     mapService.setMapControlsContainer($(this.$refs['g3w-map-controls']));
@@ -69,7 +64,7 @@ const InternalComponent = Vue.extend(vueComponentOptions);
 Vue.component('g3w-map', vueComponentOptions);
 
 function MapComponent(options = {}) {
-  base(this, options);
+  MapComponent.base(this, 'constructor', options);
   this.id = "map-component";
   this.title = "Map Component";
   const target = options.target || "map";
@@ -85,7 +80,7 @@ function MapComponent(options = {}) {
   });
 }
 
-inherit(MapComponent, Component);
+inherits(MapComponent, Component);
 
 const proto = MapComponent.prototype;
 

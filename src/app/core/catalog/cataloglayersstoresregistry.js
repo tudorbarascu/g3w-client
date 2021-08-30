@@ -1,10 +1,10 @@
-const {base, inherit} = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const LayersStoresRegistry = require('core/layers/layersstoresregistry');
 
 function CatalogLayersStoresRegistry() {
-  base(this);
+  CatalogLayersStoresRegistry.base(this, 'constructor');
 }
 
-inherit(CatalogLayersStoresRegistry, LayersStoresRegistry);
+inherits(CatalogLayersStoresRegistry, LayersStoresRegistry);
 
 module.exports = new CatalogLayersStoresRegistry();

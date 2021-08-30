@@ -1,11 +1,10 @@
-const inherit = require('core/utils/utils').inherit;
-const base = require('core/utils//utils').base;
+const {inherits} = require('core/utils/utils');
 const LayersStoresRegistry = require('core/layers/layersstoresregistry');
 
 function MapLayersStoresRegistry() {
-  base(this);
+  MapLayersStoresRegistry.base(this, 'constructor');
 }
 
-inherit(MapLayersStoresRegistry, LayersStoresRegistry);
+inherits(MapLayersStoresRegistry, LayersStoresRegistry);
 
 module.exports = new MapLayersStoresRegistry();

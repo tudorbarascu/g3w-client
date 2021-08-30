@@ -1,15 +1,14 @@
-const inherit = require('core/utils/utils').inherit;
-const base = require('core/utils/utils').base;
+const {inherits} = require('core/utils/utils');
 const Panel = require('gui/panel');
 const QueryBuilder = require('gui/querybuilder/vue/querybuilder');
 
 function QueryBuilderPanel(options={}) {
   options.title = 'Query Builder';
-  base(this, options);
+  QueryBuilderPanel.base(this, 'constructor', options);
   const internalPanel = new QueryBuilder(options);
   this.setInternalPanel(internalPanel);
 }
 
-inherit(QueryBuilderPanel, Panel);
+inherits(QueryBuilderPanel, Panel);
 
 module.exports = QueryBuilderPanel;

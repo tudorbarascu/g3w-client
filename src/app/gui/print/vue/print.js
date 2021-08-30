@@ -1,7 +1,7 @@
 import { createCompiledTemplate } from 'gui/vue/utils';
 import SelectAtlasFieldValues from './components/selectatlasfieldvalues.vue';
 import FidAtlasValues from './components/fidatlasvalues.vue';
-const inherit = require('core/utils/utils').inherit;
+const {inherits} = require('core/utils/utils');;
 const Component = require('gui/vue/component');
 const PrintService = require('gui/print/printservice');
 const base = require('core/utils/utils').base;
@@ -59,7 +59,7 @@ const vueComponentOptions = {
 };
 
 function PrintComponent(options={}) {
-  base(this, options);
+  PrintComponent.base(this, 'constructor', options);
   this.title = "print";
   this.vueComponent = vueComponentOptions;
   this.internalComponent = null;
@@ -88,7 +88,7 @@ function PrintComponent(options={}) {
   };
 }
 
-inherit(PrintComponent, Component);
+inherits(PrintComponent, Component);
 
 module.exports = PrintComponent;
 

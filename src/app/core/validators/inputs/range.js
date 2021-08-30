@@ -1,8 +1,8 @@
-const {base, inherit}= require('core/utils/utils');
+const {inherits}= require('core/utils/utils');
 const Validator = require('./validator');
 
 function RangeValidator(options={}) {
-  base(this, options);
+  RangeValidator.base(this, 'constructor', options);
   const {min, max} = options;
   this.validate = function(value) {
     value = 1*value;
@@ -10,6 +10,6 @@ function RangeValidator(options={}) {
   }
 }
 
-inherit(RangeValidator, Validator);
+inherits(RangeValidator, Validator);
 
 module.exports =  RangeValidator;

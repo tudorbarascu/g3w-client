@@ -1,4 +1,4 @@
-const {base, inherit} = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 
 // Registy Layers
@@ -17,11 +17,10 @@ function LayersStoresRegistry() {
       this._removeLayersStores();
     }
   };
-
-  base(this);
+  LayersStoresRegistry.base(this, 'constructor');
 }
 
-inherit(LayersStoresRegistry, G3WObject);
+inherits(LayersStoresRegistry, G3WObject);
 
 const proto = LayersStoresRegistry.prototype;
 

@@ -1,4 +1,4 @@
-const { base, inherit }= require('core/utils/utils');
+const {inherits}= require('core/utils/utils');
 const Stack = require('gui/utils/utils').barstack;
 const Component = require('gui/vue/component');
 const compiledTemplate = Vue.compile(require('./contentsviewer.html'));
@@ -6,7 +6,7 @@ const compiledTemplate = Vue.compile(require('./contentsviewer.html'));
 // Internal Component (VUE) of the content of the  viewport
 const InternalComponent = Vue.extend({
   ...compiledTemplate,
-  data: function() {
+  data() {
     return {
       state: null
     }
@@ -14,7 +14,7 @@ const InternalComponent = Vue.extend({
 });
 
 function ContentsViewerComponent(options={}) {
-  base(this, options);
+  ContentsViewerComponent.base(this, 'constructor', options);
   this.stack = new Stack();
   this.setService(this);
   this.title = "contents";
@@ -27,7 +27,7 @@ function ContentsViewerComponent(options={}) {
   this.internalComponent.state = this.state;
 }
 
-inherit(ContentsViewerComponent, Component);
+inherits(ContentsViewerComponent, Component);
 
 const proto = ContentsViewerComponent.prototype;
 

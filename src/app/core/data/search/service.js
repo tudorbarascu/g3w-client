@@ -1,8 +1,8 @@
-const {base, inherit} = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const BaseService = require('core/data/service');
 
 function SearchService(){
-  base(this);
+  SearchService.base(this, 'constructor');
   // method to searchfeature features
   this.features = async function(options={layer, search_endpoint, filter, raw:false, queryUrl, feature_count}){
     const promisesSearch =[];
@@ -54,6 +54,6 @@ function SearchService(){
   }
 }
 
-inherit(SearchService, BaseService);
+inherits(SearchService, BaseService);
 
 module.exports = new SearchService();

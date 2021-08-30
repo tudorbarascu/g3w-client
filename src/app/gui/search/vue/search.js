@@ -1,8 +1,7 @@
 import G3WTool from 'gui/tools/vue/tool.vue'
 import G3WSearchQuerybuilder from 'gui/querybuilder/vue/g3w-search-querybuilder.vue';
 import { createCompiledTemplate } from 'gui/vue/utils';
-const inherit = require('core/utils/utils').inherit;
-const base = require('core/utils/utils').base;
+const {inherits} = require('core/utils/utils');
 const Component = require('gui/vue/component');
 const Service = require('gui/search/service');
 const templateCompiled = createCompiledTemplate(require('./search.html'));
@@ -43,7 +42,7 @@ const vueComponentOptions = {
 const InternalComponent = Vue.extend(vueComponentOptions);
 
 function SearchComponent(options={}){
-  base(this, options);
+  SearchComponent.base(this, 'constructor', options);
   this.id = "search";
   this._service = options.service || new Service();
   this._service.init();
@@ -58,10 +57,10 @@ function SearchComponent(options={}){
   };
   this.unmount = function() {
     this._searches_searchtools.$destroy();
-    return base(this, 'unmount');
+    return SearchComponent.base(this, 'unmount');
   }
 }
 
-inherit(SearchComponent, Component);
+inherits(SearchComponent, Component);
 
 module.exports = SearchComponent;

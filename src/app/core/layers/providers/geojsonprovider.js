@@ -1,14 +1,13 @@
-const inherit = require('core/utils/utils').inherit;
-const base = require('core/utils/utils').base;
+const {inherits} = require('core/utils/utils');
 const Provider = require('core/layers/providers/provider');
 
 function GEOJSONDataProvider(options = {}) {
-  base(this, options);
+  GEOJSONDataProvider.base(this, 'constructor', options);
   this._name = 'geojson';
   this.provider = options.provider
 }
 
-inherit(GEOJSONDataProvider, Provider);
+inherits(GEOJSONDataProvider, Provider);
 
 const proto = GEOJSONDataProvider.prototype;
 
@@ -37,13 +36,11 @@ proto.getFeatures = function(options = {}) {
     d.resolve(features)
   } else {
     $.get({url})
-      .then((response) => {
+      .then(response => {
         const features = parseFeatures(response.results);
         d.resolve(features)
       })
-      .fail((err) => {
-        d.reject(err)
-      });
+      .fail(err => d.reject(err));
   }
   return d.promise()
 };
@@ -51,12 +48,8 @@ proto.getFeatures = function(options = {}) {
 proto.getDataTable = function({ page } = {}) {
   const d = $.Deferred();
   this.getFeatures()
-    .then(() => {
-      d.resolve(this._features)
-    })
-    .fail((err) => {
-      d.reject(err)
-    });
+    .then(() => d.resolve(this._features))
+    .fail(err => d.reject(err));
   return d.promise();
 };
 
@@ -65,9 +58,7 @@ proto.digestFeaturesForTable = function() {
     headers : [],
     features: []
   }
-
 };
-
 
 module.exports = GEOJSONDataProvider;
 

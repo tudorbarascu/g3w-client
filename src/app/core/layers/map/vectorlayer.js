@@ -1,4 +1,4 @@
-const inherit = require('core/utils/utils').inherit;
+const {inherits} = require('core/utils/utils');;
 const {createOlLayer, createLayerStyle} = require('core/utils/geo');
 const GUI = require('gui/gui');
 
@@ -22,7 +22,7 @@ function VectorLayer(options = {}) {
   this._olLayer = options.olLayer || this.getOLLayer();
 }
 
-inherit(VectorLayer, G3WObject);
+inherits(VectorLayer, G3WObject);
 
 module.exports = VectorLayer;
 

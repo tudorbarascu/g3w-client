@@ -1,5 +1,5 @@
 import ApplicationState from 'core/applicationstate';
-const {base, inherit} = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 const GUI = require('gui/gui');
 const StreetViewComponent = require('gui/streetview/vue/streetview');
@@ -13,15 +13,13 @@ function StreetViewService() {
   this.init = function() {
     const KEY = ApplicationState.keys.vendorkeys.google;
     return KEY ? new Promise(resolve => {
-      $script(`https://maps.googleapis.com/maps/api/js?key=${KEY}`, () => {
-        resolve()
-      })
+      $script(`https://maps.googleapis.com/maps/api/js?key=${KEY}`, () => resolve());
     }) : Promise.reject();
   };
-  base(this);
+  StreetViewService.base(this, 'constructor');
 }
 
-inherit(StreetViewService, G3WObject);
+inherits(StreetViewService, G3WObject);
 
 const proto = StreetViewService.prototype;
 
@@ -38,6 +36,5 @@ proto.showStreetView = function(position) {
     title: 'StreetView'
   });
 };
-
 
 module.exports = StreetViewService;
