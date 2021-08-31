@@ -174,7 +174,7 @@
         else if (field.query) return field.input.type;
         else return 'g3w-input';
       }
-    },
+    }
   }
 </script>
 

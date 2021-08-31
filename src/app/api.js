@@ -1,3 +1,6 @@
+//Vue component application
+import lineXY from "./gui/charts/vue/c3/line/lineXY.vue";
+/////
 import G3W_CONSTANT from './constant';
 // api file interface for external plugin
 import ApplicationState from 'core/applicationstate';
@@ -107,7 +110,7 @@ g3w.gui = {
     SearchPanel: require('gui/search/vue/panel/searchpanel'),
     PrintComponent: require('gui/print/vue/print'),
     CatalogComponent: require('gui/catalog/vue/catalog'),
-    MapComponent: require('gui/map/vue/map'),
+    MapComponent: require('gui/map/map'),
     ToolsComponent: require('gui/tools/vue/tools'),
     QueryResultsComponent : require('gui/queryresults/vue/queryresults'),
     // main Form Component
@@ -123,7 +126,7 @@ g3w.gui = {
     Charts: {
       ChartsFactory: require('gui/charts/chartsfactory'),
       c3: {
-        lineXY: require('gui/charts/vue/c3/line/lineXY')
+        lineXY
       }
     },
     Fields : require('gui/fields/fields'),

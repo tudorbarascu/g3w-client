@@ -199,7 +199,6 @@ function SidebarService() {
     this.closeSidebarPanel();
     this.stack.clear();
   };
-
   SidebarService.base(this, 'constructor');
 }
 

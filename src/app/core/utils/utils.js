@@ -137,7 +137,6 @@ const utils = {
       // Copying using loop to avoid deop due to passing arguments object to
       // function. This is faster in many JS engines as of late 2014.
       const args = new Array(arguments.length - 2);
-      console.log(args)
       for (var i = 2; i < arguments.length; i++) {
         args[i - 2] = arguments[i];
       }

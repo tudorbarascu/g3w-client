@@ -1,7 +1,7 @@
 import appConfig from 'config';
 import ApplicationState from './applicationstate';
 const {init:i18ninit, changeLanguage} = require('core/i18n/i18n.service');
-const { inherits, XHR, uniqueId}= require('core/utils/utils');
+const {inherits, XHR, uniqueId}= require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 const ApiService = require('core/apiservice');
 const RouterService = require('core/router');

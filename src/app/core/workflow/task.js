@@ -1,8 +1,8 @@
-const { inherits} = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 
 function Task(options={}) {
-  base(this, options);
+  Task.base(this, 'constructor', options);
   this.state = {
     usermessagesteps: {}
   };

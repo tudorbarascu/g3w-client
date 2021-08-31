@@ -1,8 +1,8 @@
-const { inherits}= require('core/utils/utils');
+const {inherits}= require('core/utils/utils');
 const Validator = require('./validator');
 
-function RadioValidator(options) {
-  base(this, options);
+function RadioValidator(options={}) {
+  RadioValidator.base(this, 'constructor', options);
 }
 
 inherits(RadioValidator, Validator);

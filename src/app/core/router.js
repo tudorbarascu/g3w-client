@@ -1,4 +1,4 @@
-const { inherits, Base64 }  = require('core/utils/utils');
+const {inherits}  = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 
 /*

@@ -1,20 +1,12 @@
+import vueContentsViewerComponent from './contentsviewer.vue';
 const {inherits}= require('core/utils/utils');
 const Stack = require('gui/utils/utils').barstack;
 const Component = require('gui/vue/component');
-const compiledTemplate = Vue.compile(require('./contentsviewer.html'));
 
-// Internal Component (VUE) of the content of the  viewport
-const InternalComponent = Vue.extend({
-  ...compiledTemplate,
-  data() {
-    return {
-      state: null
-    }
-  }
-});
 
 function ContentsViewerComponent(options={}) {
   ContentsViewerComponent.base(this, 'constructor', options);
+  const InternalComponent = Vue.extend(vueContentsViewerComponent);
   this.stack = new Stack();
   this.setService(this);
   this.title = "contents";

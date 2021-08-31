@@ -28,7 +28,7 @@ proto.query = function(options={}, params = {}) {
         map: this._layer.getMapProjection(),
         layer: reproject ? this._layer.getProjection(): null
       };
-      const featuresForLayers = this.handleQueryResponseFromServer(response, projections, layers, wms=false);
+      const featuresForLayers = this.handleQueryResponseFromServer(response, projections, layers, false);
       d.resolve({
         data: featuresForLayers
       });

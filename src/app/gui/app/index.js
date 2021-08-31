@@ -1,3 +1,4 @@
+import App from './app.vue';
 import ApplicationState from 'core/applicationstate';
 const {inherits, toRawType} = require('core/utils/utils');
 const {t} = require('core/i18n/i18n.service');
@@ -27,7 +28,6 @@ Vue.mixin({
 });
 
 // get all items needed by application
-const App = require('gui/app/app');
 const sidebar = require('gui/sidebar/sidebar');
 const floatbar = require('gui/floatbar/floatbar');
 const viewport = require('gui/viewport/viewport');
@@ -70,7 +70,7 @@ const ApplicationTemplate = function({ApplicationService}) {
     const PrintComponent = require('gui/print/vue/print');
     const MetadataComponent = require('gui/metadata/vue/metadata');
     const ToolsComponent = require('gui/tools/vue/tools');
-    const MapComponent = require('gui/map/vue/map');
+    const MapComponent = require('gui/map/map');
     const QueryResultsComponent = require('gui/queryresults/vue/queryresults');
     return {
       title: appTitle,
@@ -438,7 +438,7 @@ const ApplicationTemplate = function({ApplicationService}) {
      */
     GUI.outputDataPlace = async function(dataPromise, options={}){
       // show options (function) set if show data or not
-      const {title='', show, add=false} = options;
+      const {title='', show, before, after, add=false} = options;
       const queryResultsService = !add ? this.showContentFactory('query')(title): GUI.getComponent('queryresults').getService();
       //check if waiting output data
       // in case we stop and sobsitute with new request data
@@ -448,6 +448,8 @@ const ApplicationTemplate = function({ApplicationService}) {
         (async () =>{
           try {
             const data = await dataPromise;
+            //if set before coll method and wait
+            before && await before(data);
             // in case of usermessage show user message
             data.usermessage && GUI.showUserMessage({
               type: data.usermessage.type,
@@ -459,6 +461,8 @@ const ApplicationTemplate = function({ApplicationService}) {
                 add
               });
               else GUI.closeContent();
+              // call after is set with data
+              after && afetr(data);
             }
           } catch(error) {
             const message = this.errorToMessage(error);
@@ -712,7 +716,8 @@ const ApplicationTemplate = function({ApplicationService}) {
     //  - pushContent has a new parameter (backonclose) when is cliccked x
     //  - the contentComponet is close all stack is closed
     GUI.pushContent = (options = {}) => {
-      options.perc = !this._isMobile ? options.perc || 100  : 100;
+      const perc_default = appLayoutConfig.rightpanel ?  parseInt(appLayoutConfig.rightpanel.width) : 50;
+      options.perc = !this._isMobile ? options.perc || perc_default : 100;
       options.push = true;
       GUI.setContent(options);
     };

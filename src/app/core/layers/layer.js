@@ -355,6 +355,33 @@ proto.isWmsUseLayerIds = function() {
   return this.config.wms_use_layer_ids;
 };
 
+/**
+ *
+ * DOWNLOAD METHODS
+ */
+
+proto.getDownloadFilefromDownloadDataType = function(type, {data, options}){
+  let promise;
+  switch (type) {
+    case 'shapefile':
+      promise = this.getShp({data, options});
+      break;
+    case 'xls':
+      promise  = this.getXls({data, options});
+      break;
+    case 'csv':
+      promise  = this.getCsv({data, options});
+      break;
+    case 'gpx':
+      promise = this.getGpx({data, options});
+      break;
+    case 'gpkg':
+      promise = this.getGpkg({data, options});
+      break;
+  }
+  return promise;
+};
+
 proto.getXls = function({data}={}){
   const url = this.getUrl('xls');
   return XHR.fileDownload({
@@ -545,9 +572,7 @@ proto.getEditingFields = function() {
 };
 
 proto.getTableFields = function() {
-  return this.config.fields.filter((field) => {
-    return field.show
-  })
+  return this.config.fields.filter(field => field.show);
 };
 
 proto.getTableHeaders = function(){

@@ -2,7 +2,7 @@ const {inherits} = require('core/utils/utils');;
 const DataProvider = require('core/layers/providers/provider');
 
 function XMLDataProvider(options={}) {
-  XMLDataProvider.base(this, 'constructor');
+  XMLDataProvider.base(this, 'constructor', options);
   this._name = 'xml';
 }
 

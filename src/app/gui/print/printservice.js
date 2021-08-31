@@ -1,6 +1,6 @@
 const {inherits, downloadFile} = require('core/utils/utils');
 const ApplicationService = require('core/applicationservice');
-const t = require('core/i18n/i18n.service').t;
+const {t} = require('core/i18n/i18n.service');
 const GUI = require('gui/gui');
 const G3WObject = require('core/g3wobject');
 const ProjectsRegistry = require('core/project/projectsregistry');
@@ -164,7 +164,7 @@ proto.print = function() {
         perc: 100
       });
       const options = this._getOptionsPrint();
-      this.printService.print(options, method=this.state.output.method)
+      this.printService.print(options, this.state.output.method)
         .then(data => {
           this.state.output.url = data.url;
           this.state.output.layers = data.layers;

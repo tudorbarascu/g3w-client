@@ -1,7 +1,8 @@
+import lineXY from './vue/c3/line/lineXY.vue';
 const Chartsfactory = {
   CHARTS: {
     c3:{
-      lineXY: require('./vue/c3/line/lineXY')
+      lineXY
     }
   },
   /*

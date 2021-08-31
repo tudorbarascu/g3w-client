@@ -1,4 +1,4 @@
-const { inherits } = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const PluginsRegistry = require('core/plugin/pluginsregistry');
 const BaseService = require('../baseservice');
 
