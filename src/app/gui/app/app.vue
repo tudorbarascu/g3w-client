@@ -96,7 +96,6 @@
     </div>
     <!-- /.content-wrapper -->
     <!-- Control Sidebar -->
-    <floatbar></floatbar>
     <!-- /.control-sidebar -->
     <!-- Add the sidebar's background. This div must be placed
          immediately after the control sidebar -->
@@ -154,10 +153,10 @@
 </template>
 
 <script>
+  import HeaderItem from '../header/vue/components/item.vue';
   const ApplicationService = require('core/applicationservice');
   const ProjectsRegistry = require('core/project/projectsregistry');
   const { uniqueId } = require('core/utils/utils');
-  const HeaderItem = require('gui/header/headeritem');
   const GUI = require('gui/gui');
   const layout = require('./layout');
   const { resizeMixin } = require('gui/vue/vue.mixins');

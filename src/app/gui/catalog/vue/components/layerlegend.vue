@@ -9,7 +9,7 @@
 </template>
 
 <script>
-  import CatalogEventHub from '../catalogeventhub';
+  import CatalogEventHub from '../../catalogeventhub';
   const ApplicationService = require('core/applicationservice');
   const CatalogLayersStoresRegistry = require('core/catalog/cataloglayersstoresregistry');
   const GUI = require('gui/gui');

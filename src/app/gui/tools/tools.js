@@ -1,4 +1,4 @@
-import vueToolsComponent from './tools.vue';
+import vueToolsComponent from './vue/tools.vue';
 const {inherits} = require('core/utils/utils');
 const GUI = require('gui/gui');
 const Component = require('gui/vue/component');

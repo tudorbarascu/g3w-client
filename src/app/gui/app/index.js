@@ -29,7 +29,6 @@ Vue.mixin({
 
 // get all items needed by application
 const sidebar = require('gui/sidebar/sidebar');
-const floatbar = require('gui/floatbar/floatbar');
 const viewport = require('gui/viewport/viewport');
 const navbaritems = require('gui/navbar/navbaritems');
 const layout = require('./layout');
@@ -64,12 +63,12 @@ const ApplicationTemplate = function({ApplicationService}) {
     const G3WTemplate = Vue.prototype.g3wtemplate;
     const appTitle = ApplicationService.getConfig().apptitle || 'G3W Suite';
     const ContentsComponent = require('gui/viewport/contentsviewer');
-    const CatalogComponent = require('gui/catalog/vue/catalog');
+    const CatalogComponent = require('gui/catalog/catalog');
     const SearchComponent = require('gui/search/vue/search');
     const QueryBuilderUIFactory = require('gui/querybuilder/querybuilderuifactory');
-    const PrintComponent = require('gui/print/vue/print');
-    const MetadataComponent = require('gui/metadata/vue/metadata');
-    const ToolsComponent = require('gui/tools/vue/tools');
+    const PrintComponent = require('gui/print/print');
+    const MetadataComponent = require('gui/metadata/metadata');
+    const ToolsComponent = require('gui/tools/tools');
     const MapComponent = require('gui/map/map');
     const QueryResultsComponent = require('gui/queryresults/vue/queryresults');
     return {
@@ -142,9 +141,6 @@ const ApplicationTemplate = function({ApplicationService}) {
               }
             }),
           ]
-        },
-        floatbar:{
-          components: []
         }
       },
       othercomponents: [
@@ -219,7 +215,6 @@ const ApplicationTemplate = function({ApplicationService}) {
     Vue.component('navbarleftitems', navbaritems.components.left);
     Vue.component('navbarrightitems', navbaritems.components.right);
     Vue.component('viewport', viewport.ViewportComponent);
-    Vue.component('floatbar', floatbar.FloatbarComponent);
     Vue.component('app', App);
   };
 
@@ -276,7 +271,6 @@ const ApplicationTemplate = function({ApplicationService}) {
   };
   // build template function
   this._buildTemplate = function() {
-    floatbar.FloatbarService.init(layout);
     const placeholdersConfig = this.templateConfig.placeholders;
     Object.entries(placeholdersConfig).forEach(([placeholder, options]) => {
       this._addComponents(options.components, placeholder);
@@ -423,9 +417,6 @@ const ApplicationTemplate = function({ApplicationService}) {
       return ApplicationService.getConfig().resourcesurl;
     }, this);
     //LIST
-    GUI.showList = _.bind(floatbar.FloatbarService.showPanel, floatbar.FloatbarService);
-    GUI.closeList = _.bind(floatbar.FloatbarService.closePanel, floatbar.FloatbarService);
-    GUI.hideList = _.bind(floatbar.FloatbarService.hidePanel, floatbar.FloatbarService);
     // TABLE
     GUI.showTable = function() {};
     GUI.closeTable = function() {};
@@ -646,13 +637,6 @@ const ApplicationTemplate = function({ApplicationService}) {
     /* end common methods */
 
     /*  */
-    // FLOATBAR //
-    GUI.showFloatbar = function() {
-      floatbar.FloatbarService.open();
-    };
-    GUI.hideFloatbar = function() {
-      floatbar.FloatbarService.close();
-    };
     // SIDEBAR //
     GUI.showSidebar = this._showSidebar.bind(this);
     GUI.hideSidebar = this._hideSidebar.bind(this);
@@ -819,16 +803,14 @@ inherits(ApplicationTemplate, G3WObject);
 ApplicationTemplate.PLACEHOLDERS = [
   'navbar',
   'sidebar',
-  'viewport',
-  'floatbar'
+  'viewport'
 ];
 
 // service know by the applications (standard)
 ApplicationTemplate.Services = {
   navbar: null,
   sidebar: sidebar.SidebarService,
-  viewport: viewport.ViewportService,
-  floatbar: sidebar.FloatbarService
+  viewport: viewport.ViewportService
 };
 
 ApplicationTemplate.fail = function({language='en', error }) {

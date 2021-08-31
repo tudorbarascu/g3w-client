@@ -105,13 +105,13 @@ g3w.gui = {
   vue: {
     Component: require('gui/vue/component'),
     Panel: require('gui/panel'),
-    MetadataComponent: require('gui/metadata/vue/metadata'),
+    MetadataComponent: require('gui/metadata/metadata'),
     SearchComponent: require('gui/search/vue/search'),
     SearchPanel: require('gui/search/vue/panel/searchpanel'),
-    PrintComponent: require('gui/print/vue/print'),
-    CatalogComponent: require('gui/catalog/vue/catalog'),
+    PrintComponent: require('gui/print/print'),
+    CatalogComponent: require('gui/catalog/catalog'),
     MapComponent: require('gui/map/map'),
-    ToolsComponent: require('gui/tools/vue/tools'),
+    ToolsComponent: require('gui/tools/tools'),
     QueryResultsComponent : require('gui/queryresults/vue/queryresults'),
     // main Form Component
     FormComponent: require('gui/form/vue/form'),

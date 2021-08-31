@@ -1,21 +1,12 @@
-import {createCompiledTemplate} from 'gui/vue/utils';
+import vueMetadataComponent from './vue/metadata.vue';
 const {inherits} = require('core/utils/utils');
 const Component = require('gui/vue/component');
 const GUI = require('gui/gui');
 const MetadataService = require('gui/metadata/metadataservice');
-const templateCompiled = createCompiledTemplate(require('./metadata.html'));
-
-const InternalComponent = Vue.extend({
-  ...templateCompiled,
-  data() {
-    return {
-      state: null
-    }
-  }
-});
 
 const MetadataComponent = function(options = {}) {
   MetadataComponent.base(this, 'constructor', options);
+  const InternalComponent = Vue.extend(vueMetadataComponent);
   this.title = "sdk.metadata.title";
   const service = options.service || new MetadataService(options);
   this.setService(service);

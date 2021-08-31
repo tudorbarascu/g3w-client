@@ -45,8 +45,8 @@
 </template>
 
 <script>
-  import SelectAtlasFieldValues from "./selectatlasfieldvalues.vue";
-  import FidAtlasValues from "./fidatlasvalues.vue";
+  import SelectAtlasFieldValues from "./components/selectatlasfieldvalues.vue";
+  import FidAtlasValues from "./components/fidatlasvalues.vue";
   export default {
     name: "print",
     data() {

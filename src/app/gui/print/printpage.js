@@ -1,4 +1,4 @@
-import vuePrintPageComponent from './components/printpage.vue';
+import vuePrintPageComponent from './vue/printpage.vue';
 const {inherits} = require('core/utils/utils');
 const Component = require('gui/vue/component');
 
