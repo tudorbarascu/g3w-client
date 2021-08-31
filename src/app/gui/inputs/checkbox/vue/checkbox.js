@@ -5,7 +5,7 @@ const WidgetMixins = require('gui/inputs/widgetmixins');
 const CheckBoxInput = Vue.extend({
   mixins: [Input, WidgetMixins],
   template: require('./checkbox.html'),
-  data: function() {
+  data() {
     return {
       value: null,
       label:null,

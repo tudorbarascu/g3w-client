@@ -1,0 +1,31 @@
+<template>
+  <div class="form-group">
+    <slot name="label">
+      <label :for="state.name" class="col-sm-4 control-label">{{ state.label }}
+        <span v-if="state.validate && state.validate.required">*</span>
+        <slot name="label-action"></slot>
+      </label>
+    </slot>
+    <div class="col-sm-8">
+      <slot name="loading"></slot>
+      <slot name="body"></slot>
+      <slot name="message">
+        <p v-if="notvalid" class="error-input-message" style="margin: 0" v-html="state.validate.message"></p>
+        <p v-else-if="state.info" style="margin: 0 " v-html="state.info"></p>
+      </slot>
+    </div>
+  </div>
+</template>
+
+<script>
+  import BaseInputMixin from '../baseinputmixin';
+  export default {
+    name: "baseinput",
+    props: ['state'],
+    ...BaseInputMixin
+  }
+</script>
+
+<style scoped>
+
+</style>
