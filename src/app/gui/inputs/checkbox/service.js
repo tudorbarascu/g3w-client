@@ -2,9 +2,7 @@ const {inherits} = require('core/utils/utils');
 const Service = require('gui/inputs/service');
 
 function CheckBoxService(options={}) {
-  const value = options.state.input.options.values.find(value => {
-    return value.checked === false;
-  });
+  const value = options.state.input.options.values.find(value => value.checked === false);
   options.validatorOptions =  {
     values: options.state.input.options.values.map(value => value)
   };
@@ -26,8 +24,7 @@ proto.convertCheckedToValue = function(checked) {
 
 proto.convertValueToChecked = function() {
   const valueToCheck = this.state.value;
-  if (valueToCheck === null || valueToCheck === undefined)
-    return false;
+  if (valueToCheck === null || valueToCheck === undefined) return false;
   let option = this.state.input.options.values.find(value => value.value == valueToCheck);
   if (option === undefined) {
     option = this.state.input.options.values.find(value => value.checked === false);

@@ -1,31 +1,72 @@
-const utils = require('../utils');
+import {SPATIALMETHODS, VM} from '../constants';
+const {merge} = require('../utils');
 const InteractionControl = require('./interactioncontrol');
 const PickCoordinatesInteraction = require('../interactions/pickcoordinatesinteraction');
-const { getAllPolygonGeometryTypes } = require('core/geometry/geometry');
+const {getAllPolygonGeometryTypes} = require('core/geometry/geometry');
 const VALIDGEOMETRIES = getAllPolygonGeometryTypes();
 
 const QueryByPolygonControl = function(options={}) {
+  const {spatialMethod=SPATIALMETHODS[0]} = options;
+  this.layers = options.layers || [];
+  this.unwatches = [];
+  this.listenPolygonLayersChange();
+  options.visible = this.checkVisibile(this.layers);
   const _options = {
     offline: false,
     name: "querybypolygon",
     tipLabel: "sdk.mapcontrols.querybypolygon.tooltip",
     label: options.label || "\ue903",
-    onselectlayer: true,
+    // function to get selection layer
+    onSelectlayer(selectedLayer){
+      const selected = selectedLayer.isSelected();
+      const geometryType = selectedLayer.getGeometryType();
+      const querable = selectedLayer.isQueryable();
+      if (selected){
+        if (this.getGeometryTypes().indexOf(geometryType) !== -1) {
+          this.setEnable(querable ? selectedLayer.isVisible(): querable);
+        } else this.setEnable(false, false);
+      } else this.setEnable(false, false);
+    },
     clickmap: true, // set ClickMap
     interactionClass: PickCoordinatesInteraction,
+    spatialMethod,
+    toggledTool:{
+      type: 'spatialMethod',
+      how: 'toggled' // or hover
+    },
     onhover: true
   };
-  options = utils.merge(options,_options);
-  const layers = options.layers || [];
-  options.visible = this.checkVisibile(layers);
+  options = merge(options,_options);
   options.geometryTypes = VALIDGEOMETRIES;
-  this.spatialMethod = 'intersects'; // <contains, intersect>
   InteractionControl.call(this, options);
+  //starting disabled
+  this.setEnable(false);
 };
 
 ol.inherits(QueryByPolygonControl, InteractionControl);
 
 const proto = QueryByPolygonControl.prototype;
+
+proto.listenPolygonLayersChange = function(){
+  this.unwatches.forEach(unwatch => unwatch());
+  this.unwatches.splice(0);
+  const polygonLayers = this.layers.filter(layer => VALIDGEOMETRIES.indexOf(layer.getGeometryType()) !== -1);
+  polygonLayers.forEach(layer => {
+    const {state} = layer;
+    this.unwatches.push(VM.$watch(() =>  state.visible, visible => {
+      // need to be visible or selected
+      this.setEnable(visible && state.selected);
+    }));
+  });
+};
+
+proto.change = function(layers=[]){
+  this.layers = layers;
+  const visible = this.checkVisibile(layers);
+  this.setVisible(visible);
+  this.setEnable(false);
+  this.listenPolygonLayersChange();
+};
 
 proto.checkVisibile = function(layers) {
   let visible;
@@ -42,18 +83,6 @@ proto.checkVisibile = function(layers) {
     visible = querableLength > 0 && filterableLength > 0;
   }
   return visible;
-};
-
-/**
- * Method to set filter operation intersect or Contains
- */
-
-proto.setSpatialMethod = function(method='intersects'){
-  this.spatialMethod = method;
-};
-
-proto.getSpatialMethod = function(){
-  return this.spatialMethod;
 };
 
 proto.setMap = function(map) {

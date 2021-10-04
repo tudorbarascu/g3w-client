@@ -453,7 +453,7 @@ const ApplicationTemplate = function({ApplicationService}) {
               });
               else GUI.closeContent();
               // call after is set with data
-              after && afetr(data);
+              after && after(data);
             }
           } catch(error) {
             const message = this.errorToMessage(error);
@@ -548,7 +548,7 @@ const ApplicationTemplate = function({ApplicationService}) {
 
     // show results info/search
     GUI.showQueryResults = function(title, results) {
-      const perc = appLayoutConfig.rightpanel ?  parseInt(appLayoutConfig.rightpanel.width) : 50;
+      const perc = appLayoutConfig.rightpanel ? parseInt(appLayoutConfig.rightpanel.width) : 50;
       const queryResultsComponent = GUI.getComponent('queryresults');
       const queryResultService = queryResultsComponent.getService();
       queryResultService.reset();
@@ -574,7 +574,7 @@ const ApplicationTemplate = function({ApplicationService}) {
 
     //showusermessage
     GUI.showUserMessage = function(options={}) {
-      viewport.ViewportService.showUserMessage(options);
+      return viewport.ViewportService.showUserMessage(options);
     };
 
     GUI.closeUserMessage = function() {
@@ -741,11 +741,12 @@ const ApplicationTemplate = function({ApplicationService}) {
     };
 
     GUI._setContent = (options={}) => {
-      GUI.closeUserMessage();
+      const perc = appLayoutConfig.rightpanel ? parseInt(appLayoutConfig.rightpanel.width) : 50;
+      this._closeUserMessageBeforeSetContent && GUI.closeUserMessage();
       options.content = options.content || null;
       options.title = options.title || "";
       options.push = _.isBoolean(options.push) ? options.push : false;
-      options.perc = !this._isMobile ? options.perc || 50 : 100;
+      options.perc = !this._isMobile ? options.perc || perc : 100;
       options.split = options.split || 'h';
       options.backonclose = _.isBoolean(options.backonclose) ? options.backonclose : false;
       options.showtitle = _.isBoolean(options.showtitle) ? options.showtitle : true;

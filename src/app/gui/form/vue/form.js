@@ -47,7 +47,7 @@ const vueComponentObject = {
       this.$options.service.addToValidate(input);
     },
     // set layout
-    reloadLayout: function() {
+    reloadLayout() {
       const height = $(this.$el).height();
       if(!height) return;
       const footerHeight = $('.g3wform_footer').height() ? $('.g3wform_footer').height() + 50 : 50;
