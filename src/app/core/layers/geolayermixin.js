@@ -171,6 +171,18 @@ proto._sanitizeSourceUrl = function(type='wms'){
   this.config.source.url = sanitizedUrl;
 };
 
+proto.isLayerCheckedAndAllParents = function(){
+  let checked = this.isChecked();
+  if (checked) {
+    let parentGroup = this.state.parentGroup;
+    while(checked && parentGroup){
+      checked = checked && parentGroup.checked;
+      parentGroup = parentGroup.parentGroup;
+    }
+  }
+  return checked;
+};
+
 proto.setChecked = function(bool) {
   this.state.checked = bool;
 };
@@ -179,17 +191,23 @@ proto.isChecked = function() {
   return this.state.checked;
 };
 
-proto.setVisible = function(visible) {
-  this.state.visible = visible;
+/**
+ * Is a method that check for visiblitity dissabled (based on scalevisibility) and checked on toc
+ * @param bool
+ * @returns {*}
+ */
+proto.setVisible = function(bool) {
+  //check if is changed
+  const oldVisibile = this.state.visible;
+  this.state.visible = bool && this.isChecked(); // bool and is checked
+  const changed = oldVisibile !== this.state.visible;
+  //if changed call change
+  changed && this.change();
+  return this.state.visible;
 };
 
-//get syle form layer
-proto.getStyles = function(){
-  return this.config.source.external  ? this.config.source.styles : this.config.styles;
-};
-
-proto.getStyle = function(){
-  return this.config.source.external ? this.config.source.styles : this.config.styles ? this.config.styles.find(style => style.current).name : '';
+proto.isVisible = function() {
+  return this.state.visible;
 };
 
 proto.isDisabled = function() {
@@ -197,8 +215,31 @@ proto.isDisabled = function() {
 };
 
 proto.isPrintable = function({scale}={}) {
-  const visible = !this.state.groupdisabled;
-  return this.isChecked() && visible && (!this.state.scalebasedvisibility || (scale >= this.state.maxscale && scale <= this.state.minscale));
+  return this.isLayerCheckedAndAllParents() && (!this.state.scalebasedvisibility || (scale >= this.state.maxscale && scale <= this.state.minscale));
+};
+
+//get style form layer
+proto.getStyles = function(){
+  return this.config.source.external ? this.config.source.styles : this.config.styles;
+};
+
+proto.getStyle = function(){
+  return this.config.source.external ? this.config.source.styles : this.config.styles ? this.config.styles.find(style => style.current).name : '';
+};
+
+/**
+ * Method to change current style  of layer
+ * @param currentStyleName
+ * @returns {boolean}
+ */
+proto.setCurrentStyle = function(currentStyleName){
+  let changed = false;
+  this.config.styles.forEach(style => {
+    if (style.name === currentStyleName)
+      changed = !style.current;
+    style.current = style.name === currentStyleName;
+  });
+  return changed;
 };
 
 /**
@@ -211,7 +252,16 @@ proto.setDisabled = function(resolution, mapUnits='m') {
     const mapScale = getScaleFromResolution(resolution, mapUnits);
     this.state.disabled = !(mapScale >= this.state.maxscale && mapScale <= this.state.minscale);
     this.state.disabled = this.state.minscale === 0 ? !(mapScale >= this.state.maxscale) : this.state.disabled;
-  } else this.state.disabled = this.state.groupdisabled;
+    // needed to check if call setVisible if change disable property
+    // looping trhougt parentfolter checked
+    let setVisible = true;
+    let parentGroup = this.state.parentGroup;
+    while(parentGroup){
+      setVisible = setVisible && parentGroup.checked;
+      parentGroup = parentGroup.parentGroup;
+    }
+    setVisible && this.setVisible(!this.state.disabled);
+  } else this.state.disabled = false;
 };
 
 proto.getMultiLayerId = function() {

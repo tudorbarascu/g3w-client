@@ -2,7 +2,6 @@ import {G3W_FID} from 'constant';
 const {inherits} = require('core/utils/utils');
 const {t} = require('core/i18n/i18n.service');
 const BaseService = require('core/data/service');
-
 const {
   getQueryLayersPromisesByCoordinates,
   getQueryLayersPromisesByGeometry,
@@ -51,7 +50,6 @@ function QueryService(){
       {
         geometry,
         multilayers,
-        bbox: false,
         feature_count,
         filterConfig,
         projection: this.project.getProjection()
@@ -72,11 +70,12 @@ function QueryService(){
    * @param layersFilterObject
    * @returns {Promise<unknown>}
    */
-  this.bbox = function({ bbox, feature_count=this.project.getQueryFeatureCount(), multilayers=false, condition=this.condition, layersFilterObject = {SELECTEDORALL: true, FILTERABLE: true, VISIBLE: true}}={}) {
+  this.bbox = function({ bbox, feature_count=this.project.getQueryFeatureCount(), filterConfig={}, multilayers=false, condition=this.condition, layersFilterObject = {SELECTEDORALL: true, FILTERABLE: true, VISIBLE: true}}={}) {
     const layers = getMapLayersByFilter(layersFilterObject, condition);
     const request = getQueryLayersPromisesByBBOX(layers, {
       bbox,
       feature_count,
+      filterConfig,
       multilayers,
     });
     return this.handleRequest(request, {

@@ -9,7 +9,7 @@ const GUI = require('gui/gui');
 
 const SelectInput = Vue.extend({
   mixins: [Input, selectMixin, select2Mixin],
-  data: function() {
+  data() {
     return {
       showPickLayer: false
     }
@@ -29,7 +29,9 @@ const SelectInput = Vue.extend({
   methods: {
     async pickLayerValue(){
       try {
-        const value = await this.pickLayerInputService.pick();
+        const values = await this.pickLayerInputService.pick();
+        const {value:field}= this.state.input.options;
+        const value = values[field];
         this.select2.val(value).trigger('change');
         this.changeSelect(value);
         GUI.showUserMessage({
@@ -52,8 +54,10 @@ const SelectInput = Vue.extend({
       try {
         const dependencyLayer =  MapLayersStoreRegistry.getLayerById(dependencyLayerId).getEditingLayer() || CatalogLayersStoresRegistry.getLayerById(dependencyLayerId);
         this.showPickLayer = dependencyLayer ? dependencyLayer.getType() !== Layer.LayerTypes.TABLE : false;
+        const {value:field, layer_id} = this.state.input.options;
         const options = {
-          ...this.state.input.options,
+          layer_id,
+          fields: [field],
           pick_type: dependencyLayer.isStarted && dependencyLayer.isStarted() && 'map' || null
         };
         this.pickLayerInputService = this.showPickLayer && new PickLayerInputService(options);

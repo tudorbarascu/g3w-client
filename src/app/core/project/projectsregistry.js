@@ -1,4 +1,4 @@
-const {inherits }= require('core/utils/utils');
+const {inherits}= require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 const Project = require('core/project/project');
 const CatalogLayersStoresRegistry = require('core/catalog/cataloglayersstoresregistry');
@@ -17,6 +17,9 @@ function ProjectsRegistry() {
   this.projectType = null;
   this.overviewproject;
   this.setters = {
+    createProject(projectConfig){
+      //hook to get project config and modify it
+    },
     setCurrentProject(project) {
       if (this.state.currentProject !== project) {
         CatalogLayersStoresRegistry.removeLayersStores();
@@ -185,6 +188,7 @@ proto.getProject = function(projectGid, options={reload:false}) {
         projectConfig.relations = this._setProjectRelations(projectConfig);
         this._projectConfigs[projectConfig.gid] = projectConfig;
         // instance of Project
+        this.createProject(projectConfig);
         const project = new Project(projectConfig);
         // add to project
         d.resolve(project);

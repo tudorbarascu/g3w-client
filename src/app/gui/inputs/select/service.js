@@ -33,21 +33,17 @@ proto.getKeyByValue = function({search}={}) {
       key,
       value
     })
-  }).catch(err => {
-    console.log(err);
-  })
+  }).catch(err => console.log(err));
 };
 
 proto.getData = function({layer_id= this.state.input.options.layer_id, key=this.state.input.options.key, value=this.state.input.options.value, search} = {}) {
   const search_value = `${key}|${search}`.trim();
   return new Promise((resolve, reject) => {
-    if (!this._layer) {
-      this._layer = this._getLayerById(layer_id);
-    }
+    if (!this._layer) this._layer = this._getLayerById(layer_id);
     this._layer.getDataTable({
       suggest: search_value,
       ordering: key
-    }).then((response) => {
+    }).then(response => {
       const values = [];
       const features = response.features;
       for (let i=0; i < features.length; i++) {
@@ -58,9 +54,7 @@ proto.getData = function({layer_id= this.state.input.options.layer_id, key=this.
         })
       }
       resolve(values);
-    }).fail((err) => {
-      reject(err);
-    })
+    }).fail(err => reject(err));
   });
 };
 

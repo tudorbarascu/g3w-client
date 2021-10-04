@@ -17,6 +17,9 @@
         <bar-loader :loading="loading"></bar-loader>
         <div role="tabpanel" class="tab-pane" :class="{ active: activeTab === 'layers' && 'hasLayers' }" id="layers">
           <helpdiv message="catalog_items.helptext"></helpdiv>
+          <div v-if="showTocTools" id="g3w-catalog-toc-layers-toolbar" style="margin: 2px;">
+            <changemapthemes :key="project.state.gid" :map_themes="project.state.map_themes" @change-map-theme="changeMapTheme"></changemapthemes>
+          </div>
           <ul class="tree-root root project-root" v-for="_layerstree in state.layerstrees">
             <tristate-tree
                     :highlightlayers="state.highlightlayers"
@@ -50,7 +53,9 @@
             </li>
           </ul>
         </div>
-        <legendtab @showlegend="showLegend" :legend="legend" :active="activeTab === 'legend'" v-for="_layerstree in state.layerstrees" :layerstree="_layerstree" :key="_layerstree.id"></legendtab>
+        <layerslegend v-if="legend.place ===  'tab'" @showlegend="showLegend" :legend="legend" :active="activeTab === 'legend'"
+                      v-for="_layerstree in state.layerstrees" :layerstree="_layerstree" :key="_layerstree.id">
+        </layerslegend>
       </div>
     </div>
     <ul id="layer-menu" ref="layer-menu" v-click-outside-layer-menu="closeLayerMenu" tabindex="-1" v-if="layerMenu.show" :style="{top: layerMenu.top + 'px', left: layerMenu.left + 'px' }">
@@ -64,7 +69,7 @@
         <span class="menu-icon" style="position: absolute; right: 0; margin-top: 3px" :class="g3wtemplate.getFontClass('arrow-right')"></span>
         <ul v-show="layerMenu.stylesMenu.show" style="position:fixed; background-color: #FFFFFF; color:#000000; padding-left: 0" :style="{ top: layerMenu.stylesMenu.top + 'px', left: layerMenu.stylesMenu.left +   'px' }">
           <li v-for="(style, index) in layerMenu.layer.styles" @click.stop="setCurrentLayerStyle(index)" :key="style.name">
-            <span v-if="style.current" style="font-size: 0.5em;" :class="g3wtemplate.getFontClass('circle')"></span>
+            <span v-if="style.current" style="font-size: 0.8em;" :class="g3wtemplate.getFontClass('circle')"></span>
             <span>{{style.name}}
             <span v-if="style.name ===  layerMenu.layer.defaultstyle && layerMenu.layer.styles.length > 1">(<span v-t="'default'"></span>)</span></span>
           </li>
@@ -154,6 +159,7 @@
 <script>
   import tristateTreeComponent from "./components/tristate-tree.vue";
   import legendTabComponent from './components/legendtab.vue';
+  import ChangeMapThemesComponent from './components/changemapthemes.vue';
   import CatalogEventHub from "../catalogeventhub";
   const ApplicationService = require('core/applicationservice');
   const {downloadFile} = require('core/utils/utils');
@@ -221,22 +227,31 @@
       //create a vue directive from click outside contextmenu
       'click-outside-layer-menu': {
         bind(el, binding, vnode) {
-          binding.eventClickHandler = event => (!(el === event.target || el.contains(event.target))) && vnode.context[binding.expression](event);
+          this.event = function (event) {
+            (!(el === event.target || el.contains(event.target))) && vnode.context[binding.expression](event);
+          };
           //add event listener click
-          document.body.addEventListener('click', binding.eventClickHandler);
+          document.body.addEventListener('click', this.event)
         },
-        unbind(el, binding, vnode) {
-          document.body.removeEventListener('click', binding.eventClickHandler);
-          binding.eeventClickHandler = null;
+        unbind(el) {
+          document.body.removeEventListener('click', this.event)
         }
       }
     },
     components: {
       'chrome-picker': ChromeComponent,
       'tristate-tree': tristateTreeComponent,
-      'legendtab': legendTabComponent
+      'legendtab': legendTabComponent,
+      'changemapthemes': ChangeMapThemesComponent
+
     },
     computed: {
+      //show or not group toolbar
+      showTocTools(){
+        const {map_themes=[]} = this.project.state;
+        const show = map_themes.length > 1;
+        return show;
+      },
       project() {
         return this.state.prstate.currentProject
       },
@@ -256,6 +271,27 @@
       }
     },
     methods: {
+      //change view method
+      async changeMapTheme(map_theme){
+        GUI.closeContent();
+        const changes = await this.$options.service.changeMapTheme(map_theme);
+        const changeStyleLayersId = Object.keys(changes.layers).filter(layerId => {
+          if (changes.layers[layerId].style) {
+            if (!changes.layers[layerId].visible){
+              const layer = CatalogLayersStoresRegistry.getLayerById(layerId);
+              layer.change();
+            }
+            return true
+          }
+        });
+        this.legend.place === 'tab' ? CatalogEventHub.$emit('layer-change-style') :
+          // get all layer tha changes style
+          changeStyleLayersId.forEach(layerId => {
+            CatalogEventHub.$emit('layer-change-style', {
+              layerId
+            })
+          });
+      },
       delegationClickEventTab(evt){
         this.activeTab = evt.target.attributes['aria-controls'] ? evt.target.attributes['aria-controls'].value : this.activeTab;
       },
@@ -301,7 +337,7 @@
         this.layerMenu.loading.gpkg = false;
         this.layerMenu.loading.xls = false;
       },
-      zoomToLayer: function() {
+      zoomToLayer() {
         const bbox = [this.layerMenu.layer.bbox.minx, this.layerMenu.layer.bbox.miny, this.layerMenu.layer.bbox.maxx, this.layerMenu.layer.bbox.maxy] ;
         const mapService = GUI.getComponent('map').getService();
         mapService.goToBBox(bbox, this.layerMenu.layer.epsg);
@@ -519,12 +555,13 @@
           } else style.current = false;
         });
         if (changed) {
+          const layerId = this.layerMenu.layer.id;
           const layer = CatalogLayersStoresRegistry.getLayerById(this.layerMenu.layer.id);
           if (layer) {
-            layer.change();
             CatalogEventHub.$emit('layer-change-style', {
-              layerId: layer.getId()
+              layerId
             });
+            layer.change();
           }
         }
         this.closeLayerMenu();
@@ -573,118 +610,11 @@
       });
 
       /**
-       * Event handle for layer toggled
+       * Visible change layer
        */
-      CatalogEventHub.$on('treenodetoogled', (storeid, node, parent, parent_mutually_exclusive) => {
-        const mapService = GUI.getComponent('map').getService();
-        if (node.external && !node.source) {
-          let layer = mapService.getLayerByName(node.name);
-          layer.setVisible(!layer.getVisible());
-          node.visible = !node.visible;
-          node.checked = node.visible;
-        } else if (!storeid) {
-          node.visible = !node.visible;
-          let layer = mapService.getLayerById(node.id);
-          layer.setVisible(node.visible);
-        } else {
-          const layerStore = CatalogLayersStoresRegistry.getLayersStore(storeid);
-          if (!node.groupdisabled) {
-            let layer = layerStore.toggleLayer(node.id, null, parent_mutually_exclusive);
-            mapService.emit('cataloglayertoggled', layer);
-          } else layerStore.toggleLayer(node.id, false, parent_mutually_exclusive)
-        }
-        /*
-         */
-        //indipendentely of parent group  node group is mutally exlusive
-        if (node.checked) {
-          CatalogEventHub.$emit('treenodestoogled', storeid, parent, true);
-          // go down tro layer tree inside forder of layer
-          const siblingsGroups = parent.nodes && parent.nodes.filter(node => node.nodes) || [];
-          siblingsGroups.forEach(group => {
-            if (group.checked) {
-              group.checked = false;
-              CatalogEventHub.$emit('treenodestoogled', storeid, group, false);
-            }
-          });
-
-          //go up from parent layer folder to it's father parent folder
-          if (!parent.checked){
-            parent.checked = true;
-            let parentFolder;
-            const parentGroupId = parent.groupId;
-            const getParentFolder = tree => {
-              // tree is the currend group
-              if (Array.isArray(tree.nodes)) {
-                const find = tree.nodes.find(subtree => {
-                  return Array.isArray(subtree.nodes) ? (subtree.groupId === parentGroupId) || getParentFolder(subtree) : false;
-                });
-                if (find && !parentFolder) {
-                  parentFolder = tree;
-                  return true;
-                }
-              } return false;
-            };
-            getParentFolder(this.state.layerstrees[0].tree[0]);
-            parentFolder && CatalogEventHub.$emit('treenodestoogled', storeid, parent, parent.checked, parentFolder);
-          }
-        }
-      });
-
-      /**
-       * Event handler of check group
-       * nodes: is children nodes of group
-       * isGroupChecked: boolen id current group is checked or not
-       * parent: is the  group parent of current group
-       */
-      CatalogEventHub.$on('treenodestoogled', (storeid, currentgroup, isGroupChecked, parent) => {
-        if (parent && currentgroup.checked) parent.checked = true;
-        const {nodes, groupId} = currentgroup;
-        // get layestore that contains and handle all layers
-        const layerStore = CatalogLayersStoresRegistry.getLayersStore(storeid);
-        // check if parent exist and is mutually exclusive
-        const parent_mutually_exclusive = parent && parent.mutually_exclusive;
-        //id of layers belong to current group and subgroups
-        const layersIds = [];
-        // function to turn on and off all layer belong to subgroup based on group checkd or not
-        const turnOnOffSubGroups = (parentChecked, currentLayersIds, node) => {
-          if (node.nodes) {
-            const isGroupChecked = (node.checked && parentChecked);
-            const groupLayers = {
-              checked: isGroupChecked,
-              layersIds
-            };
-            const currentLayersIds = groupLayers.layersIds;
-            parentLayers.push(groupLayers);
-            node.nodes.map(turnOnOffSubGroups.bind(null, isGroupChecked, currentLayersIds));
-          } else if (node.geolayer) {
-            if (node.checked) currentLayersIds.push(node.id);
-            node.disabled = node.groupdisabled = !parentChecked;
-          }
-        };
-        const parentLayers = [{
-          checked: isGroupChecked,
-          layersIds
-        }];
-        const currentLayersIds = parentLayers[0].layersIds;
-        nodes.map(turnOnOffSubGroups.bind(null, isGroupChecked, currentLayersIds));
-        for (let i = parentLayers.length; i--;) {
-          const {layersIds, checked} = parentLayers[i];
-          layerStore.toggleLayers(layersIds, checked , false, parent_mutually_exclusive);
-        }
-        //force to set visible and unchecked al parent layers
-        if (parent_mutually_exclusive && isGroupChecked){
-          const parenGroupLayerIds = [];
-          const parentGroupSubGroups = [];
-          parent.nodes && parent.nodes.filter(node => {
-            node.id && node.checked && parenGroupLayerIds.push(node.id);
-            node.nodes && node.groupId !== groupId && node.checked && parentGroupSubGroups.push(node);
-          });
-          parenGroupLayerIds.length && layerStore.toggleLayers(parenGroupLayerIds, false, true);
-          parentGroupSubGroups.forEach(group =>{
-            group.checked = false;
-            CatalogEventHub.$emit('treenodestoogled', storeid, group, false);
-          })
-        }
+      CatalogEventHub.$on('treenodevisible', layer => {
+        const mapservice = GUI.getComponent('map').getService();
+        mapservice.emit('cataloglayervisible', layer);
       });
 
       /**
@@ -693,14 +623,9 @@
       CatalogEventHub.$on('treenodeselected', function (storeid, node) {
         const mapservice = GUI.getComponent('map').getService();
         let layer = CatalogLayersStoresRegistry.getLayersStore(storeid).getLayerById(node.id);
-        if (!layer.isSelected()) {
-          CatalogLayersStoresRegistry.getLayersStore(storeid).selectLayer(node.id);
-          // emit signal of select layer from catalog
-          mapservice.emit('cataloglayerselected', layer);
-        } else {
-          CatalogLayersStoresRegistry.getLayersStore(storeid).unselectLayer(node.id);
-          mapservice.emit('cataloglayerunselected', layer);
-        }
+        CatalogLayersStoresRegistry.getLayersStore(storeid).selectLayer(node.id, !layer.isSelected());
+        // emit signal of select layer from catalog
+        mapservice.emit('cataloglayerselected', layer);
       });
 
       CatalogEventHub.$on('showmenulayer', async (layerstree, evt) => {

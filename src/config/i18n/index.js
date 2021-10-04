@@ -1,6 +1,10 @@
 const translations = {
   it: {
     translation: {
+      cookie_law: {
+        message: "Questo sito utilizza i cookie per garantire una buona usabilità all'utilizzatore finale.",
+        buttonText: "Ho capito!"
+      },
       default:"predefinito",
       sign_in: "Accedi",
       layer_selection_filter: {
@@ -209,40 +213,49 @@ const translations = {
                 hint: "Scarica la feature in XLS"
               },
               atlas: {
-                hint: 'Stampa Atlas'
+                hint: "Stampa Atlas"
+              },
+              copy_zoom_to_fid_url: {
+                hint: "Copia URL mappa con estensione a questa geometria",
+                hint_change: "Copiato"
               }
             }
           },
           querybypolygon: {
             download: {
-              title: "Attributi associati alle features",
-              buttons:{
+              title: "Download attributi",
+              choiches:{
                feature: {
                  label: "Solo features",
-                 tooltip: ""
                },
                feature_polygon: {
-                 label: "Feature+Poligono Interrogazione",
-                 tooltip: ""
+                 label: "Features+Poligono Interrogazione",
                }
               }
             },
             tooltip: 'Interroga per poligono',
             no_geometry: 'Non contiene la geometria nella risposta',
-            help: `<h4>Guida - Interrogazione con Poligono</h4>
-                  <ul style="padding-left: 10px;">
-                    <li style="font-size:0.8em;">Seleziona uno strato poligonale in legenda.</li>
-                    <li style="font-size:0.8em;">Assicurati che lo strato sia visibile in mappa.</li>
-                    <li style="font-size:0.8em;">Clicca su una geometria dello strato selezionato.</li>
+            help: {
+              title: 'Guida - Interrogazione con Poligono',
+              message:`
+                  <ul>
+                    <li">Seleziona uno strato poligonale in legenda.</li>
+                    <li>Assicurati che lo strato sia visibile in mappa.</li>
+                    <li>Clicca su una geometria dello strato selezionato.</li>
                   </ul>`
+            }
           },
           querybybbox: {
             tooltip: 'Interroga per BBOX',
             nolayers_visible: "Nessun layer interrogabile è visibile. Assicurarsi che almeno un layer wfs sia visibile per eseguire l'interrogazione",
-            help: `<h4>Guida - Interrogazione BBox</h4>
-                   <ul style="padding-left: 10px;">
-                    <li style="font-size:0.8em;">Disegna un rettangolo per interrogare gli strati evidenziati in giallo</li>
-                   </ul>`
+            help: {
+              title:'Guida - Interrogazione BBox',
+              message:`
+                    <ul>
+                      <li>Disegna un rettangolo per interrogare gli strati evidenziati in giallo</li>
+                   </ul>
+              `
+            },
           },
           addlayer: {
             messages: {
@@ -317,6 +330,8 @@ const translations = {
           }
         },
         catalog: {
+          current_map_theme_prefix: "TEMA",
+          choose_map_theme: "SCEGLI TEMA",
           menu: {
             wms: {
               title:"",
@@ -418,7 +433,7 @@ const translations = {
           tooltip: "Area"
         },
         screenshot: {
-          error: "Errore nella creazione dello screeshot"
+          error: "Errore nella creazione dello screenshot"
         }
       },
       catalog_items: {
@@ -443,6 +458,10 @@ const translations = {
   },
   en: {
     translation: {
+      cookie_law: {
+        message: "This website uses cookies to ensure you get the best experience on our website.",
+        buttonText: "Got It!"
+      },
       default:"default",
       sign_in: "Sign in",
       layer_selection_filter: {
@@ -650,40 +669,48 @@ const translations = {
                 hint: "Download feature XLS"
               },
               atlas: {
-                hint: 'Print Atlas'
+                hint: "Print Atlas"
+              },
+              copy_zoom_to_fid_url: {
+                hint: "Copy map URL with this geometry feature extension",
+                hint_change: "Copied"
               }
             }
           },
           querybypolygon: {
             download: {
-              title: "Attributes features",
-              buttons:{
+              title: "Attributes download",
+              choiches:{
                 feature: {
                   label:"Features only",
-                  tooltip: ""
                 },
                 feature_polygon: {
-                  label:"Feature+Query Polygon",
-                  tooltip: ""
+                  label:"Features+Query Polygon",
                 }
               }
             },
             tooltip: 'Query By Polygon',
             no_geometry: 'No geometry on response',
-            help: `<h4>Guide - Query By Polygon</h4>
-                  <ul style="padding-left: 10px;">
-                    <li style="font-size:0.8em;">Select a polygon layer on TOC.</li>
-                    <li style="font-size:0.8em;">Be sure that layer is visible.</li>
-                    <li style="font-size:0.8em;">Click on a feature of selected layer.</li>
+            help: {
+              title:'Guide - Query By Polygon',
+              message: `
+                  <ul>
+                    <li>Select a polygon layer on TOC.</li>
+                    <li>Be sure that layer is visible.</li>
+                    <li>Click on a feature of selected layer.</li>
                   </ul>`
+            }
           },
           querybybbox: {
             tooltip: 'Query BBox layer',
             nolayers_visible: 'No querable layers are visible. Please set at least one visible wfs layer to run query',
-            help: `<h4>Guide - Query BBox layer</h4>
-                   <ul style="padding-left: 10px;">
-                    <li style="font-size:0.8em;">Draw a square on map to query underlined layers on TOC</li>
+            help: {
+              title: 'Guide - Query BBox layer',
+              message:`
+                   <ul>
+                    <li>Draw a square on map to query underlined layers on TOC</li>
                    </ul>`
+            }
           },
           addlayer: {
             messages: {
@@ -758,6 +785,8 @@ const translations = {
           }
         },
         catalog: {
+          current_map_theme_prefix: "THEME",
+          choose_map_theme: "CHOOSE THEME",
           menu: {
             wms: {
               title:"",
@@ -884,6 +913,10 @@ const translations = {
   },
   fi: {
     translation: {
+      cookie_law: {
+        message: "This website uses cookies to ensure you get the best experience on our website.",
+        buttonText: "Got It!"
+      },
       default:"oletuksena",
       sign_in:"Kirjaudu sisään",
       layer_selection_filter: {
@@ -1091,40 +1124,48 @@ const translations = {
                 hint: "Lataa ominaisuuden XLS-tiedosto"
               },
               atlas: {
-                hint: 'Tulosta Atlas'
+                hint: "Tulosta Atlas"
+              },
+              copy_zoom_to_fid_url: {
+                hint: "Copy map URL with this geometry feature extension",
+                hint_change: "Copied"
               }
             }
           },
           querybypolygon: {
             download: {
-              title: "Attributes features",
-              buttons:{
+              title: "Attributes download",
+              choiches:{
                 feature: {
                   label:"Features only",
-                  tooltip: ""
                 },
                 feature_polygon: {
-                  label:"Feature+Query Polygon",
-                  tooltip: ""
+                  label:"Features+Query Polygon",
                 }
               }
             },
             tooltip: 'Kysely monikulmiolla',
             no_geometry: 'No geometry on response',
-            help: `<h4>Ohje - Kysely monikulmiolla</h4>
-                  <ul style="padding-left: 10px;">
-                    <li style="font-size:0.8em;">Valitse monikulmiotaso luettelosta.</li>
-                    <li style="font-size:0.8em;">Tarkista, että taso on näkyvillä.</li>
-                    <li style="font-size:0.8em;">Valitse ominaisuus valitulla tasolla.</li>
+            help: {
+              title: 'Ohje - Kysely monikulmiolla',
+              message: `
+                  <ul>
+                    <li>Valitse monikulmiotaso luettelosta.</li>
+                    <li>Tarkista, että taso on näkyvillä.</li>
+                    <li>Valitse ominaisuus valitulla tasolla.</li>
                   </ul>`
+            }
           },
           querybybbox: {
             tooltip: 'Tasoon kohdituva BBox-kysely',
             nolayers_visible: 'Ei kyseltäviä tasoja näkyvillä. Aseta vähintään yksi WFS-taso näkyväksi suorittaaksesi haun.',
-            help: `<h4>Ohje - Tasoon kohdistuva BBox-kysely</h4>
-                   <ul style="padding-left: 10px;">
-                    <li style="font-size:0.8em;">Piirrä suorakulmio kartalle suorittaaksesi kyselyn luettelossa alleviivatuille tasoille.</li>
+            help: {
+              title: 'Ohje - Tasoon kohdistuva BBox-kysely',
+              message:`
+                   <ul>
+                    <li>Piirrä suorakulmio kartalle suorittaaksesi kyselyn luettelossa alleviivatuille tasoille.</li>
                    </ul>`
+            }
           },
           addlayer: {
             messages: {
@@ -1199,6 +1240,8 @@ const translations = {
           }
         },
         catalog: {
+          current_map_theme_prefix: "THEME",
+          choose_map_theme: "CHOOSE THEME",
           menu: {
             wms: {
               title:"",
@@ -1325,6 +1368,10 @@ const translations = {
   },
   se: {
     translation: {
+      cookie_law: {
+        message: "This website uses cookies to ensure you get the best experience on our website.",
+        buttonText: "Got It!"
+      },
       default: "standard",
       sign_in:"Logga in",
       layer_selection_filter: {
@@ -1532,40 +1579,48 @@ const translations = {
                 hint: "Ladda egenskapens XLS-fil"
               },
               atlas: {
-                hint: 'Skriv ut Atlas'
+                hint: "Skriv ut Atlas"
+              },
+              copy_zoom_to_fid_url: {
+                hint: "Copy map URL with this geometry feature extension",
+                hint_change: "Copied"
               }
             }
           },
           querybypolygon: {
             download: {
-              title: "Attributes features",
-              buttons:{
+              title: "Attributes download",
+              choiches:{
                 feature: {
                   label:"Features only",
-                  tooltip: ""
                 },
                 feature_polygon: {
-                  label:"Feature+Query Polygon",
-                  tooltip: ""
+                  label:"Features+Query Polygon",
                 }
               }
             },
             tooltip: 'Förfrågan med polygon',
             no_geometry: 'No geometry on response',
-            help: `<h4>Ohje - Förfrågan med polygon</h4>
-                  <ul style="padding-left: 10px;">
-                    <li style="font-size:0.8em;">Välj polygonnivå i listan.</li>
-                    <li style="font-size:0.8em;">Kontrollera att nivån är synlig.</li>
-                    <li style="font-size:0.8em;">Välj egenskap på önskad nivå.</li>
+            help: {
+              title: 'Ohje - Förfrågan med polygon',
+              message:`
+                  <ul >
+                    <li>Välj polygonnivå i listan.</li>
+                    <li>Kontrollera att nivån är synlig.</li>
+                    <li>Välj egenskap på önskad nivå.</li>
                   </ul>`
+            }
           },
           querybybbox: {
             tooltip: 'BBox-förfrågan som riktar sig till en nivå',
             nolayers_visible: 'Inga nivåer som förfrågningar kan riktas till. Gör minst en WFS-nivå synlig för att kunna utföra sökningen.',
-            help: `<h4>Ohje - BBox-förfrågan som riktar sig till nivån</h4>
-                   <ul style="padding-left: 10px;">
-                    <li style="font-size:0.8em;">Rita upp en rektangel på kartan för att utföra förfrågan på de i listan understreckade nivåerna.</li>
+            help: {
+              title: 'Ohje - BBox-förfrågan som riktar sig till nivån',
+              message:`
+                   <ul>
+                    <li>Rita upp en rektangel på kartan för att utföra förfrågan på de i listan understreckade nivåerna.</li>
                    </ul>`
+            }
           },
           addlayer: {
             messages: {
@@ -1641,6 +1696,8 @@ const translations = {
           }
         },
         catalog: {
+          current_map_theme_prefix: "THEME",
+          choose_map_theme: "CHOOSE THEME",
           menu: {
             wms: {
               title:"",

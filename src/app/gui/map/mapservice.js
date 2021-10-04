@@ -1,10 +1,11 @@
-const {t} = require('core/i18n/i18n.service');
-const {inherits, copyUrl, uniqueId, debounce, throttle, toRawType} = require('core/utils/utils');
+const {t}= require('core/i18n/i18n.service');
+const {inherits, copyUrl, uniqueId, debounce, throttle, toRawType, XHR} = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 const {
   createVectorLayerFromFile,
   createSelectedStyle,
-  getMapLayersByFilter} = require('core/utils/geo');
+  getMapLayersByFilter,
+  getGeoTIFFfromServer} = require('core/utils/geo');
 const DataRouterService = require('core/data/routerservice');
 const GUI = require('gui/gui');
 const ApplicationService = require('core/applicationservice');
@@ -233,19 +234,10 @@ function MapService(options={}) {
 
   this._onCatalogSelectLayer = function(layer) {
     if (layer) {
-      const geometryType = layer.getGeometryType();
-      const querable = layer.isQueryable();
       for (let i = 0; i < this._mapControls.length; i++) {
         const mapcontrol = this._mapControls[i];
-        if (mapcontrol.control._onSelectLayer) {
-          if (mapcontrol.control.getGeometryTypes().indexOf(geometryType) !== -1) {
-            mapcontrol.control.setEnable(querable? layer.isVisible(): querable);
-            // listen changes
-            querable && this.on('cataloglayertoggled', _toggledLayer => {
-              if (layer === _toggledLayer) mapcontrol.control.setEnable(layer.isVisible())
-            })
-          } else mapcontrol.control.setEnable(false)
-        }
+        //is a function
+        if (mapcontrol.control.onSelectLayer) mapcontrol.control.onSelectLayer(layer);
       }
     }
   };
@@ -255,21 +247,6 @@ function MapService(options={}) {
   this._keyEvents.eventemitter.push({
     event: 'cataloglayerselected',
     listener: this._onCatalogSelectLayer
-  });
-
-  this._onCatalogUnSelectLayer = function() {
-    for (let i = 0; i< this._mapControls.length; i++) {
-      const mapcontrol = this._mapControls[i];
-      mapcontrol.control._onSelectLayer && mapcontrol.control.setEnable(false);
-      this.removeAllListeners('cataloglayertoggled')
-    }
-  };
-
-  this.on('cataloglayerunselected', this._onCatalogUnSelectLayer);
-
-  this._keyEvents.eventemitter.push({
-    event: 'cataloglayerunselected',
-    listener: this._onCatalogUnSelectLayer
   });
 
   const extraParamsSet = (extraParams, update) => {
@@ -320,10 +297,6 @@ proto.setUpMapOlEvents = function(){
     const keyolmoveeend = this.viewer.map.on("moveend", evt => this.setupCustomMapParamsToLegendUrl());
     this._keyEvents.ol.push(keyolmoveeend);
   } else this.setupCustomMapParamsToLegendUrl(false);
-  // event listener when add or remove layer on map happend
-  // this.viewer.map.getLayers().on("propertychange", evt => {
-  //   console.log(evt.target.get(evt.key))
-  // });
 };
 
 //clear methods to remove all listeners events
@@ -619,12 +592,10 @@ proto.showAddLayerModal = function() {
 };
 
 proto._checkMapControls = function(){
-  this._changeMapMapControls.forEach(({control, getVisible=()=>{return true}}) =>{
-    this._setMapControlVisible({
-      control,
-      visible: getVisible()
-    })
-  })
+  this._changeMapMapControls.forEach(({control, getLayers}) => {
+    const layers = getLayers();
+    control.change(layers);
+  });
 };
 
 proto._setupControls = function() {
@@ -645,10 +616,10 @@ proto._setupControls = function() {
     const mapcontrols = this.config.mapcontrols;
     const feature_count = this.project.getQueryFeatureCount();
     const map = this.getMap();
-    mapcontrols.forEach(controlType => {
+    mapcontrols.forEach(mapcontrol => {
       let control;
-      // mapcontroc can be a String or object with options
-      controlType = toRawType(controlType) === 'String' ? controlType : controlType.name;
+      // mapcontrol can be a String or object with options
+      const controlType = toRawType(mapcontrol) === 'String' ? mapcontrol : mapcontrol.name;
       switch (controlType) {
         case 'reset':
           if (!isMobile.any) {
@@ -699,28 +670,54 @@ proto._setupControls = function() {
           }
           break;
         case 'screenshot':
-          //check if wms externl is on map. CORS PROBLEM
-          const findWmsExternal = this.getMapLayers().find(({layers=[]}) => {
-            return !!layers.find(layer => layer.isExternalWMS ? layer.isExternalWMS() : false)
-          });
-          if (!isMobile.any && !findWmsExternal) {
+        case 'geoscreenshot':
+          if (!isMobile.any ) {
             control = this.createMapControl(controlType, {
+              layers: this.getMapLayers(),
               options: {
                 onclick: async () => {
+                  // Start download show Image
+                  const caller_download_id = ApplicationService.setDownload(true);
                   try {
                     const blobImage = await this.createMapImage();
-                    saveAs(blobImage, `map_${Date.now()}.png`);
-                  } catch (e) {
+                    if (controlType === 'screenshot') saveAs(blobImage, `map_${Date.now()}.png`);
+                    else {
+                      const url = `/${this.project.getType()}/api/asgeotiff/${this.project.getId()}/`;
+                      const bbox = this.getMapBBOX().toString();
+                      const csrfmiddlewaretoken = this.getCookie('csrftoken');
+                      try {
+                        const geoTIFF = await getGeoTIFFfromServer({
+                          url,
+                          params: {
+                            image: blobImage,
+                            csrfmiddlewaretoken,
+                            bbox
+                          },
+                          method: "POST"
+                        });
+                        saveAs(geoTIFF, `map_${Date.now()}.tif`);
+                      } catch(err) {
+                        console.log(err)
+                      }
+                    }
+                  } catch (err) {
                     GUI.showUserMessage({
                       type: 'alert',
                       message: t("mapcontrols.screenshot.error"),
                       autoclose: true
                     })
                   }
+                  // Stop download show Image
+                  ApplicationService.setDownload(false, caller_download_id);
                   return true;
                 }
               }
             });
+            const change = {
+              control,
+              getLayers: ()=> this.getMapLayers()
+            };
+            this._changeMapMapControls.push(change);
           }
           break;
         case 'scale':
@@ -774,23 +771,25 @@ proto._setupControls = function() {
                 FILTERABLE: true,
                 SELECTEDORALL: true
               }, condition);
-              return [... new Set([...controlFiltrableLayers, ...controlQuerableLayers])];
+              return controlFiltrableLayers.length ? [... new Set([...controlFiltrableLayers, ...controlQuerableLayers])] : [];
             };
+            const spatialMethod = 'intersects';
             control = this.createMapControl(controlType, {
               options: {
+                spatialMethod,
                 layers: getControlLayers(),
-                help: "sdk.mapcontrols.querybypolygon.help"
+                help: {
+                  title: "sdk.mapcontrols.querybypolygon.help.title",
+                  message: "sdk.mapcontrols.querybypolygon.help.message",
+                }
               }
             });
             if (control) {
-              this._changeMapMapControls.push({
+              const change = {
                 control,
-                getVisible: () => {
-                  const controlLayers = getControlLayers();
-                  return control.checkVisibile(controlLayers);
-                }
-              });
-
+                getLayers: getControlLayers
+              };
+              this._changeMapMapControls.push(change);
               const runQuery = throttle(async e => {
                 GUI.closeOpenSideBarComponent();
                 const coordinates = e.coordinates;
@@ -831,7 +830,9 @@ proto._setupControls = function() {
                     });
                     data.length && map.getView().setCenter(coordinates);
                   }
-                } catch(err){}
+                } catch(err){
+                  console.log(err)
+                }
               });
               const eventKey = control.on('picked', runQuery);
               control.setEventKey({
@@ -856,39 +857,31 @@ proto._setupControls = function() {
               layers.forEach(layer => layer.setTocHighlightable(true));
               return layers;
             };
+
             let controlLayers = getControlLayers();
+            const spatialMethod = 'intersects';
             control = this.createMapControl(controlType, {
               options: {
+                spatialMethod,
                 layers: controlLayers,
-                help: "sdk.mapcontrols.querybybbox.help"
+                help: {
+                  title:"sdk.mapcontrols.querybybbox.help.title",
+                  message:"sdk.mapcontrols.querybybbox.help.message",
+                }
               }
             });
             if (control) {
-              this._changeMapMapControls.push({
+              const change = {
                 control,
-                getVisible: () => {
-                  controlLayers = getControlLayers();
-                  return control.checkVisible(controlLayers);
-                }
-              });
+                getLayers: getControlLayers
+              };
+              this._changeMapMapControls.push(change);
+              // get all filtrable layers in toc no based on selection or visibility
               const layersFilterObject = {
                 SELECTEDORALL: true,
                 FILTERABLE: true,
                 VISIBLE: true
               };
-              control.on('toggled', evt => {
-                if (evt.target.isToggled()) {
-                  const layers = getMapLayersByFilter(layersFilterObject, condition);
-                  if (layers.length === 0) {
-                    GUI.showUserMessage({
-                      type: "warning",
-                      message: 'sdk.mapcontrols.querybybbox.nolayers_visible'
-                    });
-                    control.toggle();
-                  }
-                }
-              });
-
               const runQuery = throttle(async e => {
                 GUI.closeOpenSideBarComponent();
                 const bbox = e.extent;
@@ -898,6 +891,9 @@ proto._setupControls = function() {
                       bbox,
                       feature_count,
                       layersFilterObject,
+                      filterConfig: {
+                        spatialMethod: control.getSpatialMethod(), // added spatial method to polygon filter
+                      },
                       condition,
                       multilayers: this.project.isQueryMultiLayers(controlType)
                     }
@@ -906,7 +902,9 @@ proto._setupControls = function() {
                     const center = ol.extent.getCenter(bbox);
                     this.getMap().getView().setCenter(center);
                   }
-                } catch(err){}
+                } catch(err){
+                  console.log(err)
+                }
               });
               const eventKey = control.on('bboxend', runQuery);
               control.setEventKey({
@@ -1097,6 +1095,26 @@ proto.getCenter = function(){
   return map.getView().getCenter();
 };
 
+/**
+ *
+ *method to zoom to feature
+ */
+proto.zoomToFid = async function(zoom_to_fid='', separator='|'){
+  const [layerId, fid] = zoom_to_fid.split(separator);
+  if (layerId !== undefined && fid !== undefined){
+    const layer = this.project.getLayerById(layerId);
+    const feature = layer && await layer.getFeatureByFid(fid);
+    if (feature) {
+      const {geometry, bbox} = feature;
+      if (geometry)
+        this.zoomToFeatures([feature], {
+          highlight: true
+        });
+      else if (bbox) this.zoomToExtent(feature.bbox);
+    }
+  }
+};
+
 proto.getMapExtent = function(){
   const map = this.getMap();
   return map.getView().calculateExtent(map.getSize());
@@ -1259,8 +1277,14 @@ proto._updateMapControlsLayout = function({width, height}={}) {
   }
 };
 
+/**
+ *
+ * @param control
+ * @param visible
+ * @private
+ */
 proto._setMapControlVisible = function({control, visible=true}) {
-   control && (visible && $(control.element).show() || $(control.element).hide());
+   control && control.setVisible(visible);
 };
 
 proto._addControlToMapControls = function(control, visible=true) {
@@ -1434,13 +1458,17 @@ proto.addMapLayers = function(mapLayers) {
 
 proto._setupCustomMapParamsToLegendUrl = function(bool=true){
   if (bool) {
-    const size = this.getMap() && this.getMap().getSize().filter(value => value > 0) || null;
-    const bbox = size && size.length === 2 ? this.getMap().getView().calculateExtent(size): null;
+    const map = this.getMap();
+    const size = map && map.getSize().filter(value => value > 0) || null;
+    let bbox = size && size.length === 2 ? map.getView().calculateExtent(size) : this.project.state.initextent;
+    // in case of axis orientation inverted i need to iverted the axis
+    bbox = map.getView().getProjection().getAxisOrientation() === "neu" ? [bbox[1], bbox[0], bbox[3], bbox[2]] : bbox;
+    const crs = this.getEpsg();
     //setup initial legend parameter
     this.getMapLayers().forEach(mapLayer => {
       mapLayer.setupCustomMapParamsToLegendUrl && mapLayer.setupCustomMapParamsToLegendUrl({
-        crs: this.getEpsg(),
-        bbox: bbox || this.project.state.initextent
+        crs,
+        bbox
       })
     });
   }
@@ -1497,6 +1525,8 @@ proto._resetView = function() {
 proto._calculateViewOptions = function({project, width, height}={}) {
   const searchParams = new URLSearchParams(location.search);
   const map_extent = searchParams.get('map_extent');
+  const zoom_to_fid = searchParams.get('zoom_to_fid');
+  zoom_to_fid &&  this.zoomToFid(zoom_to_fid);
   const initextent = map_extent ? map_extent.split(',').map(coordinate => 1*coordinate) : project.state.initextent;
   const projection = this.getProjection();
   const extent = project.state.extent;
@@ -1579,18 +1609,6 @@ proto._setUpEventsKeysToLayersStore = function(layerStore) {
   const layerStoreId = layerStore.getId();
   // check if already store a key of events
   this._layersStoresEventKeys[layerStoreId] = [];
-  //SETVISIBILITY EVENT
-  const layerVisibleKey = layerStore.onafter('setLayersVisible',  layersIds => {
-    layersIds.forEach(layerId => {
-      const layer = layerStore.getLayerById(layerId);
-      const mapLayer = this.getMapLayerForLayer(layer);
-      mapLayer && this.updateMapLayer(mapLayer)
-    });
-  });
-
-  this._layersStoresEventKeys[layerStoreId].push({
-    setLayersVisible: layerVisibleKey
-  });
   //ADD LAYER
   const addLayerKey = layerStore.onafter('addLayer', layer => {
     if (layer.getType() === 'vector') {
@@ -1774,8 +1792,12 @@ proto.getOverviewMapLayers = function(project) {
 };
 
 proto.updateMapLayer = function(mapLayer, options={}) {
-  const { force=false } = options;
-  !force ? mapLayer.update(this.state, {}) : mapLayer.update(this.state, {"time": Date.now()})
+  const {force=false} = options;
+  !force ? mapLayer.update(this.state, {force}) : mapLayer.update(this.state,
+    {
+      force,
+      "time": Date.now()
+    })
 };
 
 // run update function on ech mapLayer
@@ -1861,8 +1883,7 @@ proto._watchInteraction = function(interaction) {
   })
 };
 
-proto.zoomTo = function(coordinate, zoom) {
-  zoom = _.isNumber(zoom) ? zoom : 6;
+proto.zoomTo = function(coordinate, zoom=6) {
   this.viewer.zoomTo(coordinate, zoom);
 };
 
@@ -1909,6 +1930,7 @@ proto.getGeometryAndExtentFromFeatures = function(features=[]){
   try {
     const olClassGeomType = geometryType.includes('Multi') ? geometryType : `Multi${geometryType}`;
     geometry = new ol.geom[olClassGeomType](geometryCoordinates);
+    if (extent === undefined) extent = geometry.getExtent();
   } catch(err){}
   return {
     extent,
@@ -1924,7 +1946,7 @@ proto.highlightFeatures = function(features, options={}){
 };
 
 proto.zoomToFeatures = function(features, options={highlight: false}) {
-  const {geometry, extent} = this.getGeometryAndExtentFromFeatures(features);
+  let {geometry, extent} = this.getGeometryAndExtentFromFeatures(features);
   const {highlight} = options;
   if (highlight && extent) options.highLightGeometry = geometry;
   extent && this.zoomToExtent(extent, options);

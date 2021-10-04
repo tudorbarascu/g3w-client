@@ -14,9 +14,10 @@ const MousePositionControl = require('g3w-ol/src/controls/mousepositioncontrol')
 const ScaleControl = require('g3w-ol/src/controls/scalecontrol');
 const OnClikControl = require('g3w-ol/src/controls/onclickcontrol');
 const ScreenshotControl = require('g3w-ol/src/controls/screenshotcontrol');
+const geoScreenshotControl = require('g3w-ol/src/controls/geoscreenshotcontrol');
 
 const ControlsFactory = {
-  create: function(options={}) {
+  create(options={}) {
     let control;
     const ControlClass = ControlsFactory.CONTROLS[options.type];
     if (ControlClass) control = new ControlClass(options);
@@ -43,7 +44,8 @@ ControlsFactory.CONTROLS = {
   'mouseposition': MousePositionControl,
   'scale': ScaleControl,
   'onclick': OnClikControl,
-  'screenshot': ScreenshotControl
+  'screenshot': ScreenshotControl,
+  'geoscreenshot': geoScreenshotControl
 };
 
 module.exports = ControlsFactory;

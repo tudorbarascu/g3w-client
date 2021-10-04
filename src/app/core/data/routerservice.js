@@ -21,10 +21,15 @@ function Routerservice() {
    * }
    */
   this.ouputplaces = {
-    gui(dataPromise, options={}){
-      GUI.outputDataPlace(dataPromise, options);
+    async gui(dataPromise, options={}){
+      GUI.setLoadingContent(true);
+      try {
+        GUI.outputDataPlace(dataPromise, options);
+        await dataPromise;
+      } catch(err){}
+      GUI.setLoadingContent(false);
     },
-    iframe(dataPromise, options={}){
+    async iframe(dataPromise, options={}){
       IFrameRouterService.outputDataPlace(dataPromise, options);
     }
   };
@@ -58,6 +63,19 @@ function Routerservice() {
     //return always data
     const data = await dataPromise;
     return await data;
+  };
+
+  /**
+   *Force to show empty output data
+   *
+   * */
+  this.showEmptyOutputs = function(){
+    const dataPromise = Promise.resolve({
+      data: []
+    });
+    this.currentoutputplaces.forEach(place =>{
+      this.ouputplaces[place](dataPromise);
+    });
   };
 
   /**
@@ -99,7 +117,7 @@ function Routerservice() {
    * @param method has to get two parameters data (promise) and options (Object)
    * ex {
    * place: <newplace>
-   * method: function(dataPromise, options={}){}
+   * method(dataPromise, options={}){}
    *   }
    */
   this.addNewOutputPlace = function({place, method=()=>{}}={}){

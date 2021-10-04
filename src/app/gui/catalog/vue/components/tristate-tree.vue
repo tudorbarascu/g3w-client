@@ -1,63 +1,70 @@
 <template>
-  <li class="tree-item" @contextmenu.prevent.stop="showLayerMenu(layerstree, $event)" @click.prevent="select"
-    :class="{selected: !isFolder || !isTable ? layerstree.selected : false, itemmarginbottom: !isFolder,  disabled: isDisabled, group: isFolder  }">
-    <span v-if="isFolder"
-      style="padding-right: 2px;"
-      :class="[{bold : isFolder}, layerstree.expanded ? g3wtemplate.getFontClass('caret-down') : g3wtemplate.getFontClass('caret-right')]"
-      @click="expandCollapse"
-      class="root collapse-expande-collapse-icon">
-    </span>
-    <span v-if="isFolder"
-      @click.stop="toggle(true)"
+  <li class="tree-item" @contextmenu.prevent.stop="showLayerMenu(layerstree, $event)" @click.prevent.stop="select"
+          :class="{selected: !isGroup || !isTable ? layerstree.selected : false, itemmarginbottom: !isGroup,  disabled: isInGrey, group: isGroup  }">
+  <span v-if="isGroup"
+        style="padding-right: 2px;"
+        :class="[{bold : isGroup}, layerstree.expanded ? g3wtemplate.getFontClass('caret-down') : g3wtemplate.getFontClass('caret-right')]"
+        @click="expandCollapse"
+        class="root collapse-expande-collapse-icon">
+  </span>
+    <span v-if="isGroup"
+          @click.stop="toggle()"
           style="color: #ffffff"
           :class="[triClass()]">
-    </span>
+  </span>
     <span v-else-if="isTable"
           v-show="!layerstree.hidden"
-          :style="{paddingLeft: !layerstree.exclude_from_legend && legendplace === 'toc' ? '18px' : '25px'}"
+          :style="{paddingLeft: !layerstree.exclude_from_legend && legendplace === 'toc' ? '18px' : '22px'}"
           :class="[parentFolder ? 'child' : 'root', g3wtemplate.getFontClass('table')]">
-    </span>
+  </span>
     <template v-else>
-      <span style="color: red" v-if="layerstree.external && layerstree.removable"
-        :class="g3wtemplate.getFontClass('trash')" @click="removeExternalLayer(layerstree.name)">
-      </span>
+    <span style="color: red" v-if="layerstree.external && layerstree.removable"
+          :class="g3wtemplate.getFontClass('trash')" @click="removeExternalLayer(layerstree.name)">
+    </span>
       <span style="color: #ffffff; margin-left: 5px;" v-if="layerstree.external && layerstree.download"
-        :class="g3wtemplate.getFontClass('download')" @click="downloadExternalLayer(layerstree.download)">
+            :class="g3wtemplate.getFontClass('download')"
+            @click="downloadExternalLayer(layerstree.download)">
+    </span>
+      <span v-show="!layerstree.hidden" class="checkbox-layer" :class="parentFolder ? 'child' : 'root'">
+      <span class="collapse-expande-collapse-icon" v-if="this.legendlayerposition === 'toc'"
+            @click.self.stop="()=> layerstree.legend.show = !layerstree.legend.show"
+            :class="g3wtemplate.getFontClass(layerstree.legend.show ? 'caret-down' : 'caret-right')">
       </span>
-        <span v-show="!layerstree.hidden" class="checkbox-layer" :class="parentFolder ? 'child' : 'root'">
-        <span class="collapse-expande-collapse-icon" v-if="this.legendlayerposition === 'toc'"
-          @click.stop="()=> layerstree.legend.show = !layerstree.legend.show" :class="g3wtemplate.getFontClass(layerstree.legend.show ? 'caret-down' : 'caret-right')">
-        </span>
-        <span :style="{paddingLeft: this.legendlayerposition === 'toc' ? '5px' : (!layerstree.legend && layerstree.external) ? '0' :
-           (legendplace === 'toc') ? '19px' : '26px'}" @click.stop="toggle(false)"
-           :class="[g3wtemplate.getFontClass(layerstree.checked ? 'check': 'uncheck'), {'toc-added-external-layer':(!layerstree.legend && layerstree.external)}]">
-        </span>
+      <span :style="{paddingLeft: this.legendlayerposition === 'toc' ? '5px' : (!layerstree.legend && layerstree.external) ? '0' :
+         (legendplace === 'toc') ? '18px' : '23px'}" @click.stop="toggle()"
+            :class="[g3wtemplate.getFontClass(layerstree.checked ? 'check': 'uncheck'), {'toc-added-external-layer':(!layerstree.legend && layerstree.external)}]">
       </span>
+    </span>
     </template>
-    <div v-show="!layerstree.hidden || isFolder" class="tree-node-title" :class="{disabled: layerstree.disabled, bold: isFolder}">
-      <span :class="{highlightlayer: isHighLight, scalevisibility: showscalevisibilityclass}" class="skin-tooltip-top"
-        data-placement="top" :current-tooltip="showScaleVisibilityToolip ? `minscale:${layerstree.minscale} - maxscale: ${layerstree.maxscale}` : ''"
-        v-t-tooltip.text = "showScaleVisibilityToolip ? `minscale:${layerstree.minscale} - maxscale:${layerstree.maxscale}` : ''">
+    <div v-show="!layerstree.hidden || isGroup"
+         class="tree-node-title"
+         :class="{disabled: layerstree.disabled || (layerstree.id && !layerstree.visible) , bold: isGroup}">
+      <span
+              :class="{highlightlayer: isHighLight, scalevisibility: showscalevisibilityclass}"
+              class="skin-tooltip-top new_line_too_long_text"
+              data-placement="top"
+              :current-tooltip="showScaleVisibilityToolip ? `minscale:${layerstree.minscale} - maxscale: ${layerstree.maxscale}` : ''"
+              v-t-tooltip.text = "showScaleVisibilityToolip ? `minscale:${layerstree.minscale} - maxscale:${layerstree.maxscale}` : ''">
         {{ layerstree.title }}
       </span>
-      <div v-if="(!isFolder && !layerstree.external)">
+      <div v-if="(!isGroup && !layerstree.external)">
         <span v-if="layerstree.selection.active" class="action-button skin-tooltip-left selection-filter-icon" data-placement="left" data-toggle="tooltip" :class="g3wtemplate.getFontClass('success')" @click.caputure.prevent.stop="clearSelection" v-t-tooltip.create="'layer_selection_filter.tools.clear'"></span>
         <span v-if="layerstree.selection.active || layerstree.filter.active" class="action-button skin-tooltip-left selection-filter-icon" data-placement="left" data-toggle="tooltip" :class="[g3wtemplate.getFontClass('filter'), layerstree.filter.active ? 'active' : '']" @click.caputure.prevent.stop="toggleFilterLayer" v-t-tooltip.create="'layer_selection_filter.tools.filter'"></span>
       </div>
     </div>
     <layerlegend v-if="this.legendlayerposition === 'toc'" :layer="layerstree"></layerlegend>
-    <ul v-if="isFolder" class="tree-content-items" :class="[`g3w-lendplace-${legendplace}`, {root: root}]" v-show="layerstree.expanded">
+    <ul v-if="isGroup" class="tree-content-items root" :class="[`g3w-lendplace-${legendplace}`]" v-show="layerstree.expanded">
       <tristate-tree
+        v-for="_layerstree in layerstree.nodes" :key="layerstree.id"
         :root="false"
         :legendConfig="legend"
         :legendplace="legendplace"
         :highlightlayers="highlightlayers"
-        :parentFolder="isFolder"
+        :parentFolder="isGroup"
         :layerstree="_layerstree"
         :storeid="storeid"
         :parent="layerstree"
-        :parent_mutually_exclusive="!!layerstree.mutually_exclusive"
-        v-for="_layerstree in layerstree.nodes" :key="layerstree.id">
+        :parent_mutually_exclusive="!!layerstree.mutually_exclusive">
       </tristate-tree>
     </ul>
   </li>
@@ -65,37 +72,38 @@
 <script>
   import LayerLegend from "./layerlegend.vue";
   import CatalogEventHub from "../../catalogeventhub";
+  const CatalogLayersStoresRegistry = require('core/catalog/cataloglayersstoresregistry');
   const GUI = require('gui/gui');
   export default {
     name: "tristate-tree",
-    props : ['layerstree', 'storeid', 'legend', 'legendplace', 'highlightlayers', 'parent_mutually_exclusive', 'parentFolder', 'externallayers', 'root', 'parent'],
+    props: ['layerstree', 'storeid', 'legend', 'legendplace', 'highlightlayers', 'parent_mutually_exclusive', 'parentFolder', 'externallayers', 'root', 'parent'],
     components: {
       'layerlegend': LayerLegend
     },
     data() {
       return {
         expanded: this.layerstree.expanded,
-        isFolderChecked: true,
+        isGroupChecked: true,
         controltoggled: false,
         n_childs: null,
         filtered: false
       }
     },
     computed: {
-      isFolder() {
+      isGroup() {
         return !!this.layerstree.nodes
       },
-      legendlayerposition(){
+      legendlayerposition() {
         return !this.layerstree.exclude_from_legend && this.legendplace === 'toc' && this.layerstree.visible && this.layerstree.legend ? 'toc' : 'tab';
       },
-      showscalevisibilityclass(){
-        return !this.isFolder && this.layerstree.scalebasedvisibility
+      showscalevisibilityclass() {
+        return !this.isGroup && this.layerstree.scalebasedvisibility
       },
-      showScaleVisibilityToolip(){
-        return this.showscalevisibilityclass && this.isDisabled && this.layerstree.checked;
+      showScaleVisibilityToolip() {
+        return this.showscalevisibilityclass && this.layerstree.disabled && this.layerstree.checked;
       },
       isTable() {
-        return !this.isFolder && !this.layerstree.geolayer && !this.layerstree.external;
+        return !this.isGroup && !this.layerstree.geolayer && !this.layerstree.external;
       },
       isHidden() {
         return this.layerstree.hidden && (this.layerstree.hidden === true);
@@ -105,64 +113,133 @@
       },
       isHighLight() {
         const id = this.layerstree.id;
-        return this.highlightlayers && !this.isFolder && CatalogLayersStoresRegistry.getLayerById(id).getTocHighlightable() && this.layerstree.visible;
+        return this.highlightlayers && !this.isGroup && CatalogLayersStoresRegistry.getLayerById(id).getTocHighlightable() && this.layerstree.visible;
       },
-      isDisabled() {
-        return (!this.isFolder && !this.isTable && !this.layerstree.checked) || this.layerstree.disabled || this.layerstree.groupdisabled
+      isInGrey() {
+        return (!this.isGroup && !this.isTable && (!this.layerstree.visible || this.layerstree.disabled));
       }
     },
-    watch:{
+    watch: {
       'layerstree.disabled'(bool) {
-        this.layerstree.selected = bool && this.layerstree.selected ? false : this.layerstree.selected;
       },
-      'layerstree.checked'(){
+      'layerstree.checked'() {
+        this.isGroup ? this.handleGroupChecked(this.layerstree) : this.handleLayerChecked(this.layerstree)
       }
     },
     methods: {
-      toggleFilterLayer(){
+      /**
+       * Handel change checked property of group
+       * @param group
+       */
+      handleGroupChecked(group) {
+        let {checked, parentGroup, nodes} = group;
+        const setAllLayersVisible = ({nodes, visible}) => {
+          nodes.forEach(node => {
+            if (node.id !== undefined) {
+              if (node.parentGroup.checked && node.checked) {
+                const projectLayer = CatalogLayersStoresRegistry.getLayerById(node.id);
+                projectLayer.setVisible(visible);
+              }
+            } else setAllLayersVisible({
+              nodes: node.nodes,
+              visible
+            })
+          });
+        };
+        if (checked) {
+          if (parentGroup && parentGroup.mutually_exclusive) {
+            parentGroup.nodes.forEach(node => {
+              node.checked = node.groupId === group.groupId;
+              node.checked && setAllLayersVisible({
+                nodes: node.nodes,
+                visible: true
+              })
+            })
+          } else setAllLayersVisible({
+            nodes,
+            visible: parentGroup ? parentGroup.checked : true
+          });
+          while (parentGroup) {
+            parentGroup.checked = parentGroup.root || parentGroup.checked;
+            parentGroup = parentGroup.parentGroup
+          }
+        } else {
+          nodes.forEach(node => {
+            if (node.id !== undefined) {
+              if (node.checked) {
+                const projectLayer = CatalogLayersStoresRegistry.getLayerById(node.id);
+                projectLayer.setVisible(false);
+              }
+            } else setAllLayersVisible({
+              nodes: node.nodes,
+              visible: false
+            })
+          });
+        }
+      },
+      /**
+       * Handle changing checked property of layer
+       * @param layer
+       */
+      handleLayerChecked(layer) {
+        let {checked, id, disabled, parentGroup} = layer;
+        const projectLayer = CatalogLayersStoresRegistry.getLayerById(id);
+        if (checked) {
+          const visible = projectLayer.setVisible(!disabled);
+          visible && this.legendplace === 'toc' && setTimeout(() => CatalogEventHub.$emit('layer-change-style', {
+            layerId: id
+          }));
+          if (parentGroup.mutually_exclusive) {
+            parentGroup.nodes.forEach(node => node.checked = node.id === layer.id);
+          }
+          while (parentGroup) {
+            parentGroup.checked = true;
+            parentGroup = parentGroup.parentGroup;
+          }
+        } else projectLayer.setVisible(false);
+        CatalogEventHub.$emit('treenodevisible', projectLayer);
+      },
+      toggleFilterLayer() {
         CatalogEventHub.$emit('activefiltertokenlayer', this.storeid, this.layerstree);
       },
-      clearSelection(){
+      clearSelection() {
         CatalogEventHub.$emit('unselectionlayer', this.storeid, this.layerstree);
       },
-      toggle(isFolder) {
-        if (isFolder) {
-          this.layerstree.checked = !this.layerstree.checked;
-          this.isFolderChecked = this.layerstree.checked && !this.layerstree.disabled;
-          CatalogEventHub.$emit('treenodestoogled', this.storeid, this.layerstree, this.isFolderChecked, this.parent);
-        } else CatalogEventHub.$emit('treenodetoogled', this.storeid, this.layerstree, this.parent, this.parent_mutually_exclusive);
+      toggle() {
+        this.layerstree.checked = !this.layerstree.checked;
       },
       expandCollapse() {
         this.layerstree.expanded = !this.layerstree.expanded;
       },
       select() {
-        if (!this.isFolder && !this.layerstree.external && !this.isTable) {
-          CatalogEventHub.$emit('treenodeselected',this.storeid, this.layerstree);
+        if (!this.isGroup && !this.layerstree.external && !this.isTable) {
+          CatalogEventHub.$emit('treenodeselected', this.storeid, this.layerstree);
         }
       },
-      triClass () {
+      triClass() {
         return this.layerstree.checked ? this.g3wtemplate.getFontClass('check') : this.g3wtemplate.getFontClass('uncheck');
       },
       downloadExternalLayer(download) {
         if (download.file) {
           downloadFile(download.file);
-        } else if (download.url) {}
+        } else if (download.url) {
+        }
       },
-      removeExternalLayer: function(name) {
+      removeExternalLayer(name) {
         const mapService = GUI.getComponent('map').getService();
         mapService.removeExternalLayer(name);
       },
       showLayerMenu(layerstree, evt) {
-        if (!this.isFolder && (this.layerstree.openattributetable || this.layerstree.downloadable || this.layerstree.geolayer || this.layerstree.external)) {
+        if (!this.isGroup && (this.layerstree.openattributetable || this.layerstree.downloadable || this.layerstree.geolayer || this.layerstree.external)) {
           CatalogEventHub.$emit('showmenulayer', layerstree, evt);
         }
       }
     },
     created() {
-      (this.isFolder && !this.layerstree.checked) && CatalogEventHub.$emit('treenodestoogled', this.storeid, this.layerstree, this.layerstree.checked, this.parent);
+      if (this.isGroup && !this.layerstree.checked) this.handleGroupChecked(this.layerstree);
     },
     async mounted() {
-      if (this.isFolder && !this.root) {
+      if (this.isGroup && !this.root) {
         this.layerstree.nodes.forEach(node => {
           if (this.parent_mutually_exclusive && !this.layerstree.mutually_exclusive)
             if (node.id) node.uncheckable = true;

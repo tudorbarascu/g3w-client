@@ -30,10 +30,6 @@ proto.addLayer = function(layer){
   this.allLayers.push(layer);
 };
 
-proto.toggleLayer = function(){
-  this._updateLayers();
-};
-
 proto.update = function(mapState, extraParams) {
   this._updateLayer(mapState, extraParams);
 };
@@ -61,7 +57,8 @@ proto._makeOlLayer = function(){
 };
 
 proto._updateLayer = function(mapState={}, extraParams={}) {
-  this.checkLayersDisabled(mapState.resolution, mapState.mapUnits);
+  const {force=false} = extraParams;
+  !force && this.checkLayersDisabled(mapState.resolution, mapState.mapUnits);
   this._olLayer.setVisible(this.layer.isVisible());
 };
 

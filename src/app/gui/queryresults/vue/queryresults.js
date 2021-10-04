@@ -1,6 +1,6 @@
 import Tabs from '../../tabs/tabs.vue';
 import Link from '../../fields/link.vue';
-import HeaderFeatureBody from './headerfeaturebody.vue';
+import HeaderFeatureBody from './components/headerfeaturebody.vue';
 import { createCompiledTemplate } from 'gui/vue/utils';
 const {inherits, throttle} = require('core/utils/utils');
 const Component = require('gui/vue/component');
@@ -18,7 +18,7 @@ const vueComponentOptions = {
     return {
       state: this.$options.queryResultsService.state,
       headerExpandActionCellWidth: headerExpandActionCellWidth,
-      headerActionsCellWidth: headerActionsCellWidth,
+      headerActionsCellWidth: headerActionsCellWidth
     }
   },
   components: {
@@ -37,7 +37,7 @@ const vueComponentOptions = {
       return this.hasResults || !!this.state.components.length;
     },
     hasResults() {
-      return this.state.layers.length > 0
+      return this.state.layers.length > 0;
     },
     info(){
       const info = {
@@ -66,6 +66,12 @@ const vueComponentOptions = {
     }
   },
   methods: {
+    getColSpan(layer){
+      return this.attributesSubsetLength(layer)+(this.state.layersactions[layer.id].length ? 1 : 0)+(!this.hasLayerOneFeature(layer)*1)
+    },
+    getDownloadActions(layer){
+      return this.state.layersactions[layer.id].find(action => action.formats);
+    },
     addLayerFeaturesToResults(layer){
       this.$options.queryResultsService.addLayerFeaturesToResultsAction(layer);
     },
@@ -74,7 +80,10 @@ const vueComponentOptions = {
       evt.target.children[0].style.display = display === 'none' ? 'inline-block' : 'none';
     },
     printAtlas(layer){
-      this.$options.queryResultsService.printAtlas(layer)
+      this.$options.queryResultsService.printAtlas(layer);
+    },
+    showLayerDownloadFormats(layer){
+      this.$options.queryResultsService.showLayerDownloadFormats(layer)
     },
     saveLayerResult(layer, type="csv") {
       this.$options.queryResultsService.saveLayerResult({layer, type});
@@ -264,7 +273,7 @@ const vueComponentOptions = {
         await this.$nextTick();
       }
       const container = this.getContainerFromFeatureLayer({layer, index});
-      this.$options.queryResultsService.trigger(action.id, layer,feature, index, container);
+      await this.$options.queryResultsService.trigger(action.id, layer,feature, index, container);
     },
     showFullPhoto(url) {
       this.$options.queryResultsService.showFullPhoto(url);
@@ -291,7 +300,7 @@ const vueComponentOptions = {
     }
   },
   watch: {
-    'state.layers'(layers) {
+    async 'state.layers'(layers, oldlayers) {
       layers.forEach(layer => {
         if (layer.attributes.length <= maxSubsetLength && !layer.hasImageField) layer.expandable = false;
         layer.features.forEach(feature => {
@@ -321,7 +330,8 @@ const vueComponentOptions = {
           this.showFeatureInfo(layer, boxid);
         });
       }
-      requestAnimationFrame(() => this.$options.queryResultsService.postRender(this.$el))
+      requestAnimationFrame(() => this.$options.queryResultsService.postRender(this.$el));
+      await this.$nextTick();
     },
     onelayerresult(bool) {
       bool && this.$options.queryResultsService.highlightFeaturesPermanently(this.state.layers[0]);
@@ -340,7 +350,7 @@ const vueComponentOptions = {
     this.layersFeaturesBoxes = null;
   },
   destroyed() {
-    setTimeout(()=>this.$options.queryResultsService.clear())
+    this.$options.queryResultsService.clear();
   }
 };
 
@@ -365,7 +375,6 @@ function QueryResultsComponent(options={}) {
   this._service.onafter('setLayersData', async () => {
     !this.internalComponent && this.setInternalComponent();
     await this.internalComponent.$nextTick();
-    $('.action-button[data-toggle="tooltip"]').tooltip();
   });
 
   this.layout = function(width,height) {};

@@ -28,7 +28,16 @@ proto.query = function(options={}, params = {}) {
         map: this._layer.getMapProjection(),
         layer: reproject ? this._layer.getProjection(): null
       };
-      const featuresForLayers = this.handleQueryResponseFromServer(response, projections, layers, false);
+      const featuresForLayers = this.handleQueryResponseFromServer(response, projections, layers, wms=false);
+      featuresForLayers.forEach(featuresForLayer => {
+        const {features=[]} = featuresForLayer;
+        //sanitize in case of nil:true
+        features.forEach(feature => {
+          Object.entries(feature.getProperties()).forEach(([attribute, value])=>{
+            if (toRawType(value) === 'Object' && value['xsi:nil'])feature.set(attribute, 'NULL');
+          })
+        })
+      })
       d.resolve({
         data: featuresForLayers
       });
@@ -93,6 +102,7 @@ proto._doRequest = function(filter, params = {}, layers, reproject=true) {
         });
         break;
       case 'geometry':
+        //speatial methos. <inteserct, within>
         const {spatialMethod = 'intersects'} = filterConfig;
         featureRequest = new ol.format.WFS().writeGetFeature({
           featureTypes: [layer],

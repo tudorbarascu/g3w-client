@@ -8,6 +8,7 @@ const STATE = Vue.observable({
   upload: false, // upload
   baseLayerId: null,
   lng: 'en', // language default
+  changeProjectview: false,
   plugins: [],
   map: {
     epsg: ''
@@ -30,6 +31,5 @@ const STATE = Vue.observable({
     filtertoken: undefined
   }
 });
-
 
 export default STATE;

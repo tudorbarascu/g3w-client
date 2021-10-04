@@ -1,4 +1,5 @@
 const {inherits} = require('core/utils/utils');
+const ApplicationService = require('core/applicationservice');
 const G3WObject = require('core/g3wobject');
 const ProjectsRegistry = require('core/project/projectsregistry');
 const CatalogLayersStoresRegistry = require('core/catalog/cataloglayersstoresregistry');
@@ -13,8 +14,11 @@ function CatalogService() {
   };
   CatalogService.base(this, 'constructor');
   const layersStores = CatalogLayersStoresRegistry.getLayersStores();
+
   layersStores.forEach(layersStore => this.addLayersStoreToLayersTrees(layersStore));
+
   CatalogLayersStoresRegistry.onafter('addLayersStore', layersStore => this.addLayersStoreToLayersTrees(layersStore));
+
   CatalogLayersStoresRegistry.onafter('removeLayersStore', layersStore => {
     this.state.layerstrees.forEach((layersTree, idx) => {
       if (layersTree.storeid === layersStore.getId()) {
@@ -74,6 +78,22 @@ proto.addLayersStoreToLayersTrees = function(layersStore) {
     tree: layersStore.getLayersTree(),
     storeid: layersStore.getId()
   });
+};
+
+proto.changeMapTheme = async function(map_theme){
+  // set is changing project view
+  ApplicationService.changeProjectView(true);
+  const {currentProject} = this.state.prstate;
+  const rootNode = this.state.layerstrees[0];
+  rootNode.checked = true;
+  const layerstree = rootNode.tree[0].nodes;
+  const changeMapThemeProjectObj = await currentProject.setLayersTreePropertiesFromMapTheme({
+    map_theme,
+    layerstree,
+    rootNode
+  });
+  ApplicationService.changeProjectView(false);
+  return changeMapThemeProjectObj;
 };
 
 module.exports = CatalogService;
