@@ -51,6 +51,7 @@ let production = false;
 let g3w_admin = false;
 let build_all = true;
 let g3w_admin_version = 'dev';
+
 //used to check if change are done on these file without upload new file with no changes
 const buildChanges = {
   vendor: {
@@ -213,6 +214,17 @@ gulp.task('less',['fonts'], function () {
       plugins: [LessGlob] //plugin to manage globs import es: @import path/***
     }))
     .pipe(gulp.dest(clientFolder+'/css/'))
+});
+
+// compile less file in css
+gulp.task('custom-less', function () {
+  const customLessFolder = path.join(assetsFolder, 'style', 'less', 'g3w-skins-custom', process.env.CUSTOM_LESS_FOLDER);
+  return gulp.src(path.join(customLessFolder, 'main.less'))
+    .pipe(concat('custom.less'))
+    .pipe(less({
+      plugins: [LessGlob] //plugin to manage globs import es: @import path/***
+    }))
+    .pipe(gulp.dest(`${customLessFolder}/css/`))
 });
 
 
