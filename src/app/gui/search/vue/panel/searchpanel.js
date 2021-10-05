@@ -66,8 +66,8 @@ function SearchPanel(options = {}) {
   const service = options.service || new Service(options);
   this.setService(service);
   this.id = uniqueId();
-  const internalPanelComponent = options.component || SearchPanelComponent;
-  const internalPanel = new internalPanelComponent({
+  const SearchPanel = options.component || SearchPanelComponent;
+  const internalPanel = new SearchPanel({
     service
   });
   this.setInternalPanel(internalPanel);

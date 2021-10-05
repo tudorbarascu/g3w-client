@@ -1,5 +1,9 @@
 <template>
   <div class="wrapper" v-disabled="app.disabled">
+    <cookie-law theme="dark-lime" :buttonText="cookie_law_buttonText">
+      <div slot="message" v-t="'cookie_law.message'">
+      </div>
+    </cookie-law>
     <header v-if="!isIframe" class="main-header">
       <!-- Logo -->
       <!-- Header Navbar: style can be found in header.less -->
@@ -15,7 +19,7 @@
             </a>
             <div class="logo-wrapper" :class="{'mobile': isMobile()}">
               <a  v-if="logo_url" :href="logo_link" :target="logo_link_target" class="project_logo_link">
-                <img style="max-width: 250px;" ref="img_logo" :src="logo_url">
+                <img class="img-responsive" style="max-width: 250px;" ref="img_logo" :src="logo_url">
               </a>
               <div ref="main_title_project_title" class="project_title_content">
                 <div  v-if="!isMobile()" class="main_title">{{ main_title }}</div>
@@ -26,7 +30,7 @@
           <div ref="mainnavbar" class="collapse navbar-collapse" id="main-navbar" style="text-align: center; overflow: hidden">
             <navbarleftitems></navbarleftitems>
             <navbarrightitems></navbarrightitems>
-            <ul class="nav navbar-nav navbar-right app-navbar-nav">
+            <ul ref="app-navbar-nav" class="nav navbar-nav navbar-right app-navbar-nav">
               <li v-if="!user" class="dropdown user user-menu">
                 <a :href="login_url">
                   <i :class="g3wtemplate.getFontClass('sign-in')" aria-hidden="true"></i>
@@ -96,6 +100,7 @@
     </div>
     <!-- /.content-wrapper -->
     <!-- Control Sidebar -->
+    <floatbar></floatbar>
     <!-- /.control-sidebar -->
     <!-- Add the sidebar's background. This div must be placed
          immediately after the control sidebar -->
@@ -116,7 +121,7 @@
               <div v-if="powered_by">
                 <div class="g3w-credits-block">
                   <div v-t="'credits.g3wSuiteFramework'" style="background-color: #95ad36; padding: 5px; border-radius:3px; color: #ffffff" class="credit-title-logo"></div>
-                  <a target="_blank" href="https://g3wsuite.gis3w.it/">
+                  <a target="_blank" href="https://g3wsuite.it/">
                     <img class="g3w-suite-logo" :src="g3w_suite_logo" alt="">
                   </a>
                   <div v-t="'credits.g3wSuiteDescription'" style="margin-top: 10px;"></div>
@@ -154,9 +159,11 @@
 
 <script>
   import HeaderItem from '../header/vue/components/item.vue';
+  import CookieLaw from "vue-cookie-law";
   const ApplicationService = require('core/applicationservice');
   const ProjectsRegistry = require('core/project/projectsregistry');
   const { uniqueId } = require('core/utils/utils');
+  const {t} = require('core/i18n/i18n.service');
   const GUI = require('gui/gui');
   const layout = require('./layout');
   const { resizeMixin } = require('gui/vue/vue.mixins');
@@ -166,18 +173,18 @@
     data() {
       return {
         customcredits: false,
-        current_custom_modal_content: null,
         appState: ApplicationService.getState(),
         current_custom_modal_content: null,
         language: null,
-
+        cookie_law_buttonText: t('cookie_law.buttonText')
       }
     },
     components: {
-      HeaderItem
+      HeaderItem,
+      CookieLaw
     },
     computed: {
-      app(){
+      app() {
         return this.appState.gui.app;
       },
       languages() {
@@ -195,13 +202,13 @@
       urls() {
         return this.appconfig.urls;
       },
-      staticurl(){
+      staticurl() {
         return this.urls.staticurl;
       },
       powered_by() {
         return this.appconfig.group.powered_by;
       },
-      clienturl(){
+      clienturl() {
         return this.urls.clienturl;
       },
       g3w_suite_logo() {
@@ -228,7 +235,7 @@
       user() {
         return (this.appconfig.user && this.appconfig.user.username) ? this.appconfig.user : null;
       },
-      login_url(){
+      login_url() {
         return this.appconfig.user.login_url
       },
       numberOfProjectsInGroup() {
@@ -254,23 +261,23 @@
         );
         return $state;
       },
-      async resize(){
+      async resize() {
         if (!this.isIframe) {
           await this.$nextTick();
           const max_width = this.$refs.navbar_toggle.offsetWidth > 0 ? this.$refs.navbar.offsetWidth - this.$refs.navbar_toggle.offsetWidth :
-            this.$refs.mainnavbar.offsetWidth - this.rightNavbarWidth;
-          this.$refs.main_title_project_title.style.maxWidth = `${max_width - this.logoWidth || 150 }px`;
+            this.$refs.mainnavbar.offsetWidth - this.$refs['app-navbar-nav'].offsetWidth;
+          this.$refs.main_title_project_title.style.maxWidth = `${max_width - this.logoWidth - 15}px`;
         }
       },
-      showCustomModalContent(id){
+      showCustomModalContent(id) {
         const {content} = this.custom_modals.find(custommodal => custommodal.id === id);
         this.current_custom_modal_content = content;
       },
-      closePanel(){
+      closePanel() {
         sidebarService.closePanel();
       },
       getLogoLink() {
-        return this.appconfig.logo_link ? this.appconfig.logo_link: null;
+        return this.appconfig.logo_link ? this.appconfig.logo_link : null;
       },
       openProjectsMenu() {
         GUI.openProjectsMenu();
@@ -278,7 +285,10 @@
     },
     watch: {
       'language'(lng, currentlng) {
-        currentlng && ApplicationService.changeLanguage(lng);
+        if (currentlng) {
+          ApplicationService.changeLanguage(lng);
+          this.cookie_law_buttonText = t('cookie_law.buttonText');
+        }
       }
     },
     beforeCreate() {
@@ -302,15 +312,15 @@
             id,
             content: customitem.content
           });
-          let position = 1*(customitem.position || 0);
-          position = position > 4 ? 4 : position < 0 || Number.isNaN(position)? 0 : position;
+          let position = 1 * (customitem.position || 0);
+          position = position > 4 ? 4 : position < 0 || Number.isNaN(position) ? 0 : position;
           this.custom_header_items_position[position].push(customitem);
           return true
         }
         return false;
-      }): [];
+      }) : [];
 
-      !!this.appconfig.credits && $.get(this.appconfig.credits).then(credits=> this.customcredits = credits !== 'None' && credits);
+      !!this.appconfig.credits && $.get(this.appconfig.credits).then(credits => this.customcredits = credits !== 'None' && credits);
     },
     async mounted() {
       this.logoWidth = 0;
@@ -318,12 +328,12 @@
       const rightNavBarElements = !this.isIframe ? this.$refs.mainnavbar.getElementsByTagName('ul') : [];
       const elementLenght = rightNavBarElements.length;
       this.rightNavbarWidth = 15; // margin right
-      for (let i = 0; i < elementLenght; i++ ) {
-        this.rightNavbarWidth+= rightNavBarElements.item(i).offsetWidth;
+      for (let i = 0; i < elementLenght; i++) {
+        this.rightNavbarWidth += rightNavBarElements.item(i).offsetWidth;
       }
       this.language = this.appconfig.user.i18n;
       await this.$nextTick();
-      !this.isIframe && this.$refs.img_logo.addEventListener('load', ()=>{
+      !this.isIframe && this.$refs.img_logo.addEventListener('load', () => {
         this.logoWidth = this.$refs.img_logo.offsetWidth + 15; // added marging
         this.resize();
       }, {once: true});
@@ -335,15 +345,19 @@
       layout.controlSidebar._fix($(".control-sidebar-bg"));
       layout.controlSidebar._fix($(".control-sidebar"));
       const controlsidebarEl = layout.options.controlSidebarOptions.selector;
+
       function setFloatBarMaxHeight() {
-        $(controlsidebarEl).css('max-height',$(window).innerHeight());
-        $('.g3w-sidebarpanel').css('height',$(window).height() - $("#main-navbar").height());
+        $(controlsidebarEl).css('max-height', $(window).innerHeight());
+        $('.g3w-sidebarpanel').css('height', $(window).height() - $("#main-navbar").height());
       }
+
       setFloatBarMaxHeight();
-      function setModalHeight(){
-        $('#g3w-modal-overlay').css('height',$(window).height());
+
+      function setModalHeight() {
+        $('#g3w-modal-overlay').css('height', $(window).height());
       }
-      $(window).resize(function() {
+
+      $(window).resize(() => {
         setFloatBarMaxHeight();
         setModalHeight();
       });

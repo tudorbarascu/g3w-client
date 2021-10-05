@@ -181,7 +181,7 @@ const GlobalDirective = {
     });
     
     Vue.directive("t", {
-      bind: function (el, binding) {
+      bind (el, binding) {
         const unique_v_t_attr = createDirectiveObj({
           el,
           attr: 'g3w-v-t-id'
@@ -204,7 +204,7 @@ const GlobalDirective = {
     });
 
     Vue.directive("t-plugin", {
-      bind: function (el, binding) {
+      bind (el, binding) {
         const unique_v_t_plugin_attr = createDirectiveObj({
           el,
           attr: 'g3w-v-t-plugin-id'
@@ -304,7 +304,7 @@ const GlobalDirective = {
 
     Vue.directive('select2', {
       inserted(el, binding, vnode){
-        const { templateResult, templateSelection, search=true } = vnode.data.attrs || {};
+        const { templateResult, templateSelection, search=true} = vnode.data.attrs || {};
         vnode.context._select2 = $(el).select2({
           dropdownCssClass: 'skin-color',
           templateResult,

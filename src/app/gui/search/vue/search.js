@@ -8,7 +8,7 @@ const templateCompiled = createCompiledTemplate(require('./search.html'));
 
 const vueComponentOptions = {
   ...templateCompiled,
-  data: function() {
+  data() {
     return {
       state: null
     }

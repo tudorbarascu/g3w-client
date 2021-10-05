@@ -34,6 +34,7 @@ function GUI() {
   this.showUserMessage = noop;
   this.closeUserMessage = noop;
   this.showModalDialog = noop;
+  this._closeUserMessageBeforeSetContent = true;
   this.addComponent = function(component, placeholder) {};
   this.removeComponent = function(id) {};
   this.setComponent = function(component) {
@@ -48,23 +49,19 @@ function GUI() {
   this.goto = function(url) {
     RouterService.goto(url);
   };
-
   this.ready = function() {
     this.emit('ready');
     this.isready = true;
   };
-
   this.guiResized = function() {
     this.emit('guiresized');
   };
   //ready GUI
   this.isReady = function(){
-    return new Promise(resolve =>{
-      this.isready ? resolve() : this.once('ready', resolve);
-    })
+    return new Promise(resolve =>this.isready ? resolve() : this.once('ready', resolve));
   };
   /* spinner */
-  this.showSpinner = function(options){};
+  this.showSpinner = function(options={}){};
   this.hideSpinner = function(id){};
   /* end spinner */
   this.notify = noop;

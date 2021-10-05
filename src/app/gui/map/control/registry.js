@@ -23,7 +23,7 @@ function ControlsRegistry() {
   });
 
   this.setters = {
-    registerControl : function(id, control) {
+    registerControl(id, control) {
       this._registerControl(id, control);
     }
   };

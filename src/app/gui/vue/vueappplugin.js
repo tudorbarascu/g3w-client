@@ -66,7 +66,7 @@ const font = {
   xls:"far fa-file-excel",
   gpx: "fas fa-location-arrow",
   gpkg: "fas fa-box-open",
-  shapefile:"fas fa-download",
+  shapefile:"fas fa-file-archive",
   csv: "fas fa-file-csv",
   ppt: "far fa-file-powerpoint",
   circle: "fas fa-circle",
@@ -108,7 +108,7 @@ const font = {
 };
 
 const Vueappplugin = {
-  install: function(Vue, options = {}) {
+  install(Vue, options = {}) {
     Vue.prototype.g3wtemplate = {
       font,
       get() {},
@@ -125,7 +125,7 @@ const Vueappplugin = {
     // set isMobile method to all Vue instances
     Vue.mixin({
       methods: {
-        isMobile: function () {
+        isMobile () {
           return isMobile.any
         }
       }

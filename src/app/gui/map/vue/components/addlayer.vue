@@ -100,8 +100,8 @@
       'border': '1px solid #97A1A8'
     });
   };
-  export default {
-    name: "addlayer",
+  export default  {
+    name: 'addlayer',
     props: ['service'],
     data() {
       //add map crs if not present
@@ -320,7 +320,8 @@
       this.modal.modal('hide');
       this.modal.remove();
     }
-  }
+  };
+
 </script>
 
 <style scoped>

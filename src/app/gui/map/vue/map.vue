@@ -2,7 +2,8 @@
   <div :id="maps_container">
     <div v-for="hidemap in hidemaps" :id="hidemap.id" :key="hidemap.id" class="g3w-map hidemap"></div>
     <div :id="target" class="g3w-map">
-      <div class="g3w-map-controls" v-disabled="disableMapControls" ref="g3w-map-controls" :class="mapcontrolsalignement" ></div>
+      <div class="g3w-map-controls" v-disabled="disableMapControls" ref="g3w-map-controls" :class="mapcontrolsalignement">
+      </div>
       <div style="display: none;">
         <div id="marker"></div>
       </div>
@@ -13,7 +14,8 @@
       <div id="map_footer_right" style="display: flex;">
         <div id="scale-control"></div>
         <div id="mouse-position-control"></div>
-        <div id="permalink" data-toggle="tooltip" data-placement="top" class="skin-tooltip-top" v-t-tooltip="'sdk.tooltips.copy_map_extent_url'" style="background-color: #eeeeee">
+        <div id="permalink" data-toggle="tooltip" data-placement="top" class="skin-tooltip-top" v-t-tooltip="'sdk.tooltips.copy_map_extent_url'"
+             style="background-color: #eeeeee">
           <span class="skin-color" :class="g3wtemplate.getFontClass('link')" @click="createCopyMapExtentUrl"></span>
         </div>
       </div>
