@@ -10,7 +10,9 @@
 
 <script>
   import CatalogEventHub from "../catalogeventhub";
-
+  const ApplicationService = require('core/applicationservice');
+  const GUI = require('gui/gui');
+  const CatalogLayersStoresRegistry = require('core/catalog/cataloglayersstoresregistry');
   export default {
     name: "legenditems",
     props: {

@@ -7,18 +7,20 @@ const Service = require('../catalogservice');
 
 function CatalogComponent(options={}) {
   options.resizable = true;
-  CatalogComponent.base(this, options);
+  const InternalComponent = Vue.extend(Catalog);
+  CatalogComponent.base(this, 'constructor', options);
   const {legend}  = options.config;
   this.title = "catalog";
   this.mapComponentId = options.mapcomponentid;
   const service = options.service || new Service;
   this.setService(service);
-  this.setInternalComponent(new Catalog({
+
+  this.setInternalComponent(new InternalComponent({
     service,
     legend
   }));
   this.internalComponent.state = this.getService().state;
-  let listenToMapVisibility = map => {
+  const listenToMapVisibility = map => {
     const mapService = map.getService();
     this.state.visible = !mapService.state.hidden;
     mapService.onafter('setHidden', hidden => {

@@ -60,6 +60,7 @@
 
 <script>
   import LayerLegend from "./layerlegend.vue";
+  const CatalogLayersStoresRegistry = require('core/catalog/cataloglayersstoresregistry');
   import CatalogEventHub from "../catalogeventhub";
   export default {
     name: "tristate-tree",

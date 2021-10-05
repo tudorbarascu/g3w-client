@@ -159,8 +159,7 @@
 <script>
   import CatalogEventHub from '../catalogeventhub';
   import LayersGroup from './layersgroup.vue';
-  import LayerLegend from './layerlegend.vue';
-  import Legend from './legend.vue';
+  import LegendTab from './legend.vue';
   import TristateTree from './tristatetree.vue';
   import ChangeMapThemesComponent from './changemapthemes.vue';
   const ApplicationService = require('core/applicationservice');
@@ -185,8 +184,7 @@
     name: "catalog",
     components: {
       'chrome-picker': ChromeComponent,
-      'legend': Legend,
-      'layerslegend': LayerLegend,
+      'layerslegend': LegendTab,
       'layersgroup': LayersGroup,
       'tristate-tree': TristateTree,
       'changemapthemes': ChangeMapThemesComponent

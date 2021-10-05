@@ -9,7 +9,7 @@
   export default {
     name: "legend",
     components:{
-      '<layerslegend-items': LegendItems
+      'layerslegend-items': LegendItems
     },
     props: ['layerstree', 'legend', 'active'],
     data() {
