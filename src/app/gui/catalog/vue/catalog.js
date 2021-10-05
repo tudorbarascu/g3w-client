@@ -1,25 +1,24 @@
-import catalogVueComponent from './vue/catalog.vue';
+import Catalog from './components/catalog.vue';
 const {inherits} = require('core/utils/utils');
 const Component = require('gui/vue/component');
 const ComponentsRegistry = require('gui/componentsregistry');
 const GUI = require('gui/gui');
-const Service = require('./catalogservice');
+const Service = require('../catalogservice');
 
 function CatalogComponent(options={}) {
-  const InternalComponent = Vue.extend(catalogVueComponent);
   options.resizable = true;
-  CatalogComponent.base(this, 'constructor', options);
+  CatalogComponent.base(this, options);
   const {legend}  = options.config;
   this.title = "catalog";
   this.mapComponentId = options.mapcomponentid;
   const service = options.service || new Service;
   this.setService(service);
-  this.setInternalComponent(new InternalComponent({
+  this.setInternalComponent(new Catalog({
     service,
     legend
   }));
   this.internalComponent.state = this.getService().state;
-  let listenToMapVisibility = (map) => {
+  let listenToMapVisibility = map => {
     const mapService = map.getService();
     this.state.visible = !mapService.state.hidden;
     mapService.onafter('setHidden', hidden => {

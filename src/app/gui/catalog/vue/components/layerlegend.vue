@@ -9,7 +9,7 @@
 </template>
 
 <script>
-  import CatalogEventHub from '../../catalogeventhub';
+  import CatalogEventHub from '../catalogeventhub';
   const ApplicationService = require('core/applicationservice');
   const CatalogLayersStoresRegistry = require('core/catalog/cataloglayersstoresregistry');
   const GUI = require('gui/gui');
@@ -33,10 +33,14 @@
         this.legend.error = true;
         this.legend.loading = false;
       },
-      urlLoaded() {
+      async urlLoaded() {
         this.legend.loading = false;
       },
-      getLegendUrl: function (layer) {
+      handlerChangeLegend(options={}){
+        const { layerId } = options;
+        layerId === this.layer.id && this.getLegendSrc(this.layer);
+      },
+      getLegendUrl(layer) {
         let legendurl;
         const layerStore = CatalogLayersStoresRegistry.getLayersStores().find(layerStore => layerStore.getLayerById(layer.id));
         legendurl = layerStore && layerStore.getLayerById(layer.id).getLegendUrl(this.legendParams);
@@ -65,8 +69,14 @@
           const urlLayersName = urlMethodsLayersName[method];
           if (method === 'GET') {
             for (const url in urlLayersName) {
-              this.legend.url = urlLayersName[url].length ? `${url}&LAYER=${urlLayersName[url].map(layerObj => layerObj.layerName).join(',')}&STYLES=${urlLayersName[url].map(layerObj => layerObj.style).join(',')}${ApplicationService.getFilterToken() ? '&filtertoken=' + ApplicationService.getFilterToken() : ''}` : url;
-              this.legend.loading = true;
+              const updated_url_legend  = urlLayersName[url].length ? `${url}&LAYER=${urlLayersName[url].map(layerObj => layerObj.layerName).join(',')}&STYLES=${urlLayersName[url].map(layerObj => layerObj.style).join(',')}${ApplicationService.getFilterToken() ? '&filtertoken=' + ApplicationService.getFilterToken() : ''}` : url;
+              /*
+                Check if previous url is changed
+               */
+              if (this.legend.url !== updated_url_legend) {
+                this.legend.url = updated_url_legend;
+                this.legend.loading = true;
+              }
             }
           } else {
             for (const url in urlLayersName) {
@@ -104,10 +114,7 @@
     created() {
       this.legendParams = ApplicationService.getConfig().layout ? ApplicationService.getConfig().layout.legend : {};
       this.mapReady = false;
-      CatalogEventHub.$on('layer-change-style', (layerObj={})  => {
-        const { layerId } = layerObj;
-        layerId === this.layer.id && this.getLegendSrc(this.layer);
-      })
+      CatalogEventHub.$on('layer-change-style', this.handlerChangeLegend);
     },
     async mounted() {
       await this.$nextTick();
@@ -116,6 +123,9 @@
         this.mapReady = true;
         this.getLegendSrc(this.layer);
       })
+    },
+    beforeDestroy() {
+      CatalogEventHub.$off('layer-change-style', this.handlerChangeLegend);
     }
   }
 </script>

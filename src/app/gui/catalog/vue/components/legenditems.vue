@@ -9,12 +9,10 @@
 </template>
 
 <script>
-  import CatalogEventHub from "../../catalogeventhub";
-  const ApplicationService = require('core/applicationservice');
-  const CatalogLayersStoresRegistry = require('core/catalog/cataloglayersstoresregistry');
-  const GUI = require('gui/gui');
+  import CatalogEventHub from "../catalogeventhub";
+
   export default {
-    name: "layerslegendtab",
+    name: "legenditems",
     props: {
       layers: {
         default: []
@@ -53,10 +51,16 @@
       urlLoaded(legendurl){
         legendurl.loading = false;
       },
-      getLegendUrl: function(layer, params={}) {
+      getLegendUrl(layer, params={}) {
+        let legendurl;
         const catalogLayers = CatalogLayersStoresRegistry.getLayersStores();
-        const layerStore = catalogLayers.find(layerStore => layerStore.getLayerById(layer.id));
-        return layerStore && layerStore.getLayerById(layer.id).getLegendUrl(params);
+        catalogLayers.forEach(layerStore => {
+          if (layerStore.getLayerById(layer.id)) {
+            legendurl = layerStore.getLayerById(layer.id).getLegendUrl(params);
+            return false
+          }
+        });
+        return legendurl;
       },
       async getLegendSrc(_layers) {
         const urlMethodsLayersName = {
@@ -136,10 +140,16 @@
     },
     created(){
       this.mapReady = false;
-      this.waitinglegendsurls = [] // urls that are waiting to be loaded
-      CatalogEventHub.$on('layer-change-style', () =>{
-        this.getLegendSrc(this.layers);
-      })
+      this.waitinglegendsurls = []; // urls that are waiting to be loaded
+      CatalogEventHub.$on('layer-change-style', (options={}) => {
+        const {layerId} = options;
+        let changeLayersLegend =[];
+        if (layerId){
+          const layer = this.layers.find(layer => layerId == layer.id);
+          layer && changeLayersLegend.push(layer);
+        } else changeLayersLegend = this.layers;
+        changeLayersLegend.length && this.getLegendSrc(changeLayersLegend);
+      });
     },
     async mounted() {
       await this.$nextTick();

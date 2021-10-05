@@ -1,17 +1,17 @@
 <template>
   <div role="tabpanel" class="tab-pane" :class="{active:active}" id="legend">
-    <legendtabcontent :active="active" :legend="legend" :layers="visiblelayers"></legendtabcontent>
+    <layerslegend-items :active="active" :legend="legend" :layers="visiblelayers"></layerslegend-items>
   </div>
 </template>
 
 <script>
-  import legendTabContentComponent from "./legendtabcontent.vue";
+  import LegendItems from './legenditems.vue';
   export default {
-    name: "legendpanel",
-    props: ['layerstree', 'legend', 'active'],
+    name: "legend",
     components:{
-      'legendtabcontent': legendTabContentComponent
+      '<layerslegend-items': LegendItems
     },
+    props: ['layerstree', 'legend', 'active'],
     data() {
       return {}
     },
@@ -21,8 +21,12 @@
         const layerstree = this.layerstree.tree;
         let traverse = (obj) => {
           for (const layer of obj) {
-            if (!_.isNil(layer.id) && layer.visible && !layer.exclude_from_legend) _visiblelayers.push(layer);
-            if (!_.isNil(layer.nodes)) traverse(layer.nodes);
+            if (!_.isNil(layer.id) && layer.visible && !layer.exclude_from_legend) {
+              _visiblelayers.push(layer);
+            }
+            if (!_.isNil(layer.nodes)) {
+              traverse(layer.nodes);
+            }
           }
         };
         traverse(layerstree);

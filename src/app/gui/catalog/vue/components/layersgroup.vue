@@ -7,11 +7,12 @@
 </template>
 
 <script>
-  import tristateTree from './tristate-tree.vue';
   export default {
     name: "layersgroup",
-    components: {
-      'tristate-tree': tristateTree
+    props: {
+      layersgroup: {
+        type: Object
+      }
     }
   }
 </script>

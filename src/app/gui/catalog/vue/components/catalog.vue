@@ -54,7 +54,7 @@
           </ul>
         </div>
         <layerslegend v-if="legend.place ===  'tab'" @showlegend="showLegend" :legend="legend" :active="activeTab === 'legend'"
-                      v-for="_layerstree in state.layerstrees" :layerstree="_layerstree" :key="_layerstree.id">
+          v-for="_layerstree in state.layerstrees" :layerstree="_layerstree" :key="_layerstree.id">
         </layerslegend>
       </div>
     </div>
@@ -157,27 +157,40 @@
 </template>
 
 <script>
-  import tristateTreeComponent from "./components/tristate-tree.vue";
-  import legendTabComponent from './components/legendtab.vue';
-  import ChangeMapThemesComponent from './components/changemapthemes.vue';
-  import CatalogEventHub from "../catalogeventhub";
+  import CatalogEventHub from '../catalogeventhub';
+  import LayersGroup from './layersgroup.vue';
+  import LayerLegend from './layerlegend.vue';
+  import Legend from './legend.vue';
+  import TristateTree from './tristatetree.vue';
+  import ChangeMapThemesComponent from './changemapthemes.vue';
   const ApplicationService = require('core/applicationservice');
-  const {downloadFile} = require('core/utils/utils');
-  const GUI = require('gui/gui');
+  const {inherits, downloadFile} = require('core/utils/utils');
   const shpwrite = require('shp-write');
   const {t} = require('core/i18n/i18n.service');
+  const Component = require('gui/vue/component');
   const TableComponent = require('gui/table/vue/table');
+  const GUI = require('gui/gui');
   const ControlsRegistry = require('gui/map/control/registry');
   const CatalogLayersStoresRegistry = require('core/catalog/cataloglayersstoresregistry');
   const ChromeComponent = VueColor.Chrome;
   const DEFAULT_ACTIVE_TAB = 'layers';
+  const Service = require('../../catalogservice');
   //OFFSETMENU
   const OFFSETMENU = {
     top: 50,
     left: 15
   };
+
   export default {
     name: "catalog",
+    components: {
+      'chrome-picker': ChromeComponent,
+      'legend': Legend,
+      'layerslegend': LayerLegend,
+      'layersgroup': LayersGroup,
+      'tristate-tree': TristateTree,
+      'changemapthemes': ChangeMapThemesComponent
+    },
     data() {
       const legend = this.$options.legend;
       legend.place = ApplicationService.getCurrentProject().getLegendPosition() || 'tab';
@@ -237,13 +250,6 @@
           document.body.removeEventListener('click', this.event)
         }
       }
-    },
-    components: {
-      'chrome-picker': ChromeComponent,
-      'tristate-tree': tristateTreeComponent,
-      'legendtab': legendTabComponent,
-      'changemapthemes': ChangeMapThemesComponent
-
     },
     computed: {
       //show or not group toolbar

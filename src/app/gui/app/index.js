@@ -41,6 +41,7 @@ const ApplicationTemplate = function({ApplicationService}) {
   // useful to build a difference layout/compoìnent based on mobile or not
   this._isMobile = isMobile.any;
   this._isIframe = appLayoutConfig.iframe;
+  //ussefult ot not close user message when set content is called
   this.sizes = {
     sidebar: {
       width:0
@@ -50,7 +51,7 @@ const ApplicationTemplate = function({ApplicationService}) {
     usefull to show onaly last waiting request output
     at moment will be an object
     {
-      stop: function to sot to show result
+      stop: method to sot to show result
     }
    */
   this.waitingoutputdataplace = null;
@@ -63,7 +64,7 @@ const ApplicationTemplate = function({ApplicationService}) {
     const G3WTemplate = Vue.prototype.g3wtemplate;
     const appTitle = ApplicationService.getConfig().apptitle || 'G3W Suite';
     const ContentsComponent = require('gui/viewport/contentsviewer');
-    const CatalogComponent = require('gui/catalog/catalog');
+    const CatalogComponent = require('gui/catalog/vue/catalog');
     const SearchComponent = require('gui/search/vue/search');
     const QueryBuilderUIFactory = require('gui/querybuilder/querybuilderuifactory');
     const PrintComponent = require('gui/print/print');
