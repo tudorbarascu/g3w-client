@@ -1,4 +1,4 @@
-const { inherits } = require('core/utils/utils');
+const {inherits} = require('core/utils/utils');
 const BaseLayer = require('core/layers/baselayers/baselayer');
 const BasesLayers = require('g3w-ol/src/layers/bases');
 

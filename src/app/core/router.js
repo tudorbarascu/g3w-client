@@ -34,7 +34,7 @@ const RouterService = function(){
   this._initialLocationQuery;
   this._routeQuery = '';
   this.setters = {
-    setRouteQuery: function(routeQuery){
+    setRouteQuery(routeQuery){
       this._routeQuery = routeQuery;
       crossroads.parse(routeQuery);
     }

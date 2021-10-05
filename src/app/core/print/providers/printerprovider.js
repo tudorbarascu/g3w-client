@@ -1,5 +1,4 @@
-const {inherits} = require('core/utils/utils');;
-const base = require('core/utils/utils').base;
+const {inherits} = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 
 function PrinterProvider() {

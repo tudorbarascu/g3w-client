@@ -1,5 +1,4 @@
 const {inherits}  = require('core/utils/utils');
-const Base64 = require('core/utils/utils').Base64;
 const G3WObject = require('core/g3wobject');
 
 /*
