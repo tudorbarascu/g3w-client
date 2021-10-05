@@ -162,7 +162,7 @@
   import CookieLaw from "vue-cookie-law";
   const ApplicationService = require('core/applicationservice');
   const ProjectsRegistry = require('core/project/projectsregistry');
-  const { uniqueId } = require('core/utils/utils');
+  const {uniqueId} = require('core/utils/utils');
   const {t} = require('core/i18n/i18n.service');
   const GUI = require('gui/gui');
   const layout = require('./layout');

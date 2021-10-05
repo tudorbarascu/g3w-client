@@ -1,4 +1,5 @@
 import App from './app.vue';
+import Viewport  from 'gui/viewport/viewport.vue';
 import ApplicationState from 'core/applicationstate';
 const {inherits, toRawType} = require('core/utils/utils');
 const {t} = require('core/i18n/i18n.service');
@@ -10,6 +11,10 @@ const VueAppPlugin = require('gui/vue/vueappplugin');
 const G3wApplicationFilterPlugin = require('gui/vue/vue.filter');
 const GlobalComponents = require('gui/vue/vue.globalcomponents');
 const GlobalDirective = require('gui/vue/vue.directives');
+
+//Services
+const ViewportService = require('gui/viewport/service');
+///
 
 // install global components
 Vue.use(GlobalComponents);
@@ -29,7 +34,6 @@ Vue.mixin({
 
 // get all items needed by application
 const sidebar = require('gui/sidebar/sidebar');
-const viewport = require('gui/viewport/viewport');
 const navbaritems = require('gui/navbar/navbaritems');
 const layout = require('./layout');
 
@@ -215,7 +219,7 @@ const ApplicationTemplate = function({ApplicationService}) {
     //Navbar custom items
     Vue.component('navbarleftitems', navbaritems.components.left);
     Vue.component('navbarrightitems', navbaritems.components.right);
-    Vue.component('viewport', viewport.ViewportComponent);
+    Vue.component('viewport', Viewport);
     Vue.component('app', App);
   };
 
@@ -510,7 +514,7 @@ const ApplicationTemplate = function({ApplicationService}) {
     };
     GUI.closeForm = function() {
       this.emit('closeform', false);
-      viewport.ViewportService.removeContent();
+      ViewportService.removeContent();
       // force set modal to false
       GUI.setModal(false);
     };
@@ -535,12 +539,12 @@ const ApplicationTemplate = function({ApplicationService}) {
 
     // hide content
     GUI.hideContent = function(bool, perc) {
-      return viewport.ViewportService.hideContent(bool, perc);
+      return ViewportService.hideContent(bool, perc);
     };
 
     GUI.closeContent = function() {
       this.emit('closecontent', false);
-      return viewport.ViewportService.closeContent();
+      return ViewportService.closeContent();
     };
 
     GUI.closeOpenSideBarComponent = function(){
@@ -575,11 +579,11 @@ const ApplicationTemplate = function({ApplicationService}) {
 
     //showusermessage
     GUI.showUserMessage = function(options={}) {
-      return viewport.ViewportService.showUserMessage(options);
+      return ViewportService.showUserMessage(options);
     };
 
     GUI.closeUserMessage = function() {
-      viewport.ViewportService.closeUserMessage();
+      ViewportService.closeUserMessage();
     };
     /* ------------------ */
     GUI.notify = {
@@ -659,27 +663,27 @@ const ApplicationTemplate = function({ApplicationService}) {
 
     // VIEWPORT //
     GUI.setPrimaryView = function(viewName) {
-      viewport.ViewportService.setPrimaryView(viewName);
+      ViewportService.setPrimaryView(viewName);
     };
     // only map
     GUI.showMap = function() {
-      viewport.ViewportService.showMap();
+      ViewportService.showMap();
     };
 
     GUI.showContextualMap = function(perc, split) {
       perc = perc || 30;
-      viewport.ViewportService.showContextualMap({
+      ViewportService.showContextualMap({
         perc,
         split
       })
     };
 
     GUI.setContextualMapComponent = function(mapComponent) {
-      viewport.ViewportService.setContextualMapComponent(mapComponent);
+      ViewportService.setContextualMapComponent(mapComponent);
     };
 
     GUI.resetContextualMapComponent = function() {
-      viewport.ViewportService.resetContextualMapComponent();
+      ViewportService.resetContextualMapComponent();
     };
 
     //  (100%) content
@@ -715,20 +719,20 @@ const ApplicationTemplate = function({ApplicationService}) {
     };
     // remove last content from stack
     GUI.popContent = function() {
-      viewport.ViewportService.popContent();
+      ViewportService.popContent();
     };
     //return number of component of stack
     GUI.getContentLength = function() {
-      return viewport.ViewportService.contentLength();
+      return ViewportService.contentLength();
     };
 
     //get content percentage
     GUI.getContentPercentage = function(){
-      return viewport.ViewportService.getContentPercentage();
+      return ViewportService.getContentPercentage();
     };
 
     GUI.setContentPercentage = function(perc=50){
-      viewport.ViewportService.setContentPercentage(perc);
+      ViewportService.setContentPercentage(perc);
     };
 
     GUI.getProjectMenuDOM = function({projects, host, cbk}={}) {
@@ -751,7 +755,7 @@ const ApplicationTemplate = function({ApplicationService}) {
       options.split = options.split || 'h';
       options.backonclose = _.isBoolean(options.backonclose) ? options.backonclose : false;
       options.showtitle = _.isBoolean(options.showtitle) ? options.showtitle : true;
-      viewport.ViewportService.showContent(options);
+      ViewportService.showContent(options);
     };
 
     GUI.hideClientMenu = function() {
@@ -812,7 +816,7 @@ ApplicationTemplate.PLACEHOLDERS = [
 ApplicationTemplate.Services = {
   navbar: null,
   sidebar: sidebar.SidebarService,
-  viewport: viewport.ViewportService
+  viewport: ViewportService
 };
 
 ApplicationTemplate.fail = function({language='en', error }) {
@@ -824,6 +828,16 @@ ApplicationTemplate.fail = function({language='en', error }) {
       f5: "Premi Ctrl+F5"
     },
     en: {
+      error: error || "Connection error",
+      at_moment: "At the moment is not possible show map",
+      f5: "Press Ctrl+F5"
+    },
+    fi: {
+      error: error || "Connection error",
+      at_moment: "At the moment is not possible show map",
+      f5: "Press Ctrl+F5"
+    },
+    se: {
       error: error || "Connection error",
       at_moment: "At the moment is not possible show map",
       f5: "Press Ctrl+F5"

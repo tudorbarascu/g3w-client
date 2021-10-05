@@ -5,6 +5,7 @@
               v-if="usermessage.show"
               @close-usermessage="closeUserMessage"
               :title="usermessage.title"
+              :id="usermessage.id"
               :message="usermessage.message"
               :draggable="usermessage.draggable"
               :closable="usermessage.closable"
@@ -68,6 +69,7 @@
   import onlineNotify from 'gui/notifications/online/vue/online.vue';
   import downloadNotify from 'gui/notifications/download/vue/download.vue';
   import pluginsNotify from 'gui/notifications/plugins/vue/plugins.vue';
+  const ViewportService = require('./service');
   const GUI = require('gui/gui');
   export default {
     name: "viewport",
@@ -81,6 +83,14 @@
       onlineNotify,
       downloadNotify,
       pluginsNotify
+    },
+    data() {
+      return {
+        state: ViewportService.state,
+        media: {
+          matches: true
+        }
+      }
     },
     computed: {
       showresize(){
@@ -141,13 +151,13 @@
         GUI.closeContent();
       },
       closeMap() {
-        viewportService.closeMap();
+        ViewportService.closeMap();
       },
       gotoPreviousContent() {
-        viewportService.popContent();
+        ViewportService.popContent();
       },
       closeUserMessage(){
-        viewportService.closeUserMessage();
+        ViewportService.closeUserMessage();
       },
       moveFnc(evt){
         const size =  this.state.split === 'h' ? 'width' : 'height';
@@ -162,7 +172,7 @@
         const contentSize = viewPortSize - mapSize;
         const resizePercentageMap = Math.round((mapSize / viewPortSize) * 100);
         const resizePercentageContent = 100 - resizePercentageMap;
-        viewportService.resizeViewComponents(this.state.split, {
+        ViewportService.resizeViewComponents(this.state.split, {
           map: {
             [size]: mapSize
           },

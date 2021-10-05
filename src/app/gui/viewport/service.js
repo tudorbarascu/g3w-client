@@ -1,11 +1,9 @@
 import {viewport as viewportConstraints} from 'gui/constraints';
-import vueViewportComponent from './viewport.vue';
-const {inherits} = require('core/utils/utils');
+const {inherits, uniqueId} = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 const GUI = require('gui/gui');
 let SIDEBARWIDTH;
 
-// calsse servizio della viewport
 const ViewportService = function() {
   // state of viewport
   this.state = {
@@ -50,6 +48,7 @@ const ViewportService = function() {
       contentsdata:[] // content data array
     },
     usermessage: {
+      id: null, // unique identify
       show: false,
       title: null,
       message: null,
@@ -98,6 +97,7 @@ const ViewportService = function() {
   this.showUserMessage = function({title, message, type, position, size, draggable, duration, textMessage=false, closable, autoclose, hooks={}}={}) {
     this.closeUserMessage();
     setTimeout(() => {
+      this.state.usermessage.id = uniqueId();
       this.state.usermessage.show = true;
       this.state.usermessage.message = message;
       this.state.usermessage.textMessage = textMessage;
@@ -110,13 +110,15 @@ const ViewportService = function() {
       this.state.usermessage.autoclose = autoclose;
       this.state.usermessage.closable = closable;
       this.state.usermessage.draggable = draggable;
-      this.state.usermessage.hooks.header = hooks.header;
-      this.state.usermessage.hooks.body = hooks.body;
-      this.state.usermessage.hooks.footer = hooks.footer;
-    })
+      this.state.usermessage.hooks.header = hooks.header; // has to be a vue component or vue object
+      this.state.usermessage.hooks.body = hooks.body; // has to be a vue component or vue object
+      this.state.usermessage.hooks.footer = hooks.footer; // has to be a vue component or vue object
+    });
+    return this.state.usermessage;
   };
 
   this.closeUserMessage = function() {
+    this.state.usermessage.id = null;
     this.state.usermessage.show = false;
     this.state.usermessage.textMessage = false;
     this.state.usermessage.message = '';
@@ -555,22 +557,4 @@ const ViewportService = function() {
 inherits(ViewportService, G3WObject);
 
 //singleton
-const viewportService = new ViewportService;
-
-// VUE VIEWPORT component
-const ViewportComponent = Vue.extend({
-  ...vueViewportComponent,
-  data() {
-    return {
-      state: viewportService.state,
-      media: {
-        matches: true
-      }
-    }
-  }
-});
-
-module.exports = {
-  ViewportService: viewportService,
-  ViewportComponent
-};
+module.exports = new ViewportService();

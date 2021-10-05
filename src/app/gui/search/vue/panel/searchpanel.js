@@ -66,13 +66,13 @@ function SearchPanel(options = {}) {
   const service = options.service || new Service(options);
   this.setService(service);
   this.id = uniqueId();
-  const SearchPanel = options.component || SearchPanelComponent;
-  const internalPanel = new SearchPanel({
+  const internalPanelComponent = options.component || SearchPanelComponent;
+  const internalPanel = new internalPanelComponent({
     service
   });
   this.setInternalPanel(internalPanel);
   this.unmount = function() {
-    return SearchPanel.base(this, 'unmount').then(() => service.clear());
+    return SearchPanel.base(this,'unmount').then(() => service.clear());
   }
 }
 
