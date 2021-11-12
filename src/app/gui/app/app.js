@@ -6,10 +6,9 @@ const {t} = require('core/i18n/i18n.service');
 const HeaderItem = require('gui/header/headeritem');
 const GUI = require('gui/gui');
 const layout = require('./layout');
-const compiledTemplate = Vue.compile(require('./app.html'));
 const { resizeMixin } = require('gui/vue/vue.mixins');
-const AppUI = Vue.extend({
-  ...compiledTemplate,
+const AppUI = {
+  template:require('./app.html'),
   mixins: [resizeMixin],
   data() {
     return {
@@ -215,6 +214,6 @@ const AppUI = Vue.extend({
       setModalHeight();
     });
   },
-});
+};
 
 module.exports = AppUI;

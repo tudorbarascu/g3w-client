@@ -64,11 +64,9 @@ const vueComponentOptions = {
   }
 };
 // interanl registration
-const InternalComponent = Vue.extend(vueComponentOptions);
-
-Vue.component('g3w-map', vueComponentOptions);
-
-function MapComponent(options = {}) {
+const InternalComponent = Vue.defineComponent(vueComponentOptions);
+function MapComponent(app, options = {}) {
+  app.component('g3w-map', vueComponentOptions);
   base(this, options);
   this.id = "map-component";
   this.title = "Map Component";

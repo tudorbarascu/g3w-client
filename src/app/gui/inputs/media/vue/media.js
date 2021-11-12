@@ -5,7 +5,7 @@ const Service = require('../service');
 const MediaField = require('gui/fields/fields').media_field;
 const GUI = require('gui/gui');
 
-const MediaInput = Vue.extend({
+const MediaInput = Vue.defineComponent({
   mixins: [InputMixins],
   components: {
     'g3w-media': MediaField

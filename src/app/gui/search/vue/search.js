@@ -39,9 +39,9 @@ const vueComponentOptions = {
   }
 };
 
-const InternalComponent = Vue.extend(vueComponentOptions);
+const InternalComponent = Vue.defineComponent(vueComponentOptions);
 
-function SearchComponent(options={}){
+function SearchComponent(app, options={}){
   base(this, options);
   this.id = "search";
   this._service = options.service || new Service();

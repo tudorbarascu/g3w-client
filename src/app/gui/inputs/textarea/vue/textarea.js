@@ -1,6 +1,6 @@
 const Input = require('gui/inputs/input');
 
-const TextAreaInput = Vue.extend({
+const TextAreaInput = Vue.defineComponent({
   mixins: [Input],
   template: require('./textarea.html')
 });

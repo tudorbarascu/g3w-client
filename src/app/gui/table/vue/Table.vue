@@ -105,7 +105,7 @@
               const header = this.state.headers[index];
               let contentDOM;
               if (header === null) {
-                const SelectRowClass = Vue.extend(SelectRow);
+                const SelectRowClass = Vue.defineComponent(SelectRow);
                 const SelectRowInstance = new SelectRowClass({
                   propsData: {
                     feature
@@ -121,7 +121,7 @@
                 );
                 contentDOM = SelectRowInstance.$mount().$el;
               } else {
-                const fieldClass = Vue.extend(Field);
+                const fieldClass = Vue.defineComponent(Field);
                 const fieldInstance = new fieldClass({
                   propsData: {
                     state: {
@@ -230,7 +230,7 @@
       }
 
       this.isMobile() && hideElements();
-      const G3WTableToolbarClass = Vue.extend(G3wTableToolbar);
+      const G3WTableToolbarClass = Vue.defineComponent(G3wTableToolbar);
       const G3WTableToolbarInstance = new G3WTableToolbarClass({
         propsData: {
           tools: this.state.tools,

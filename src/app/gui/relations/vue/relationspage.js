@@ -8,7 +8,7 @@ const { getFeaturesFromResponseVectorApi } = require('core/utils/geo');
 const RelationPageEventBus = require('./relationeventbus');
 const compiledTemplate = createCompiledTemplate(require('./relationspage.html'));
 
-const InternalComponent = Vue.extend({
+const InternalComponent = Vue.defineComponent({
   ...compiledTemplate,
   data() {
     this. chartRelationIds = this.$options.chartRelationIds || [];

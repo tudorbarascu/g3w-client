@@ -3,9 +3,9 @@ import Service from '../service';
 const {base, inherit} = require('core/utils/utils');
 const GUI = require('gui/gui');
 const Component = require('gui/vue/component');
-const InternalComponent = Vue.extend(WMS);
+const InternalComponent = Vue.defineComponent(WMS);
 
-function ToolsComponent(options={}) {
+function ToolsComponent(app, options={}) {
   base(this, options);
   this._service = new Service(options);
   this.title = "WMS";

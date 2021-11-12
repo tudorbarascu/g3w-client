@@ -1,6 +1,6 @@
 import { createCompiledTemplate } from 'gui/vue/utils';
 const compiledTemplate = createCompiledTemplate(require('./footer.html'));
-const FooterFormComponent = Vue.extend({
+const FooterFormComponent = Vue.defineComponent({
   ...compiledTemplate,
   props: ['state'],
   data() {

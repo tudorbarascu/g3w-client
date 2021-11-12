@@ -222,7 +222,7 @@ const vueComponentOptions = {
     getLayerFeatureBox(layer, feature, relation_index){
       const boxid = this.getBoxId(layer, feature, relation_index);
       if (this.layersFeaturesBoxes[boxid] === undefined) {
-        this.layersFeaturesBoxes[boxid] = Vue.observable({
+        this.layersFeaturesBoxes[boxid] = Vue.reactive({
           collapsed: true
         });
         this.$watch(()=> this.layersFeaturesBoxes[boxid].collapsed, collapsed => {
@@ -353,9 +353,9 @@ const vueComponentOptions = {
   }
 };
 
-const InternalComponent = Vue.extend(vueComponentOptions);
+const InternalComponent = Vue.defineComponent(vueComponentOptions);
 
-function QueryResultsComponent(options={}) {
+function QueryResultsComponent(app, options={}) {
   base(this, options);
   this.id = "queryresults";
   this.title = "Query Results";

@@ -2,7 +2,7 @@ const Input = require('gui/inputs/input');
 const {getUniqueDomId} = require('core/utils/utils');
 const WidgetMixins = require('gui/inputs/widgetmixins');
 
-const CheckBoxInput = Vue.extend({
+const CheckBoxInput = Vue.defineComponent({
   mixins: [Input, WidgetMixins],
   template: require('./checkbox.html'),
   data() {

@@ -60,7 +60,7 @@ const vueComponentOptions = {
   }
 };
 
-function PrintComponent(options={}) {
+function PrintComponent(app, options={}) {
   base(this, options);
   this.title = "print";
   this.vueComponent = vueComponentOptions;
@@ -70,7 +70,7 @@ function PrintComponent(options={}) {
   // init service
   this._service.init();
   this.setInternalComponent = function () {
-    const InternalComponent = Vue.extend(this.vueComponent);
+    const InternalComponent = Vue.defineComponent(this.vueComponent);
     this.internalComponent = new InternalComponent({
       service
     });

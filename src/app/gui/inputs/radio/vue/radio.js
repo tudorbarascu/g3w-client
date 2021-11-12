@@ -1,7 +1,7 @@
 const Input = require('gui/inputs/input');
 const {getUniqueDomId} = require('core/utils/utils');
 
-const RadioInput = Vue.extend({
+const RadioInput = Vue.defineComponent({
   mixins: [Input],
   data() {
     return {

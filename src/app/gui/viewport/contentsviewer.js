@@ -4,7 +4,7 @@ const Component = require('gui/vue/component');
 const compiledTemplate = Vue.compile(require('./contentsviewer.html'));
 
 // Internal Component (VUE) of the content of the  viewport
-const InternalComponent = Vue.extend({
+const InternalComponent = Vue.defineComponent({
   ...compiledTemplate,
   data() {
     return {
@@ -13,7 +13,7 @@ const InternalComponent = Vue.extend({
   }
 });
 
-function ContentsViewerComponent(options={}) {
+function ContentsViewerComponent(app, options={}) {
   base(this, options);
   this.stack = new Stack();
   this.setService(this);

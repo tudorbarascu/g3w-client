@@ -7,7 +7,7 @@ const selectMixin = require('./selectmixin');
 const {select2Mixin} = require('gui/vue/vue.mixins');
 const GUI = require('gui/gui');
 
-const SelectInput = Vue.extend({
+const SelectInput = Vue.defineComponent({
   mixins: [Input, selectMixin, select2Mixin],
   data() {
     return {

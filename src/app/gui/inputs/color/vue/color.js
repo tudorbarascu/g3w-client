@@ -1,6 +1,6 @@
 const Input = require('gui/inputs/input');
 
-const TextInput = Vue.extend({
+const TextInput = Vue.defineComponent({
   template: require('./color.html'),
   mixins: [Input]
 });

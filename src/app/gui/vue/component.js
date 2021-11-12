@@ -2,9 +2,9 @@ const {base, inherit, resolve} = require('core/utils/utils');
 const BaseComponent = require('gui/component');
 
 // class component
-const Component = function(options={}) {
+const Component = function(app, options={}) {
   this._firstLayout = true;
-  base(this, options);
+  base(this, app, options);
 };
 
 inherit(Component, BaseComponent);

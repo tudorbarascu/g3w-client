@@ -1,9 +1,10 @@
+import {createEventBus} from 'gui/vue/utils';
 const {inherit, base} = require('core/utils/utils');
 const G3WObject = require('core/g3wobject');
 
 function FormService() {
   this.state = null;
-  this.eventBus = new Vue();
+  this.eventBus = createEventBus();
   this.layer;
   this.setters = {
     setInitForm(options={}) {

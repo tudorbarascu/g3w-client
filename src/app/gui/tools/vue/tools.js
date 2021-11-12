@@ -5,7 +5,7 @@ const GUI = require('gui/gui');
 const Component = require('gui/vue/component');
 const ToolsService = require('gui/tools/service');
 const compiledTemplate = createCompiledTemplate(require('./tools.html'));
-const InternalComponent = Vue.extend({
+const InternalComponent = Vue.defineComponent({
   ...compiledTemplate,
   data() {
     return {
@@ -24,7 +24,7 @@ const InternalComponent = Vue.extend({
   }
 });
 
-function ToolsComponent(options={}) {
+function ToolsComponent(app, options={}) {
   base(this, options);
   this._service = new ToolsService(options);
   this.title = "tools";

@@ -1,6 +1,6 @@
 import { createCompiledTemplate } from 'gui/vue/utils';
 const compiledTemplate = createCompiledTemplate(require('./header.html'));
-const HeaderFormComponent = Vue.extend({
+const HeaderFormComponent = Vue.defineComponent({
   ...compiledTemplate,
   props: {
     headers: {

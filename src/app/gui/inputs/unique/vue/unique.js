@@ -4,7 +4,7 @@ const selectMixin = require('gui/inputs/select/vue/selectmixin');
 const {getUniqueDomId} = require('core/utils/utils');
 const compiledTemplate = createCompiledTemplate(require('./unique.html'));
 
-const UniqueInput = Vue.extend({
+const UniqueInput = Vue.defineComponent({
   mixins: [Input, selectMixin],
   ...compiledTemplate,
   data() {

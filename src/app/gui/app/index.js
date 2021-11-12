@@ -10,22 +10,6 @@ const G3wApplicationFilterPlugin = require('gui/vue/vue.filter');
 const GlobalComponents = require('gui/vue/vue.globalcomponents');
 const GlobalDirective = require('gui/vue/vue.directives');
 
-// install global components
-Vue.use(GlobalComponents);
-// install gloabl directive
-Vue.use(GlobalDirective);
-
-// install Application Filter Plugin
-Vue.use(G3wApplicationFilterPlugin);
-
-// install template information library (es. classes etc..)
-Vue.use(VueAppPlugin, {});
-
-// set mixins inheriAttrs to avoid tha unused props are setted as attrs
-Vue.mixin({
-  inheritAttrs: false
-});
-
 // get all items needed by application
 const App = require('gui/app/app');
 const sidebar = require('gui/sidebar/sidebar');
@@ -61,7 +45,7 @@ const ApplicationTemplate = function({ApplicationService}) {
     this._createApp();
   };
   // create application config
-  this._createTemplateConfig = function() {
+  this._createTemplateConfig = function(app) {
     const G3WTemplate = Vue.prototype.g3wtemplate;
     const appTitle = ApplicationService.getConfig().apptitle || 'G3W Suite';
     const ContentsComponent = require('gui/viewport/contentsviewer');
@@ -82,21 +66,21 @@ const ApplicationTemplate = function({ApplicationService}) {
         },
         sidebar: {
           components: [
-            new MetadataComponent({
+            new MetadataComponent(app,{
               id: 'metadata',
               open: false,
               collapsible: false,
               icon: G3WTemplate.getFontClass('file'),
               mobile: true
             }),
-            new PrintComponent({
+            new PrintComponent(app,{
               id: 'print',
               open: false,
               collapsible: true, //  it used to manage click event if can run setOpen component method
               icon: G3WTemplate.getFontClass('print'),
               mobile: false
             }),
-            new SearchComponent({
+            new SearchComponent(app,{
               id: 'search',
               open: false,
               collapsible: true,
@@ -123,21 +107,21 @@ const ApplicationTemplate = function({ApplicationService}) {
               mobile: true
             }),
             // Component that store plugins
-            new ToolsComponent({
+            new ToolsComponent(app,{
               id: 'tools',
               open: false,
               collapsible: true,
               icon: G3WTemplate.getFontClass('tools'),
               mobile: true
             }),
-            new WMSComponent({
+            new WMSComponent(app,{
               id: 'wms',
               open: false,
               collapsible: true,
               icon: G3WTemplate.getFontClass('layers'),
               mobile: true
             }),
-            new CatalogComponent({
+            new CatalogComponent(app,{
               id: 'catalog',
               open: false,
               collapsible: false,
@@ -157,17 +141,17 @@ const ApplicationTemplate = function({ApplicationService}) {
         }
       },
       othercomponents: [
-        new QueryResultsComponent({
+        new QueryResultsComponent(app,{
           id: 'queryresults'
         })
       ],
       viewport: {
         // placeholder of the content (view content). Secondary view (hidden)
         components: {
-          map: new MapComponent({
+          map: new MapComponent(app,{
             id: 'map'
           }),
-          content: new ContentsComponent({
+          content: new ContentsComponent(app,{
             id: 'contents'
           })
         }
@@ -180,38 +164,62 @@ const ApplicationTemplate = function({ApplicationService}) {
     this._setDataTableLanguage();
     const self = this;
     if (isMobile.any || this._isIframe) $('body').addClass('sidebar-collapse');
-    return new Vue({
-      el: '#app',
-      created() {
-        // set general metods for the application as  GUI.showForm etc ..
-        self._setupInterface();
-        // setup layout
-        self._setupLayout();
-        //register all services fro the application
-        self._setUpServices();
-        // create templateConfig
-        self.templateConfig = self._createTemplateConfig();
-        // listen lng change and reset datatable lng
-        this.$watch(()=> ApplicationState.lng, ()=>{
-          self._setDataTableLanguage();
-        });
-      },
-      async mounted() {
-        await this.$nextTick();
-        self._buildTemplate();
-        // setup Font, Css class methods
-        self._setUpTemplateDependencies(this);
-        $(document).localize();
-        self._setViewport(self.templateConfig.viewport);
-        const skinColor = $('.navbar').css('background-color');
-        GUI.skinColor = skinColor && `#${skinColor.substr(4, skinColor.indexOf(')') - 4).split(',').map((color) => parseInt(color).toString(16)).join('')}`;
-        await this.$nextTick();
-        self.emit('ready');
-        self.sizes.sidebar.width = $('#g3w-sidebar').width();
-        //getSkinColor
-        GUI.ready();
-      }
-    })
+    // const app = Vue.createApp({
+    //   created() {
+    //     // listen lng change and reset datatable lng
+    //     this.$watch(()=> ApplicationState.lng, ()=>{
+    //       self._setDataTableLanguage();
+    //     });
+    //   },
+    //   async mounted() {
+    //     await this.$nextTick();
+    //     $(document).localize();
+    //     const skinColor = $('.navbar').css('background-color');
+    //     GUI.skinColor = skinColor && `#${skinColor.substr(4, skinColor.indexOf(')') - 4).split(',').map((color) => parseInt(color).toString(16)).join('')}`;
+    //     await this.$nextTick();
+    //     //getSkinColor
+    //     self.sizes.sidebar.width = $('#g3w-sidebar').width();
+    //   }
+    // }).mount('#app');
+    const app = Vue.createApp(App);
+    // install global components
+    app.use(GlobalComponents);
+    // install global directive
+    app.use(GlobalDirective);
+    //
+    // //install Application Filter Plugin NO LONGER SUPPORTED
+    //app.use(G3wApplicationFilterPlugin);
+    //
+    // //install template information library (es. classes etc..)
+    app.use(VueAppPlugin, {});
+    //
+    // //set mixins inheriAttrs to avoid tha unused props are setted as attrs
+    app.mixin({
+      inheritAttrs: false
+    });
+    // // Inizialization of the components of the application
+    app.component('sidebar', sidebar.SidebarComponent);
+    // //Navbar custom items
+    app.component('navbarleftitems', navbaritems.components.left);
+    app.component('navbarrightitems', navbaritems.components.right);
+    app.component('viewport', viewport.ViewportComponent);
+    app.component('floatbar', floatbar.FloatbarComponent);
+
+    app.mount('#app');
+    // set general metodh for the application as  GUI.showForm etc ..
+    this._setupInterface();
+    // setup layout
+    this._setupLayout();
+    //register all services fro the application
+    this._setUpServices();
+    // create templateConfig
+    this.templateConfig = this._createTemplateConfig(app);
+    this._buildTemplate();
+    // setup Font, Css class methods
+    this._setUpTemplateDependencies(app);
+    this._setViewport(this.templateConfig.viewport);
+    this.emit('ready');
+    GUI.ready();
   };
 
   this._setupLayout = function(){
@@ -222,14 +230,6 @@ const ApplicationTemplate = function({ApplicationService}) {
         "left:43px;" +
       "}</style>").appendTo("head");
     }
-    // Inizialization of the components of the application
-    Vue.component('sidebar', sidebar.SidebarComponent);
-    //Navbar custom items
-    Vue.component('navbarleftitems', navbaritems.components.left);
-    Vue.component('navbarrightitems', navbaritems.components.right);
-    Vue.component('viewport', viewport.ViewportComponent);
-    Vue.component('floatbar', floatbar.FloatbarComponent);
-    Vue.component('app', App);
   };
 
   // dataTable Translations and custom extentions
@@ -859,13 +859,15 @@ ApplicationTemplate.fail = function({language='en', error }) {
     }
   };
   const compiledTemplate = Vue.compile(require('gui/templates/500.html'));
-  const app = new Vue({
-    el: '#app',
+  const app = Vue.createApp({
     ...compiledTemplate,
-    data: {
-      messages: error_page[language]
+    data(){
+      return {
+        messages: error_page[language]
+      }
     }
   });
+  app.mount('#app');
 };
 
 module.exports =  ApplicationTemplate;

@@ -1,6 +1,6 @@
 const Input = require('gui/inputs/input');
 
-const RangeInput = Vue.extend({
+const RangeInput = Vue.defineComponent({
   mixins: [Input],
   template: require('./sliderrange.html'),
   watch:{

@@ -3,7 +3,6 @@ const {t, tPlugin} = require('core/i18n/i18n.service');
 const {uniqueId, toRawType} = require('core/utils/utils');
 const GlobalDirective = {
   install(Vue) {
-    const vm = new Vue();
     const directives = {};
     const createDirectiveObj = ({el, attr}) =>{
       //create unique id
@@ -37,7 +36,7 @@ const GlobalDirective = {
         else if (position === 'post') el.innerHTML = `${innerHTML} ${value}`;
       };
       handlerElement(innerHTML);
-      return vm.$watch(() => ApplicationState.lng, () => handlerElement(innerHTML));
+      return Vue.watch(() => ApplicationState.lng, () => handlerElement(innerHTML));
     };
 
     Vue.directive("disabled", (el, binding) => {
@@ -95,7 +94,7 @@ const GlobalDirective = {
         directives[unique_v_t_tooltip_attr].handler = handler;
         setUnwatch({
           id:unique_v_t_tooltip_attr,
-          unwatch: vm.$watch(() => ApplicationState.lng, handler)
+          unwatch: Vue.watch(() => ApplicationState.lng, handler)
         })
       },
       componentUpdated(el, oldVnode){
@@ -127,7 +126,7 @@ const GlobalDirective = {
         handlerElement();
         setUnwatch({
           id: unique_v_t_html_attr,
-          unwatch: vm.$watch(() => ApplicationState.lng, handlerElement)
+          unwatch: Vue.watch(() => ApplicationState.lng, handlerElement)
         });
       },
       unbind(el){
@@ -153,7 +152,7 @@ const GlobalDirective = {
         handler();
         setUnwatch({
           id:unique_v_t_placeholder_attr,
-          unwatch: vm.$watch(() => ApplicationState.lng, handler)
+          unwatch: Vue.watch(() => ApplicationState.lng, handler)
         });
       },
       unbind(el){
@@ -181,7 +180,7 @@ const GlobalDirective = {
         handler();
         setUnwatch({
           id: unique_v_t_title_attr,
-          unwatch: vm.$watch(() => ApplicationState.lng, handler)
+          unwatch: Vue.watch(() => ApplicationState.lng, handler)
         });
       },
       unbind(el){
@@ -250,7 +249,7 @@ const GlobalDirective = {
         });
         setUnwatch({
           id: unique_v_plugins_notify_attr,
-          unwatch: vm.$watch(() => ApplicationState.plugins, showHideHandler)
+          unwatch: Vue.watch(() => ApplicationState.plugins, showHideHandler)
         })
       },
       unbind(el){
@@ -276,7 +275,7 @@ const GlobalDirective = {
         });
         setUnwatch({
           id: unique_v_online_notify_attr,
-          unwatch: vm.$watch(() => ApplicationState.online, showHideHandler)
+          unwatch: Vue.watch(() => ApplicationState.online, showHideHandler)
         })
       },
       unbind(){
@@ -302,7 +301,7 @@ const GlobalDirective = {
           downloadHandler(listen && ApplicationState.download);
           setUnwatch({
             id: unique_v_download_attr,
-            unwatch: vm.$watch(() => ApplicationState.download, downloadHandler)
+            unwatch: Vue.watch(() => ApplicationState.download, downloadHandler)
           })
         }
       },
@@ -346,7 +345,7 @@ const GlobalDirective = {
             });
             setUnwatch(({
               id: unique_v_select2_attr,
-              unwatch: vm.$watch(()=> vnode.context[binding.value], value =>{
+              unwatch: Vue.watch(()=> vnode.context[binding.value], value =>{
                 (multiple && value.length === 0 || value === null) && $(el).val(null).trigger('change');
               })
             }))

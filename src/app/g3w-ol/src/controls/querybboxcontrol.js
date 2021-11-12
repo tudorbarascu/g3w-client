@@ -1,4 +1,4 @@
-import {SPATIALMETHODS, VM} from '../constants';
+import {SPATIALMETHODS} from '../constants';
 const {merge} = require('../utils');
 const InteractionControl = require('./interactioncontrol');
 
@@ -51,7 +51,7 @@ proto.listenLayersVisibleChange = function(){
   this.unwatches.splice(0);
   this.layers.forEach(layer => {
     const {state} = layer;
-    this.unwatches.push(VM.$watch(() =>  state.visible, visible =>{
+    this.unwatches.push(Vue.watch(() =>  state.visible, visible =>{
       if (state.selected && !visible){
         this.setEnable(false);
       } else {

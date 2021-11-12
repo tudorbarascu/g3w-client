@@ -5,7 +5,7 @@ const GUI = require('gui/gui');
 const Component = require('gui/vue/component');
 const compiledTemplate = createCompiledTemplate(require('./printpage.html'));
 
-const InternalComponent = Vue.extend({
+const InternalComponent = Vue.defineComponent({
   ...compiledTemplate,
   data() {
     return {

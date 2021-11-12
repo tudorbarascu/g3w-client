@@ -21,9 +21,7 @@
 </head>
 <body class="hold-transition skin-blue fixed">
 
-  <div id="app">
-    <app></app>
-  </div>
+  <div id="app"></div>
 
   <!-- build:js js/vendor.min.js -->
 

@@ -1,13 +1,13 @@
+import Table from './Table.vue';
 const {t} = require('core/i18n/i18n.service');
 const {base, inherit} = require('core/utils/utils');
 const GUI = require('gui/gui');
 const Component = require('gui/vue/component');
 const TableService = require('../tableservice');
-import Table from './Table.vue';
 
-const InternalComponent = Vue.extend(Table);
+const InternalComponent = Vue.defineComponent(Table);
 
-const TableComponent = function(options = {}) {
+const TableComponent = function(app, options = {}) {
   base(this);
   this.id = "openattributetable";
   const layer = options.layer;

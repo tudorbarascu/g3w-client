@@ -4,7 +4,7 @@ import Layer from './layer.vue'
 
 function LayerComponent({state = {}, service} = {}) {
   base(this);
-  const vueComponent = Vue.extend(Layer);
+  const vueComponent = Vue.defineComponent(Layer);
   this.setService(service);
   this.internalComponent = new vueComponent({
     state

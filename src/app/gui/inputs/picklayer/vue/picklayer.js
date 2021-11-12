@@ -1,7 +1,7 @@
 const Input = require('gui/inputs/input');
 const Service = require('../service');
 
-const PickLayerInput = Vue.extend({
+const PickLayerInput = Vue.defineComponent({
   mixins: [Input],
   template: require('./picklayer.html'),
   methods: {

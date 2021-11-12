@@ -19,7 +19,7 @@ const Control = function(options={}) {
     const customClass = options.customClass;
     const tipLabel = options.tipLabel || this.name;
     const label = options.label || '';
-    const mapControlButtonVue =  Vue.extend({
+    const mapControlButtonVue =  Vue.defineComponent({
       functional: true,
       render(h){
         return h('div', {

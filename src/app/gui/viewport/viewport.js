@@ -566,7 +566,7 @@ const viewportService = new ViewportService;
 const compiledTemplate = Vue.compile(require('./viewport.html'));
 
 // COMPONENTE VUE VIEWPORT
-const ViewportComponent = Vue.extend({
+const ViewportComponent = Vue.defineComponent({
   props: {
     appState: {
       type: Object

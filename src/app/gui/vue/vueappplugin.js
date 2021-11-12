@@ -112,8 +112,9 @@ const font = {
 };
 
 const Vueappplugin = {
-  install(Vue, options = {}) {
-    Vue.prototype.g3wtemplate = {
+  install(app, options = {}) {
+    console.log(app.config)
+    app.config.globalProperties.g3wtemplate = {
       font,
       get() {},
       getInfo() {
@@ -127,13 +128,13 @@ const Vueappplugin = {
       }
     };
     // set isMobile method to all Vue instances
-    Vue.mixin({
+    app.mixin({
       methods: {
         isMobile () {
           return isMobile.any
         }
       }
-    })
+    });
   }
 };
 

@@ -6,7 +6,7 @@ const ProjectsRegistry = require('core/project/projectsregistry');
 const compiledTemplate = Vue.compile(require('./menu.html'));
 const fakeImage = '/static/client/images/FakeProjectThumb.png';
 
-const InternalComponent = Vue.extend({
+const InternalComponent = Vue.defineComponent({
   ...compiledTemplate,
   data() {
     return {
@@ -56,7 +56,7 @@ const InternalComponent = Vue.extend({
   }
 });
 
-function MenuComponent(options={}){
+function MenuComponent(app, options={}){
   base(this,options);
   this.title = options.title || "menu";
   this.state.visible = true;

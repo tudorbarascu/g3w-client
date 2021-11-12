@@ -11,18 +11,19 @@ import DateTime from './global-components/datetime.vue';
 import Range from './global-components/range.vue';
 
 const GlobalComponents = {
-  install(Vue) {
-    Vue.component(ImageComponent.name, ImageComponent);
-    Vue.component(GalleryImagesComponent.name, GalleryImagesComponent);
-    Vue.component(GeospatialComponet.name, GeospatialComponet);
-    Vue.component(BarLoader.name, BarLoader);
-    Vue.component(Progressbar.name, Progressbar);
-    Vue.component(Skeleton.name, Skeleton);
-    Vue.component(HelpDiv.name, HelpDiv);
-    Vue.component(Resize.name, Resize);
-    Vue.component(LayerPositions.name, LayerPositions);
-    Vue.component(DateTime.name, DateTime);
-    Vue.component(Range.name, Range);
+  install(app) {
+    console.log(app)
+    app.component(ImageComponent.name, ImageComponent);
+    app.component(GalleryImagesComponent.name, GalleryImagesComponent);
+    app.component(GeospatialComponet.name, GeospatialComponet);
+    app.component(BarLoader.name, BarLoader);
+    app.component(Progressbar.name, Progressbar);
+    app.component(Skeleton.name, Skeleton);
+    app.component(HelpDiv.name, HelpDiv);
+    app.component(Resize.name, Resize);
+    app.component(LayerPositions.name, LayerPositions);
+    app.component(DateTime.name, DateTime);
+    app.component(Range.name, Range);
   }
 };
 

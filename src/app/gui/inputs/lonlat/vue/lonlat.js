@@ -1,7 +1,7 @@
 const { getUniqueDomId } = require('core/utils/utils');
 const Input = require('gui/inputs/input');
 
-const LatLontInput = Vue.extend({
+const LatLontInput = Vue.defineComponent({
   mixins: [Input],
   template: require('./lonlat.html'),
   data(){

@@ -2,7 +2,7 @@ const {base, inherit} = require('core/utils/utils');
 const ProjectRegistry = require('core/project/projectsregistry');
 const MenuComponent = require('./menu');
 
-function ProjectsMenuComponent(options={}) {
+function ProjectsMenuComponent(app, options={}) {
   options.id = 'projectsmenu';
   base(this, options);
   this.state.menuitems = [];

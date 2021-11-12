@@ -3,7 +3,7 @@ const Input = require('gui/inputs/input');
 const WidgetMixins = require('gui/inputs/widgetmixins');
 const {resizeMixin} = require('gui/vue/vue.mixins');
 
-const DateTimePickerInput = Vue.extend({
+const DateTimePickerInput = Vue.defineComponent({
   mixins: [Input, WidgetMixins, resizeMixin],
   template: require('./datetimepicker.html'),
   data() {

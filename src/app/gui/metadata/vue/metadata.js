@@ -5,7 +5,7 @@ const GUI = require('gui/gui');
 const MetadataService = require('gui/metadata/metadataservice');
 const templateCompiled = createCompiledTemplate(require('./metadata.html'));
 
-const InternalComponent = Vue.extend({
+const InternalComponent = Vue.defineComponent({
   ...templateCompiled,
   data() {
     return {

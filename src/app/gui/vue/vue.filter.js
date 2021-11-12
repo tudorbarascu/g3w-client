@@ -1,8 +1,8 @@
 const {t, tPlugin} = require('core/i18n/i18n.service');
 const G3WApplicationFilter = {
- install(Vue) {
-   Vue.filter('t', value => t(value));
-   Vue.filter('tPlugin', value => value !== null ? tPlugin(value) : '');
+ install(app) {
+   app.filter('t', value => t(value));
+   app.filter('tPlugin', value => value !== null ? tPlugin(value) : '');
   }
 };
 

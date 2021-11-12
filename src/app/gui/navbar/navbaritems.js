@@ -21,7 +21,7 @@ inherit(navbaritemsService, G3WObject);
 const navbaritemsservice = new navbaritemsService();
 const compiledTemplateLeft = Vue.compile(require('./navbarleftitems.html'));
 
-const NavbarLeftItemsComponent = Vue.extend({
+const NavbarLeftItemsComponent = Vue.defineComponent({
   ...compiledTemplateLeft,
   data() {
     return {
@@ -32,7 +32,7 @@ const NavbarLeftItemsComponent = Vue.extend({
 
 const compiledTemplateRight = Vue.compile(require('./navbarrightitems.html'));
 
-const NavbarRightItemsComponent = Vue.extend({
+const NavbarRightItemsComponent = Vue.defineComponent({
   ...compiledTemplateRight,
   data() {
     return {

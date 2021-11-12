@@ -17,6 +17,7 @@ const ChromeComponent = VueColor.Chrome;
 const compiledTemplate = createCompiledTemplate(require('./catalog.html'));
 const DEFAULT_ACTIVE_TAB = 'layers';
 const Service = require('../catalogservice');
+const CATALOGCOMPONENTS = {};
 //OFFSETMENU
 const OFFSETMENU = {
   top: 50,
@@ -533,23 +534,23 @@ const vueComponentOptions = {
   }
 };
 
-const InternalComponent = Vue.extend(vueComponentOptions);
+const InternalComponent = Vue.defineComponent(vueComponentOptions);
 
-Vue.component('g3w-catalog', vueComponentOptions);
+CATALOGCOMPONENTS['g3w-catalog']= vueComponentOptions;
 
-Vue.component('layers-group', {
+CATALOGCOMPONENTS['layers-group'] = {
   template: require('./layersgroup.html'),
   props: {
     layersgroup: {
       type: Object
     }
   }
-});
+};
 
 const compiledTristateTreeTemplate = createCompiledTemplate(require('./tristate-tree.html'));
 /* CHILDREN COMPONENTS */
 // tree component
-Vue.component('tristate-tree', {
+CATALOGCOMPONENTS['tristate-tree'] = {
   ...compiledTristateTreeTemplate,
   props : ['layerstree', 'storeid', 'legend', 'legendplace', 'highlightlayers', 'parent_mutually_exclusive', 'parentFolder', 'externallayers', 'root', 'parent'],
   components: {
@@ -728,11 +729,11 @@ Vue.component('tristate-tree', {
     await this.$nextTick();
     $('span.scalevisibility').tooltip();
   }
-});
+};
 
 const compiletLegendTemplate = createCompiledTemplate(require('./legend.html'));
 
-Vue.component('layerslegend',{
+CATALOGCOMPONENTS['layerslegend'] = {
     ...compiletLegendTemplate,
     props: ['layerstree', 'legend', 'active'],
     data() {
@@ -770,11 +771,11 @@ Vue.component('layerslegend',{
       const show = !!this.visiblelayers.length;
       this.$emit('showlegend', show);
     }
-});
+};
 
 const compiledLegendItemsTemplate = createCompiledTemplate(require('./legend_items.html'));
 
-Vue.component('layerslegend-items',{
+CATALOGCOMPONENTS['layerslegend-items'] = {
   ...compiledLegendItemsTemplate,
   props: {
     layers: {
@@ -922,9 +923,12 @@ Vue.component('layerslegend-items',{
       this.getLegendSrc(this.layers);
     })
   },
-});
+};
 
-function CatalogComponent(options={}) {
+function CatalogComponent(app, options={}) {
+  Object(CATALOGCOMPONENTS).entries(([componentName, componentOptions]) =>{
+    app.component(componentName, componentOptions)
+  });
   options.resizable = true;
   base(this, options);
   const {legend}  = options.config;

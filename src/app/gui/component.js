@@ -3,7 +3,7 @@ const G3WObject = require('core/g3wobject');
 const VUECOMPONENTSATTRIBUTES = ['methods', 'computed', 'data', 'components'];
 
 // Class Component (Base)
-const Component = function(options={}) {
+const Component = function(app, options={}) {
   // internal VUE component
   this.internalComponent = null;
   this._components = [];
@@ -61,7 +61,7 @@ proto.init = function(options = {}) {
   this._service.init ? this._service.init(options): null;
   template && this.setInternalComponentTemplate(template);
   this.setInternalComponent = function() {
-    const InternalComponent = Vue.extend(this.vueComponent);
+    const InternalComponent = Vue.defineComponent(this.vueComponent);
     this.internalComponent = new InternalComponent({
       service: this._service,
       template,

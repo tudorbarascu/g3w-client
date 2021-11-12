@@ -523,7 +523,7 @@ function NominatimControl(options={}) {
 
   const {placeholder, fontIcon} = this.options;
   const containerClass = klasses.namespace + ' ' + klasses.inputText.container + ' ' + this.options.classMobile;
-  const nominatimVueContainer = Vue.extend({
+  const nominatimVueContainer = Vue.defineComponent({
     functional: true,
     render(h){
       return h('div', {class: {[containerClass]: true}}, [
@@ -794,7 +794,7 @@ function NominatimControl(options={}) {
       });
     } else {
       const noresults = this.options.noresults;
-      const elementVue = Vue.extend({
+      const elementVue = Vue.defineComponent({
         functional: true,
         render(h){
           return h('li', {

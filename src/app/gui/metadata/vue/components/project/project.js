@@ -4,7 +4,7 @@ import ProjectCatalog from './project.vue'
 
 function ProjectMetadataComponent({state = {}, service} = {}) {
   base(this);
-  const vueComponent = Vue.extend(ProjectCatalog);
+  const vueComponent = Vue.defineComponent(ProjectCatalog);
   this.setService(service);
   this.internalComponent = new vueComponent({
     state

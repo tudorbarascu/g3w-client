@@ -5,7 +5,7 @@ const Panel = require('gui/panel');
 const Service = require('./searchservice');
 const compiledTemplate = Vue.compile(require('./searchpanel.html'));
 
-const SearchPanelComponent = Vue.extend({
+const SearchPanelComponent = Vue.defineComponent({
   ...compiledTemplate,
   components:{
     Select2

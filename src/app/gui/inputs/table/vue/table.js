@@ -2,7 +2,7 @@ import InputTableHeader from './components/input-table-header.vue';
 import InputTableBody from './components/input-table-body.vue';
 const Input = require('gui/inputs/input');
 
-const TableInput = Vue.extend({
+const TableInput = Vue.defineComponent({
   mixins: [Input],
   template: require('./table.html'),
   components: {

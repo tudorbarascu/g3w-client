@@ -16,8 +16,6 @@ const CatalogLayersStoresRegistry = require('core/catalog/cataloglayersstoresreg
 const RelationsPage = require('gui/relations/vue/relationspage');
 const PickCoordinatesInteraction = require('g3w-ol/src/interactions/pickcoordinatesinteraction');
 //used to get and set vue reactivity to queryresultservice
-const VM = new Vue();
-
 function QueryResultsService() {
   this.printService = new PrintService();
   this._currentLayerIds = [];
@@ -297,14 +295,14 @@ proto.setActionsForLayers = function(layers, options={add: false}) {
        * set eventually layer action tool and need to be reactive
        * @type {{}}
        */
-      this.state.layeractiontool[layer.id] = Vue.observable({
+      this.state.layeractiontool[layer.id] = Vue.reactive({
         component: null,
         config: null
       });
 
       const currentactiontoolslayer = {};
       layer.features.forEach((feature, index)=> currentactiontoolslayer[index] = null);
-      this.state.currentactiontools[layer.id] = Vue.observable(currentactiontoolslayer);
+      this.state.currentactiontools[layer.id] = Vue.reactive(currentactiontoolslayer);
       const is_external_layer_or_wms = layer.external || (layer.source ? layer.source.type === 'wms' : false);
       if (!this.state.layersactions[layer.id]) this.state.layersactions[layer.id] = [];
       /**
@@ -363,7 +361,7 @@ proto.setActionsForLayers = function(layers, options={add: false}) {
             download: false,
             opened: true,
             class: GUI.getFontClass('chart'),
-            state: Vue.observable({
+            state: Vue.reactive({
               toggled
             }),
             hint: 'sdk.mapcontrols.query.actions.relations_charts.hint',
@@ -387,13 +385,13 @@ proto.setActionsForLayers = function(layers, options={add: false}) {
       layer.features.map((feature, index)=> {
         toggled[index] = false; // SET INITIAL TOGGLED TO FALSE
       });
-      const state = Vue.observable({
+      const state = Vue.reactive({
         toggled
       });
       if (layer.downloads.length === 1) {
         const [format] = layer.downloads;
         const cbk = this.downloadFeatures.bind(this, format);
-        layer[format] = Vue.observable({
+        layer[format] = Vue.reactive({
           active: false
         });
         this.state.layersactions[layer.id].push({
@@ -444,10 +442,7 @@ proto.setActionsForLayers = function(layers, options={add: false}) {
           state,
           hint: `Downloads`,
           change({features}) {
-            features.forEach((feature, index) =>{
-              if (this.state.toggled[index] === undefined) VM.$set(this.state.toggled, index, false);
-              else this.state.toggled[index] = false;
-            });
+            features.forEach((feature, index) =>this.state.toggled[index] = false);
           },
           cbk: (layer, feature, action, index) => {
             action.state.toggled[index] = !action.state.toggled[index];
@@ -486,7 +481,7 @@ proto.setActionsForLayers = function(layers, options={add: false}) {
           download: false,
           class: GUI.getFontClass('success'),
           hint: 'sdk.mapcontrols.query.actions.add_selection.hint',
-          state: Vue.observable({
+          state: Vue.reactive({
             toggled
           }),
           init: ({feature, index, action}={})=>{

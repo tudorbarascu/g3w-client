@@ -42,15 +42,15 @@
         </ul>
       </div>
       <div class="tab-pane baselayers" v-if="hasBaseLayers" role="tabpanel"  :class="{ active: activeTab === 'baselayers' || !hasLayers }" id="baselayers">
-        <ul id="baselayers-content" :class="{'mobile': isMobile()}" :style="{gridTemplateColumns: `repeat(auto-fill, minmax(${baselayers.length > 4 ? 80 : 120}px, 1fr))`}">
-          <li v-if="!baselayer.fixed" v-for="baselayer in baselayers" :key="baselayer.title">
-            <img :src="getSrcBaseLayerImage(baselayer)" @click.stop="setBaseLayer(baselayer.id)" class="img-responsive img-thumbnail baselayer" :style="{opacity: currentBaseLayer === baselayer.id ? 1 : 0.5}" >
-            <div class="baseselayer-text text-center">{{ baselayer.title }}</div>
-          <li @click.stop="setBaseLayer(null)">
-            <img :src="getSrcBaseLayerImage(null)" class="img-responsive img-thumbnail baselayer" :style="{opacity: currentBaseLayer === null ? 1 : 0.5}">
-            <div class="baseselayer-text text-center" v-t="'nobaselayer'"></div>
-          </li>
-        </ul>
+<!--        <ul id="baselayers-content" :class="{'mobile': isMobile()}" :style="{gridTemplateColumns: `repeat(auto-fill, minmax(${baselayers.length > 4 ? 80 : 120}px, 1fr))`}">-->
+<!--          <li v-if="!baselayer.fixed" v-for="baselayer in baselayers" :key="baselayer.title">-->
+<!--            <img :src="getSrcBaseLayerImage(baselayer)" @click.stop="setBaseLayer(baselayer.id)" class="img-responsive img-thumbnail baselayer" :style="{opacity: currentBaseLayer === baselayer.id ? 1 : 0.5}" >-->
+<!--            <div class="baseselayer-text text-center">{{ baselayer.title }}</div>-->
+<!--          <li @click.stop="setBaseLayer(null)">-->
+<!--            <img :src="getSrcBaseLayerImage(null)" class="img-responsive img-thumbnail baselayer" :style="{opacity: currentBaseLayer === null ? 1 : 0.5}">-->
+<!--            <div class="baseselayer-text text-center" v-t="'nobaselayer'"></div>-->
+<!--          </li>-->
+<!--        </ul>-->
       </div>
       <layerslegend v-if="legend.place ===  'tab'" @showlegend="showLegend" :legend="legend" :active="activeTab === 'legend'"
         v-for="_layerstree in state.layerstrees" :layerstree="_layerstree" :key="_layerstree.id">

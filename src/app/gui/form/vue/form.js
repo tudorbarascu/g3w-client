@@ -86,7 +86,7 @@ const vueComponentObject = {
   }
 };
 
-function FormComponent(options = {}) {
+function FormComponent(app, options = {}) {
   options.id = options.id || 'form';
   base(this, options);
   options.service = options.service ?  new options.service : new Service;

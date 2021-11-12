@@ -4,7 +4,7 @@ const templateCompiled = Vue.compile(require('./querybuilder.html'));
 const ProjectsRegistry = require('core/project/projectsregistry');
 const operators = Object.values(OPERATORS);
 
-const QueryBuilder = Vue.extend({
+const QueryBuilder = Vue.defineComponent({
   ...templateCompiled,
   data() {
     const options = this.$options.options;
